@@ -1,8 +1,8 @@
-import React from 'react'
+
 
 const Home = () => {
     return (
-        <div>Home</div>
+        <div className='w-screen h-screen bg-white dark:bg-purple-500'>Home</div>
     )
 }
 

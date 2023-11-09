@@ -1,22 +1,36 @@
-import { Menu, rem, useMantineColorScheme } from "@mantine/core"
+import { useEffect, useState } from "react";
+import { Menu, rem } from "@mantine/core"
 
 import {
-    IconSettings,
     IconLogout,
-    IconBuildingBank,
-    IconDiscount,
     IconUserCircle,
     IconMoon,
     IconSun,
     IconDeviceDesktop
 } from '@tabler/icons-react';
+import { getTheme } from "../../services/Utilities";
 
 const Header = () => {
-    const { colorScheme, setColorScheme } = useMantineColorScheme()
-    const handleChangeDarkMode = () => {
-        setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')
-    }
+    const darkSystem = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const [theme, setTheme] = useState(getTheme())
+    useEffect(() => {
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    }, [theme, darkSystem])
 
+    {/* use Tailwind darkmode */ }
+    const handleChangeDarkMode = (mode) => {
+        setTheme(mode)
+        if (mode === 'auto') {
+            localStorage.removeItem('theme')
+        }
+        else {
+            localStorage.setItem('theme', mode)
+        }
+    }
     return (
         <div className="flex flex-wrap h-full w-full ">
             {/* logo */}
@@ -28,28 +42,42 @@ const Header = () => {
 
             </div>
             {/* user area */}
-            <div className="flex basis-1/6 justify-end items-center bg-red-500">
-                {/* light/dark mode */}
-                <IconSun className="text-white hover:cursor-pointer" onClick={handleChangeDarkMode} />
+            <div className="flex basis-1/6 justify-end items-center ">
                 {/* user */}
                 <Menu shadow="md" width={200} position="bottom-end">
-                    <Menu.Target>
-                        <IconUserCircle className=" w-7 h-7 text-white hover:text-yellow-700 cursor-pointer" />
+                    <Menu.Target className="hover:cursor-pointer">
+                        {
+                            theme === 'light' ? <IconSun stroke={1.5} className="text-sky-700 h-5 w-5" /> : theme === 'dark' ? <IconMoon stroke={1.5} className="text-sky-700 h-5 w-5" /> : <IconDeviceDesktop stroke={1.5} className="text-sky-700 h-5 w-5" />
+                        }
                     </Menu.Target>
                     <Menu.Dropdown>
-                        <Menu.Label>Ứng dụng</Menu.Label>
-                        <Menu.Item leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
-                            Cài đặt
+                        <Menu.Item
+                            leftSection={<IconSun className="w-5 h-5" />}
+                            onClick={() => handleChangeDarkMode('light')}
+                            className={`text-base ${theme === 'light' ? 'text-sky-500 font-semibold' : ''}`}
+                        >
+                            Sáng
                         </Menu.Item>
-                        <Menu.Item leftSection={<IconBuildingBank style={{ width: rem(14), height: rem(14) }} />}>
-                            Danh sách ngân hàng
+                        <Menu.Item
+                            leftSection={<IconMoon className="w-5 h-5" />}
+                            onClick={() => handleChangeDarkMode('dark')}
+                            className={`text-base ${theme === 'dark' ? 'text-sky-500 font-semibold' : ''}`}
+                        >
+                            Tối
                         </Menu.Item>
-                        <Menu.Item leftSection={<IconDiscount style={{ width: rem(14), height: rem(14) }} />}>
-                            Danh sách KM
+                        <Menu.Item leftSection={<IconDeviceDesktop className="w-5 h-5" />}
+                            onClick={() => handleChangeDarkMode('auto')}
+                            className={`text-base ${theme === 'auto' ? 'text-sky-500 font-semibold' : ''}`}
+                        >
+                            Tự động
                         </Menu.Item>
-                        <Menu.Divider />
-
-                        <Menu.Label>Người dùng</Menu.Label>
+                    </Menu.Dropdown>
+                </Menu>
+                <Menu shadow="md" width={200} position="bottom-end">
+                    <Menu.Target>
+                        <IconUserCircle className=" w-5 h-5 text-slate-700 hover:text-yellow-700 cursor-pointer" />
+                    </Menu.Target>
+                    <Menu.Dropdown>
                         <Menu.Item
                             color="red"
                             leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
