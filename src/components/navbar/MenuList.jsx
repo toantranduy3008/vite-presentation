@@ -1,4 +1,4 @@
-import { IconHome2, IconSettings } from '@tabler/icons-react'
+import { IconHome2, IconSearch, IconSettings } from '@tabler/icons-react'
 
 export const MenuList = [
     {
@@ -27,5 +27,10 @@ export const MenuList = [
                 icon: <IconSettings size={16} />
             }
         ]
-    }
+    },
+    {
+        label: 'Tra cứu giao dịch',
+        href: '/bankdemo/inquiry',
+        icon: <IconSearch size={16} />
+    },
 ]

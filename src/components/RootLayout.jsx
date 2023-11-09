@@ -11,6 +11,8 @@ export default function RootLayout() {
             header={{ height: 60 }}
             navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}
             padding="md"
+            // className="bg-[url('/napas-bg-white.jpg')] dark:bg-[url('/napas-bg-blue.jpg')] bg-right bg-cover bg-no-repeat"
+            className='bg-[#dcdcdc]'
         >
             <AppShell.Header>
                 <Group h="100%" px="md">
