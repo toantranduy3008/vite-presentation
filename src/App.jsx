@@ -15,7 +15,7 @@ import SubMenu from './pages/submenu/SubMenu';
 import SubMenu2 from './pages/submenu2/SubMenu2';
 function App() {
   return (
-    <MantineProvider defaultColorScheme="auto">
+    <MantineProvider>
       <Notifications />
       <Routes>
         <Route path='/login' element={<Login />} />
