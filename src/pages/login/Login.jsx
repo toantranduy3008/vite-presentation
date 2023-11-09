@@ -63,9 +63,10 @@ const Login = () => {
             <div className="flex flex-1 h-full justify-center">
                 <div className="relative flex flex-col h-full w-full max-w-xl justify-center p-5 gap-5">
                     <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-                    <p className="font-bold">
-                        Ngân hàng Vinabank - Napas
-                    </p>
+                    <div className="flex font-bold">
+                        <img src="/vinabank-logo.png" className="h-16" />
+                        {/* <p>Ngân hàng Vinabank - Napas</p> */}
+                    </div>
                     <TextInput
                         placeholder="Tài khoản"
                         value={username}
