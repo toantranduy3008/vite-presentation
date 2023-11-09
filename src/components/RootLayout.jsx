@@ -12,7 +12,7 @@ export default function RootLayout() {
             navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}
             padding="md"
             // className="bg-[url('/napas-bg-white.jpg')] dark:bg-[url('/napas-bg-blue.jpg')] bg-right bg-cover bg-no-repeat"
-            className='bg-[#dcdcdc]'
+            className='bg-[#dcdcdc] bg-gradient-to-r from-blue-800 to-cyan-800'
         >
             <AppShell.Header>
                 <Group h="100%" px="md">
