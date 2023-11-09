@@ -38,7 +38,7 @@ const Header = () => {
 
     const handleLogout = () => {
         sessionStorage.removeItem('userSession')
-        navigate('/login')
+        navigate('/bankdemo/login')
     }
     return (
         <div className="flex flex-wrap h-full w-full ">

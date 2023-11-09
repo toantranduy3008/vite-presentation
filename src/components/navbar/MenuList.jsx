@@ -3,17 +3,17 @@ import { IconHome2, IconSettings } from '@tabler/icons-react'
 export const MenuList = [
     {
         label: 'Trang chủ',
-        href: '/home',
+        href: '/bankdemo/home',
         icon: <IconHome2 size={16} />
     },
     {
         label: 'Cài đặt',
-        href: '/settings',
+        href: '/bankdemo/settings',
         icon: <IconSettings size={16} />
     },
     {
         label: 'Menu',
-        href: '/menu',
+        href: '/bankdemo/menu',
         icon: <IconSettings size={16} />,
         subMenu: [
             {

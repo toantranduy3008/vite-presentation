@@ -2,7 +2,7 @@
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/core/styles.css';
-
+import '@mantine/notifications/styles.css';
 {/* React router */ }
 import { Route, Routes } from 'react-router-dom';
 
@@ -18,13 +18,13 @@ function App() {
     <MantineProvider>
       <Notifications />
       <Routes>
-        <Route path='/login' element={<Login />} />
+        <Route path='/bankdemo/login' element={<Login />} />
         <Route element={<RootLayout />}>
-          <Route path='/' element={<Home />} />
-          <Route path='/home' element={<Home />} />
-          <Route path='/settings' element={<Settings />} />
-          <Route path='/menu/submenu' element={<SubMenu />} />
-          <Route path='/menu/submenu2' element={<SubMenu2 />} />
+          <Route path='/bankdemo/' element={<Home />} />
+          <Route path='/bankdemo/home' element={<Home />} />
+          <Route path='/bankdemo/settings' element={<Settings />} />
+          <Route path='/bankdemo/menu/submenu' element={<SubMenu />} />
+          <Route path='/bankdemo/menu/submenu2' element={<SubMenu2 />} />
         </Route>
       </Routes>
     </MantineProvider>
