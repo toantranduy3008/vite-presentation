@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Menu, rem } from "@mantine/core"
 import { useNavigate } from "react-router-dom";
-
+import { getTheme } from "../../services/Utilities";
 import {
     IconLogout,
     IconUserCircle,
@@ -9,17 +9,18 @@ import {
     IconSun,
     IconDeviceDesktop
 } from '@tabler/icons-react';
-import { getTheme } from "../../services/Utilities";
 
 const Header = () => {
     const navigate = useNavigate()
     const darkSystem = window.matchMedia('(prefers-color-scheme: dark)').matches
     const [theme, setTheme] = useState(getTheme())
+    const [logoUrl, setLogoUrl] = useState('./napas-logo.svg')
     useEffect(() => {
-        // window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => e.matches && setTheme('dark'));
-        // window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => e.matches && setTheme('light'));
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => e.matches && setTheme('dark'));
+        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => e.matches && setTheme('light'));
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark')
+            setLogoUrl('./napas-logo-white.png')
         } else {
             document.documentElement.classList.remove('dark')
         }
@@ -33,6 +34,7 @@ const Header = () => {
         }
         else {
             localStorage.setItem('theme', mode)
+            setLogoUrl('./napas-logo-white.png')
         }
     }
 
@@ -42,19 +44,18 @@ const Header = () => {
     }
     return (
         <div className="flex flex-row w-full h-full justify-between items-center p-2">
-            {/* logo */}
             <div className="flex basis-1/6 h-full justify-start items-center">
-                <img src={'./napas-logo.svg'} className=" w-auto xs:w-24 h-12 xs:h-auto align-middle border-none " />
+                <img src={logoUrl} className=" w-auto xs:w-24 h-12 xs:h-auto align-middle border-none " />
             </div>
-            {/* text */}
+
             <div className="flex flex-grow h-full xs:hidden md:flex justify-center items-center">
-                <p className="text-lg text-center font-semibold md:text-lg">Ngân Hàng Vinabank - Napas</p>
+                <p className="text-lg text-center font-bold md:text-xl uppercase text-indigo-700 dark:text-sky-500">Ngân Hàng Vinabank - Napas</p>
             </div>
-            {/* user area */}
+
             <div className="flex basis-1/6 h-full justify-end items-center gap-2">
-                {/* user */}
+
                 <Menu shadow="md" width={200} position="bottom-end" className="flex">
-                    <Menu.Target className="bg-teal-500 hover:cursor-pointer hover:shadow-md rounded-md p-1 transition ease-linear duration-200">
+                    <Menu.Target className={`${theme === 'light' ? 'bg-yellow-400' : theme === 'dark' ? 'bg-sky-400' : 'bg-red-400'} hover:cursor-pointer hover:shadow-md rounded-md p-1 transition ease-linear duration-200`}>
                         {
                             theme === 'light' ?
                                 <IconSun stroke={1.5} className="text-white h-7 w-7  hover:bg-yellow-500" /> :
@@ -88,8 +89,8 @@ const Header = () => {
                     </Menu.Dropdown>
                 </Menu>
                 <Menu shadow="md" width={200} position="bottom-end" className="flex">
-                    <Menu.Target className="bg-teal-500 hover:cursor-pointer hover:shadow-md rounded-md p-1 transition ease-linear duration-200">
-                        <IconUserCircle className=" w-7 h-7 text-white  hover:bg-yellow-500" />
+                    <Menu.Target className="bg-teal-400 hover:cursor-pointer hover:shadow-md rounded-md p-1 transition ease-linear duration-200">
+                        <IconUserCircle className=" w-7 h-7 text-white  hover:bg-teal-500" />
                     </Menu.Target>
                     <Menu.Dropdown>
                         <Menu.Item

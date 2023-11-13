@@ -9,6 +9,7 @@ import '@mantine/dates/styles.css';
 import { Route, Routes } from 'react-router-dom';
 
 {/* pages */ }
+import ProtectedRoute from './components/ProtectedRoute';
 import RootLayout from './components/RootLayout';
 import Home from './pages/home/Home';
 import Login from './pages/login/Login';
@@ -22,7 +23,7 @@ function App() {
       <Notifications />
       <Routes>
         <Route path='/bankdemo/login' element={<Login />} />
-        <Route element={<RootLayout />}>
+        <Route element={<ProtectedRoute><RootLayout /></ProtectedRoute>}>
           <Route path='/bankdemo/' element={<Home />} />
           <Route path='/bankdemo/home' element={<Home />} />
           <Route path='/bankdemo/settings' element={<Settings />} />

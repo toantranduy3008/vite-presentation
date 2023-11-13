@@ -14,7 +14,7 @@ const NavBar = ({ toggle }) => {
                         label={item.label}
                         leftSection={item.icon}
                         stroke={1.5}
-                        className={`font-semibold ${pathname.includes(item.href) ? 'text-sky-500 border-l-2 border-solid border-indigo-400' : 'text-slate-700'}`}
+                        className={`font-semibold ${pathname.includes(item.href) ? 'text-sky-500 border-l-2 border-solid border-indigo-400' : ''} dark:hover:bg-orange-400`}
                         component={RouterLink}
                         to={item.href}
                         onClick={toggle}
@@ -30,7 +30,7 @@ const NavBar = ({ toggle }) => {
                                     component={RouterLink}
                                     to={`${item.href}${subItem.href}`}
                                     active={pathname === `${item.href}${subItem.href}`}
-                                    className={`${pathname === `${item.href}${subItem.href}` ? 'text-sky-500 border-l-2 border-solid border-indigo-400' : 'text-slate-700 border-l-2 border-solid border-slate-200'}`}
+                                    className={`${pathname === `${item.href}${subItem.href}` ? 'text-sky-500 border-l-2 border-solid border-indigo-400' : 'border-l-2 border-solid border-slate-200'} dark:hover:bg-orange-400`}
                                 />
                             ))
                         }

@@ -17,6 +17,8 @@ export default {
         '3xl': '2000px',
       },
       colors: {
+        bkgHex: 'var(--color-bkg-hex)',
+        colorHex: 'var(--color-content-hex)',
         bkg: 'rgb(var(--color-bkg) / <alpha-value>)',
         content: 'rgb(var(--color-content) / <alpha-value>)',
         accent: {
