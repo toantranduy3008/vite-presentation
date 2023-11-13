@@ -46,7 +46,7 @@ const Inquiry = () => {
             })
     }
     return (
-        <div className="relative flex flex-col min-h-screen w-full items-center ">
+        <div className="relative flex flex-col min-h-screen w-full items-center bg-bkg text-content">
             <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
             <div className="flex h-14 max-h-24 w-full max-w-md bg-white items-center rounded-md p-2 gap-2 shadow-md xs:shadow-none lg:shadow-md xs:p-1 lg:p-2 transition duration-300 hover:shadow-xl">
                 <DatePickerInput
@@ -83,6 +83,9 @@ const Inquiry = () => {
                 >
                     <IconSearch stroke={1.5} />
                 </ActionIcon>
+            </div>
+            <div >
+                <p>ok</p>
             </div>
         </div>
     )

@@ -14,7 +14,7 @@ const NavBar = ({ toggle }) => {
                         label={item.label}
                         leftSection={item.icon}
                         stroke={1.5}
-                        className={`font-semibold ${pathname.includes(item.href) ? 'text-sky-500' : 'text-slate-700'}`}
+                        className={`font-semibold ${pathname.includes(item.href) ? 'text-sky-500 border-l-2 border-solid border-indigo-400' : 'text-slate-700'}`}
                         component={RouterLink}
                         to={item.href}
                         onClick={toggle}

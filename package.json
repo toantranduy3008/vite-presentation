@@ -15,6 +15,7 @@
     "@mantine/hooks": "^7.2.1",
     "@mantine/notifications": "^7.2.1",
     "@tabler/icons-react": "^2.40.0",
+    "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@vitejs/plugin-basic-ssl": "^1.0.1",
     "axios": "^1.6.1",
     "dayjs": "^1.11.10",
