@@ -22,7 +22,7 @@ const Inquiry = () => {
             f13: `${monthS}${dateS}`
         }
 
-        axios.post('/1st/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
+        axios.post('/2nd/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
             .then(res => {
                 setData(res.data.payload)
                 if (res.data.payload.length === 0) {
@@ -57,7 +57,7 @@ const Inquiry = () => {
             f63: refCode.trim()
         }
 
-        axios.post('/1st/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
+        axios.post('/2nd/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
             .then(res => {
                 setData(res.data.payload)
                 if (res.data.payload.length === 0) {
@@ -100,7 +100,7 @@ const Inquiry = () => {
                 />
                 <Divider variant="dashed" orientation="vertical" />
                 <TextInput
-                    placeholder="Mã giao dịch"
+                    placeholder="Số tham chiếu (Ref ID)"
                     value={refCode}
                     onChange={handleChangeRefCode}
                     size="sm"

@@ -34,7 +34,7 @@ const Header = () => {
         }
         else {
             localStorage.setItem('theme', mode)
-            setLogoUrl('./napas-logo-white.png')
+            setLogoUrl(mode === 'light' ? './napas-logo-white.png' : './napas-logo.svg')
         }
     }
 

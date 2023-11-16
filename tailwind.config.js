@@ -17,14 +17,11 @@ export default {
         '3xl': '2000px',
       },
       colors: {
-        bkgHex: 'var(--color-bkg-hex)',
-        colorHex: 'var(--color-content-hex)',
-        bkg: 'rgb(var(--color-bkg) / <alpha-value>)',
-        content: 'rgb(var(--color-content) / <alpha-value>)',
-        accent: {
-          1: 'hsl(var(--color-accent1) / <alpha-value>)',
-          2: 'hsl(var(--color-accent2) / <alpha-value>)'
-        }
+        content: 'var(--color-content)',
+        myGradientFrom: 'var(--navbar-color-gradient-from)',
+        myGradientTo: 'var(--navbar-color-gradient-to)',
+        navbarHoverBgColor: 'var(--navbar-hover-bg-color)',
+        navbarHoverTextColor: 'var(--navbar-hover-text-color)'
       }
     },
   },
