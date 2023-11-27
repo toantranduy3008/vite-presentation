@@ -1,4 +1,4 @@
-import { IconHome2, IconSearch, IconSettings } from '@tabler/icons-react'
+import { IconHome2, IconQrcode, IconSearch, IconSettings } from '@tabler/icons-react'
 
 export const MenuList = [
     {
@@ -14,7 +14,7 @@ export const MenuList = [
     {
         label: 'Menu',
         href: '/bankdemo/menu',
-        icon: <IconSettings size={16} />,
+        // icon: <IconSettings size={16} />,
         subMenu: [
             {
                 label: 'Submenu 1',
@@ -32,5 +32,36 @@ export const MenuList = [
         label: 'Tra cứu giao dịch',
         href: '/bankdemo/inquiry',
         icon: <IconSearch size={16} />
+    },
+    {
+        label: 'IBFT',
+        href: '/bankdemo/ibft',
+        subMenu: [
+            {
+                label: 'Tra cứu',
+                href: '/inquiry',
+                icon: <IconSettings size={16} />
+            },
+            {
+                label: 'Vấn tin',
+                href: '/submenu2',
+                icon: <IconSettings size={16} />
+            },
+            {
+                label: 'Chuyển khoản',
+                href: '/submenu2',
+                icon: <IconSettings size={16} />
+            },
+            {
+                label: 'Giao dịch số tiền lớn',
+                href: '/submenu2',
+                icon: <IconSettings size={16} />
+            },
+            {
+                label: 'Dịch vụ QR',
+                href: '/qr-code',
+                icon: <IconQrcode size={16} />
+            }
+        ]
     },
 ]

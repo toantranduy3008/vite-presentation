@@ -45,11 +45,11 @@ const Header = () => {
     return (
         <div className="flex flex-row w-full h-full justify-between items-center p-2">
             <div className="flex basis-1/6 h-full justify-start items-center">
-                <img src={logoUrl} className=" w-auto xs:w-24 h-12 xs:h-auto align-middle border-none " />
+                <img src={'./napas-logo.svg'} className=" w-auto xs:w-24 h-12 xs:h-auto align-middle border-none " />
             </div>
 
             <div className="flex flex-grow h-full xs:hidden md:flex justify-center items-center">
-                <p className="text-lg text-center font-bold md:text-xl uppercase text-indigo-700 dark:text-sky-500">Ngân Hàng Vinabank - Napas</p>
+                <p className="text-lg text-center font-bold md:text-xl uppercase text-indigo-700 dark:text-sky-500">Hệ thống mô phỏng giao dịch</p>
             </div>
 
             <div className="flex basis-1/6 h-full justify-end items-center gap-2">

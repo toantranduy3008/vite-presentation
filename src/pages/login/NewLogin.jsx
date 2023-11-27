@@ -57,7 +57,7 @@ const NewLogin = () => {
                 <div className="relative flex flex-col bg-white/50 w-96 h-96 max-h-full px-10 py-15 gap-2 rounded-md items-center justify-center overflow-y-auto">
                     <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
                     <img src="/napas-logo.svg" className="h-10" />
-                    <p className="flex w-full text-white text-xl font-bold uppercase justify-center items-center text-center m-0 p-0">Hệ thống mô phỏng <br /> giao dịch</p>
+                    <p className="flex w-full text-white text-xl font-bold uppercase justify-center items-center text-center m-0 p-0">simulator system</p>
                     <input
                         type="text"
                         name="username"
@@ -78,7 +78,7 @@ const NewLogin = () => {
                         autoComplete="off"
                         className="w-full px-2 py-2 border-none outline-none rounded placeholder:italic"
                         ref={passRef} />
-                    {errorMsg && errorMsg.length > 0 && <p className="w-full m-0 p-0 text-red-900 justify-center items-center text-left">* {errorMsg}</p>}
+                    {errorMsg && errorMsg.length > 0 && <p className="flex w-full m-0 p-0 text-red-900 justify-start items-center ">* {errorMsg}</p>}
                     <button
                         type="button"
                         className="w-full px-1 py-2 border-none outline-none rounded bg-indigo-500 text-white hover:bg-indigo-800/80 hover:cursor-pointer"

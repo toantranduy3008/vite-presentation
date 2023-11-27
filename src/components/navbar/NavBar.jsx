@@ -2,6 +2,7 @@
 import { NavLink } from '@mantine/core';
 import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 import { MenuList } from './MenuList'
+import { IconFolder } from '@tabler/icons-react';
 
 const NavBar = ({ toggle }) => {
     const { pathname } = useLocation()
@@ -12,7 +13,7 @@ const NavBar = ({ toggle }) => {
                     <NavLink
                         key={item.label}
                         label={item.label}
-                        leftSection={item.icon}
+                        leftSection={item.icon ? item.icon : <IconFolder size={16} />}
                         stroke={1.5}
                         className={`font-semibold ${pathname.includes(item.href) ? 'text-sky-500 border-l-2 border-solid border-indigo-400' : ''} hover:bg-navbarHoverBgColor hover:text-navbarHoverTextColor`}
                         component={RouterLink}
