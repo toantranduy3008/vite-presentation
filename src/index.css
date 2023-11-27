@@ -33,4 +33,23 @@
     body {
         @apply font-sans;
     }
+
+}
+
+@layer components {
+    .login-page {
+        /* position: fixed;
+        width: 100%;
+        height: 100%;
+        background-image: url('/napas-bg-blue.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        filter: blur(10px); */
+        @apply before:fixed before:w-screen before:h-screen before:bg-[url('/napas-bg-blue.jpg')] before:bg-center before:bg-no-repeat before:bg-fixed before:bg-cover before:blur-sm before:-z-10
+    }
+
+    .test {
+        /* @apply bg-indigo-400 */
+    }
 }

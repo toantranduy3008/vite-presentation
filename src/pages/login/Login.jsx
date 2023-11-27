@@ -41,7 +41,7 @@ const Login = () => {
         }
 
         setLoading(true)
-        axios.post('/2nd/bankdemo/api/auth/signin', {
+        axios.post('/1st/bankdemo/api/auth/signin', {
             username: username,
             password: password
         })

@@ -17,12 +17,13 @@ import Settings from './pages/settings/Settings';
 import SubMenu from './pages/submenu/SubMenu';
 import SubMenu2 from './pages/submenu2/SubMenu2';
 import Inquiry from './pages/inquiry/Inquiry';
+import NewLogin from './pages/login/NewLogin';
 function App() {
   return (
     <MantineProvider>
       <Notifications />
       <Routes>
-        <Route path='/bankdemo/login' element={<Login />} />
+        <Route path='/bankdemo/login' element={<NewLogin />} />
         <Route element={<ProtectedRoute><RootLayout /></ProtectedRoute>}>
           <Route path='/bankdemo/' element={<Home />} />
           <Route path='/bankdemo/home' element={<Home />} />

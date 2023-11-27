@@ -22,7 +22,7 @@ const Inquiry = () => {
             f13: `${monthS}${dateS}`
         }
 
-        axios.post('/2nd/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
+        axios.post('/1st/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
             .then(res => {
                 setData(res.data.payload)
                 if (res.data.payload.length === 0) {
@@ -57,7 +57,7 @@ const Inquiry = () => {
             f63: refCode.trim()
         }
 
-        axios.post('/2nd/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
+        axios.post('/1st/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
             .then(res => {
                 setData(res.data.payload)
                 if (res.data.payload.length === 0) {
@@ -81,8 +81,7 @@ const Inquiry = () => {
                 className="flex h-14 max-h-24 w-full max-w-md border border-solid border-slate-300 bg-white items-center rounded-md p-2 gap-2 shadow-md xs:shadow-none lg:shadow-md xs:p-1 lg:p-2 ring-0
                 hover:shadow-xl
                 hover:ring-offset-2
-                hover:ring-indigo-400
-                dark:hover:ring-sky-400
+                hover:ring-indigo-700
                 hover:ring-2
                 transition duration-300"
             >
@@ -91,7 +90,6 @@ const Inquiry = () => {
                     value={date}
                     onChange={handleChangeDate}
                     size="sm"
-                    fullWidth
                     classNames={{
                         input: classes.input,
                         wrapper: classes.wrapper,
@@ -139,9 +137,7 @@ const Inquiry = () => {
                     </Accordion.Item>
                     {data.map((item, index) => (
                         <Accordion.Item value={item.trace_no} className="flex flex-col w-full dark:bg-slate-500" key={item.trace_no}>
-                            <Accordion.Control
-                            // icon={item.respcode === '00' ? <IconStarFilled className=" text-green-500" /> : item.respcode === '68' ? <IconStarFilled className=" text-yellow-500" /> : <IconStarFilled className=" text-red-500" />}
-                            >
+                            <Accordion.Control>
                                 <div className="flex flex-row w-full gap-2 text-sm">
                                     <p className="flex shrink w-10 xs:hidden lg:flex justify-start items-center">{`${data.length > 1 ? index + 1 : '1'}`}</p>
                                     <p className="flex flex-1 justify-start items-center">{item.ref_code}</p>
