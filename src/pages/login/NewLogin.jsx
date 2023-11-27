@@ -52,7 +52,7 @@ const NewLogin = () => {
             .finally(() => setLoading(false))
     }
     return (
-        <div className="w-screen h-screen bg-slate-900/80 bg-[url('/napas-bg-blue.jpg')] bg-fixed bg-left bg-cover bg-no-repeat">
+        <div className="w-screen h-screen bg-slate-900/80 bg-[url('/napas-bg-blue.jpg')] bg-fixed bg-center bg-cover bg-no-repeat">
             <div className="flex w-full h-full backdrop-blur-sm justify-center items-center">
                 <div className="relative flex flex-col bg-white/50 w-96 h-96 max-h-full px-10 py-15 gap-2 rounded-md items-center justify-center overflow-y-auto">
                     <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
