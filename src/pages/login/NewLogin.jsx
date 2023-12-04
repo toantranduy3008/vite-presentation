@@ -56,7 +56,7 @@ const NewLogin = () => {
             <div className="flex w-full h-full backdrop-blur-sm justify-center items-center">
                 <div className="relative flex flex-col bg-white/50 w-96 h-96 max-h-full px-10 py-15 gap-2 rounded-md items-center justify-center overflow-y-auto">
                     <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-                    <img src="/napas-logo.svg" className="h-10" />
+                    <img src="/bankdemo/napas-logo.svg" className="h-10" />
                     <p className="flex w-full text-white text-xl font-bold uppercase justify-center items-center text-center m-0 p-0">simulator system</p>
                     <input
                         type="text"

@@ -11,23 +11,22 @@ export const MenuList = [
         href: '/bankdemo/settings',
         icon: <IconSettings size={16} />
     },
-    {
-        label: 'Menu',
-        href: '/bankdemo/menu',
-        // icon: <IconSettings size={16} />,
-        subMenu: [
-            {
-                label: 'Submenu 1',
-                href: '/submenu',
-                icon: <IconSettings size={16} />
-            },
-            {
-                label: 'Submenu 2',
-                href: '/submenu2',
-                icon: <IconSettings size={16} />
-            }
-        ]
-    },
+    // {
+    //     label: 'Menu',
+    //     href: '/bankdemo/menu',
+    //     subMenu: [
+    //         {
+    //             label: 'Submenu 1',
+    //             href: '/submenu',
+    //             icon: <IconSettings size={16} />
+    //         },
+    //         {
+    //             label: 'Submenu 2',
+    //             href: '/submenu2',
+    //             icon: <IconSettings size={16} />
+    //         }
+    //     ]
+    // },
     {
         label: 'Tra cứu giao dịch',
         href: '/bankdemo/inquiry',
@@ -38,23 +37,18 @@ export const MenuList = [
         href: '/bankdemo/ibft',
         subMenu: [
             {
-                label: 'Tra cứu',
+                label: 'Truy vấn',
                 href: '/inquiry',
                 icon: <IconSettings size={16} />
             },
             {
-                label: 'Vấn tin',
-                href: '/submenu2',
-                icon: <IconSettings size={16} />
-            },
-            {
                 label: 'Chuyển khoản',
-                href: '/submenu2',
+                href: '/transfer',
                 icon: <IconSettings size={16} />
             },
             {
                 label: 'Giao dịch số tiền lớn',
-                href: '/submenu2',
+                href: '/batch-transfer',
                 icon: <IconSettings size={16} />
             },
             {

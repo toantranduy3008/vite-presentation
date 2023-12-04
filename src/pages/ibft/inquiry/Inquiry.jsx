@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import classes from './Inquiry.module.css'
 import { IconDiscountCheck, IconSearch } from "@tabler/icons-react";
 import dayjs from "dayjs"
-import { authHeader } from "../../services/AuthServices";
-import NotificationServices from "../../services/notificationServices/NotificationServices";
+import { authHeader } from "../../../services/AuthServices";
+import NotificationServices from "../../../services/notificationServices/NotificationServices";
 import axios from "axios"
-import { setBadge, numberWithCommas } from "../../services/Utilities";
+import { setBadge, numberWithCommas } from "../../../services/Utilities";
 const Inquiry = () => {
     const [date, setDate] = useState(new Date());
     const [refCode, setRefCode] = useState('')

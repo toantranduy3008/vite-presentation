@@ -14,13 +14,11 @@ const Header = () => {
     const navigate = useNavigate()
     const darkSystem = window.matchMedia('(prefers-color-scheme: dark)').matches
     const [theme, setTheme] = useState(getTheme())
-    const [logoUrl, setLogoUrl] = useState('./napas-logo.svg')
     useEffect(() => {
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => e.matches && setTheme('dark'));
         window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => e.matches && setTheme('light'));
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark')
-            setLogoUrl('./napas-logo-white.png')
         } else {
             document.documentElement.classList.remove('dark')
         }
@@ -34,7 +32,6 @@ const Header = () => {
         }
         else {
             localStorage.setItem('theme', mode)
-            setLogoUrl(mode === 'light' ? './napas-logo-white.png' : './napas-logo.svg')
         }
     }
 
@@ -45,12 +42,12 @@ const Header = () => {
     return (
         <div className="flex flex-row w-full h-full justify-between items-center p-2">
             <div className="flex basis-1/6 h-full justify-start items-center">
-                <img src={'./napas-logo.svg'} className=" w-auto xs:w-24 h-12 xs:h-auto align-middle border-none " />
+                <img src='/bankdemo/napas-logo.svg' className=" w-auto xs:w-24 h-12 xs:h-auto align-middle border-none " />
             </div>
 
-            <div className="flex flex-grow h-full xs:hidden md:flex justify-center items-center">
+            {/* <div className="flex flex-grow h-full xs:hidden md:flex justify-center items-center">
                 <p className="text-lg text-center font-bold md:text-xl uppercase text-indigo-700 dark:text-sky-500">Hệ thống mô phỏng giao dịch</p>
-            </div>
+            </div> */}
 
             <div className="flex basis-1/6 h-full justify-end items-center gap-2">
 
