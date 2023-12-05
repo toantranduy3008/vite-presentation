@@ -4,10 +4,9 @@ import { Button, NumberInput, Select, TextInput, Tooltip } from "@mantine/core"
 import { ibftChannel, destinationType, fromAcc } from "../ibftConfig"
 import classes from './Transfer.module.css'
 import { IconCirclePlus, IconTrash } from "@tabler/icons-react"
-import { fetchBankList, generateUID } from "../../../services/Utilities"
-import axios from "axios"
-import { authHeader } from "../../../services/AuthServices"
+import { fetchBankList, formatVietnamese, generateUID, validateInValidAmount, validateInvalidAccount } from "../../../services/Utilities"
 import NotificationServices from "../../../services/notificationServices/NotificationServices"
+import InquiryModal from "./InquiryModal"
 const Transfer = () => {
     const [transactionChannelId, setTransactionChannelId] = useState(ibftChannel[0].value)
     const [destinationTypeId, setDestinationTypeId] = useState(destinationType[0].value)
@@ -16,6 +15,146 @@ const Transfer = () => {
     const [listToBank, setListToBank] = useState([{ value: '970406', label: 'TH Bank' }])
     const [toBankId, setToBankId] = useState(listToBank[0].value)
     const [fromAccount, setFromAccount] = useState(fromAcc[0].items[0].value)
+    const [content, setContent] = useState('')
+    const [showInquiryModal, setShowInquiryModal] = useState(true)
+    const [inquiryData, setInquiryData] = useState({
+        f60: "MB" / "QR",
+        tranType: "00" / "20",
+        fromAccount: "9704aaaaa" / "",
+        content: "nội dung chuyển khoản",
+        f32: "970405",
+        f100: "970406",
+        toBankList: [
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+            {
+                f103: "6666688886",
+                f4: 100000,
+                f120: "NGUYEN VAN A DA CHUYEN TIEN",
+                f63: "ref code",
+                f39: "76",
+                f11: "1234556"
+            },
+        ]
+    })
     const [listTransaction, setListTransaction] = useState([
         {
             hash: generateUID(),
@@ -26,52 +165,9 @@ const Transfer = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            // const [fetchFromBankList, fetchToBankList] = await Promise.allSettled([
-            //     axios.get('/1st/bankdemo/api/payment/getListFromBank', { headers: authHeader() }),
-            //     axios.get('/1st/bankdemo/api/payment/getListBank', { headers: authHeader() }),
-            // ])
-
-            // if (fetchFromBankList.status === 'rejected') {
-            //     NotificationServices.error('Không lấy được danh sách ngân hàng phát lệnh');
-            //     return;
-            // }
-
-            // if (fetchToBankList.status === 'rejected') {
-            //     NotificationServices.error('Không lấy được danh sách ngân hàng nhận lệnh');
-            //     return;
-            // }
-
-            // const listFromBank = fetchFromBankList.value.data.listBank.map(item => {
-            //     return {
-            //         value: item.id,
-            //         label: item.name
-            //     }
-            // })
-
-            // const listToBank = fetchToBankList.value.data.listBank.map(item => {
-            //     return {
-            //         value: item.id,
-            //         label: item.name
-            //     }
-            // })
-
-            const [fetchFromBankList, fetchToBankList] = await fetchBankList()
-            const listFromBank = fetchFromBankList.value.data.listBank.map(item => {
-                return {
-                    value: item.id,
-                    label: item.name
-                }
-            })
-
-            const listToBank = fetchToBankList.value.data.listBank.map(item => {
-                return {
-                    value: item.id,
-                    label: item.name
-                }
-            })
-
-            setListFromBank(listFromBank)
-            setListToBank(listToBank)
+            const [acquirer, issuer] = await fetchBankList()
+            setListFromBank(acquirer)
+            setListToBank(issuer)
         }
 
         fetchData().catch((error) => console.log(error))
@@ -95,6 +191,11 @@ const Transfer = () => {
 
     const handleChangeFromAcc = value => {
         setFromAccount(value)
+    }
+
+    const handleChangeContent = e => {
+        const content = formatVietnamese(e.target.value)
+        setContent(content)
     }
 
     const handleAddTransaction = () => {
@@ -132,6 +233,24 @@ const Transfer = () => {
 
     const handleProcessTransaction = () => {
         console.log(listTransaction)
+        const invalidAmount = listTransaction.some(item => validateInValidAmount(item.amount))
+        if (invalidAmount) {
+            NotificationServices.warning('Số tiền phải lớn hơn 2,000 và nhỏ hơn 500,000,000.')
+            return
+        }
+
+        const invalidAccount = listTransaction.some(item => !validateInvalidAccount(item.toAccount))
+        if (invalidAccount) {
+            NotificationServices.warning('Số tài khoản/ Số thẻ không hợp lệ.')
+            return
+        }
+
+        if (content.length > 210) {
+            NotificationServices.warning('Nội dung chuyển khoản dài tối đa 210 ký tự.')
+            return;
+        }
+
+        setShowInquiryModal(!showInquiryModal)
     }
     return (
         <div className="flex flex-col gap-2">
@@ -189,6 +308,13 @@ const Transfer = () => {
                         nothingFoundMessage="Không tìm thấy ..."
                         className="w-1/2 md:w-full"
                         onChange={handleChangeFromAcc}
+                    />
+
+                    <TextInput
+                        label="Nội dung"
+                        placeholder="Nội dung chuyển khoản"
+                        value={content}
+                        onChange={handleChangeContent}
                     />
                 </section>
             </div>
@@ -251,6 +377,7 @@ const Transfer = () => {
                     </div>
                 </div>
             </div>
+            <InquiryModal data={inquiryData} opened={showInquiryModal} onClose={setShowInquiryModal} />
         </div>
     )
 }

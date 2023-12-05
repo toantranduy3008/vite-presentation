@@ -45,14 +45,14 @@ const removeVietnameseTones = (str) => {
     return str;
 }
 
-export const setBadge = (status) => {
+export const setBadge = (status, displayLabel = true) => {
     return (
         <Badge
             size="md"
             color={status === '00' ? 'green' : status === '68' ? 'yellow' : 'red'}
             className="text-[10px]"
         >
-            {status} - {status === '00' ? 'Thành công' : status === '68' ? 'Đang xử lý' : 'Thất bại'}
+            {status} {displayLabel && (status === '00' ? '-Thành công' : status === '68' ? '-Đang xử lý' : '-Thất bại')}
         </Badge>
     )
 }
@@ -62,24 +62,9 @@ export const validateInValidAmount = amount => {
     return (amount <= 2000 || amount >= 500000000)
 }
 
-// export const GetMedia = () => {
-//     const matchXs = useMediaQuery('(min-width: 300px)')
-//     const matchSm = useMediaQuery('(min-width: 640px)')
-//     const matchMd = useMediaQuery('(min-width: 768px)')
-//     const matchLg = useMediaQuery('(min-width: 1024px)')
-//     const matchXl = useMediaQuery('(min-width: 1280px)')
-//     const match2Xl = useMediaQuery('(min-width: 1536px)')
-//     const match3Xl = useMediaQuery('(min-width: 2000px)')
-//     //let media = match3Xl ? '3xl' ? match2Xl ? '2xl' 
-//     if (match3Xl) return '3xl'
-//     if (match2Xl) return '2xl'
-//     if (matchXl) return 'xl'
-//     if (matchLg) return 'lg'
-//     if (matchMd) return 'md'
-//     if (matchSm) return 'sm'
-//     //if (matchXs) return 'xs'
-//     return 'xs'
-// }
+export const validateInvalidAccount = acc => {
+    return (acc && typeof (acc) !== 'undefined' && acc.trim().length > 0)
+}
 
 export const generateUID = () => {
     let id = "id" + Math.random().toString(16).slice(2);
@@ -87,20 +72,53 @@ export const generateUID = () => {
 }
 
 export const fetchBankList = async () => {
-    const [fetchFromBankList, fetchToBankList] = await Promise.allSettled([
-        axios.get('/1st/bankdemo/api/payment/getListFromBank', { headers: authHeader() }),
-        axios.get('/1st/bankdemo/api/payment/getListBank', { headers: authHeader() }),
-    ])
+    let acquirer = localStorage.getItem('acquirer')
+    let issuer = localStorage.getItem('issuer')
+    if (
+        acquirer &&
+        typeof (acquirer) === 'string' &&
+        Array.isArray(JSON.parse(acquirer)) &&
+        JSON.parse(acquirer).length > 0 &&
+        issuer &&
+        typeof (issuer) === 'string' &&
+        Array.isArray(JSON.parse(issuer)) &&
+        JSON.parse(issuer).length > 0
+    ) {
+        return [JSON.parse(acquirer), JSON.parse(issuer)]
+    } else {
+        const [fetchFromBankList, fetchToBankList] = await Promise.allSettled([
+            axios.get('/1st/bankdemo/api/payment/getListFromBank', { headers: authHeader() }),
+            axios.get('/1st/bankdemo/api/payment/getListBank', { headers: authHeader() }),
+        ])
 
-    if (fetchFromBankList.status === 'rejected') {
-        NotificationServices.error('Không lấy được danh sách ngân hàng phát lệnh');
-        return;
+        if (fetchFromBankList.status === 'rejected') {
+            NotificationServices.error('Không lấy được danh sách ngân hàng phát lệnh');
+            return;
+        }
+
+        if (fetchToBankList.status === 'rejected') {
+            NotificationServices.error('Không lấy được danh sách ngân hàng nhận lệnh');
+            return;
+        }
+
+        acquirer = fetchFromBankList.value.data.listBank.map(item => {
+            return {
+                value: item.id,
+                label: item.name
+            }
+        })
+
+        issuer = fetchToBankList.value.data.listBank.map(item => {
+            return {
+                value: item.id,
+                label: item.name
+            }
+        })
+
+        localStorage.setItem('acquirer', JSON.stringify(acquirer))
+        localStorage.setItem('issuer', JSON.stringify(issuer))
+
+        return [acquirer, issuer]
     }
 
-    if (fetchToBankList.status === 'rejected') {
-        NotificationServices.error('Không lấy được danh sách ngân hàng nhận lệnh');
-        return;
-    }
-
-    return [fetchFromBankList, fetchToBankList]
 }

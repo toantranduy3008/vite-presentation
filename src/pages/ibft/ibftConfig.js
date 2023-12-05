@@ -1,7 +1,7 @@
 export const ibftChannel = [
     {
         label: 'Internet Banking/ Mobile Banking',
-        value: 'IB'
+        value: 'MB'
     },
     {
         label: 'QR Code',
@@ -12,11 +12,11 @@ export const ibftChannel = [
 export const destinationType = [
     {
         label: 'Tới thẻ',
-        value: 'TO_CARD'
+        value: '00'
     },
     {
         label: 'Tới tài khoản',
-        value: 'TO_ACC'
+        value: '20'
     }
 ]
 
