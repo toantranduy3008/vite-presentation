@@ -1,5 +1,7 @@
-import { Badge } from "@mantine/core"
-import { useMediaQuery } from "@mantine/hooks";
+import { Badge } from "@mantine/core";
+import { authHeader } from "./AuthServices";
+import NotificationServices from "./notificationServices/NotificationServices";
+import axios from "axios";
 export const getTheme = () => {
     return localStorage.theme ? localStorage.theme : 'auto'
 }
@@ -60,21 +62,45 @@ export const validateInValidAmount = amount => {
     return (amount <= 2000 || amount >= 500000000)
 }
 
-export const GetMedia = () => {
-    const matchXs = useMediaQuery('(min-width: 300px)')
-    const matchSm = useMediaQuery('(min-width: 640px)')
-    const matchMd = useMediaQuery('(min-width: 768px)')
-    const matchLg = useMediaQuery('(min-width: 1024px)')
-    const matchXl = useMediaQuery('(min-width: 1280px)')
-    const match2Xl = useMediaQuery('(min-width: 1536px)')
-    const match3Xl = useMediaQuery('(min-width: 2000px)')
-    //let media = match3Xl ? '3xl' ? match2Xl ? '2xl' 
-    if (match3Xl) return '3xl'
-    if (match2Xl) return '2xl'
-    if (matchXl) return 'xl'
-    if (matchLg) return 'lg'
-    if (matchMd) return 'md'
-    if (matchSm) return 'sm'
-    //if (matchXs) return 'xs'
-    return 'xs'
+// export const GetMedia = () => {
+//     const matchXs = useMediaQuery('(min-width: 300px)')
+//     const matchSm = useMediaQuery('(min-width: 640px)')
+//     const matchMd = useMediaQuery('(min-width: 768px)')
+//     const matchLg = useMediaQuery('(min-width: 1024px)')
+//     const matchXl = useMediaQuery('(min-width: 1280px)')
+//     const match2Xl = useMediaQuery('(min-width: 1536px)')
+//     const match3Xl = useMediaQuery('(min-width: 2000px)')
+//     //let media = match3Xl ? '3xl' ? match2Xl ? '2xl' 
+//     if (match3Xl) return '3xl'
+//     if (match2Xl) return '2xl'
+//     if (matchXl) return 'xl'
+//     if (matchLg) return 'lg'
+//     if (matchMd) return 'md'
+//     if (matchSm) return 'sm'
+//     //if (matchXs) return 'xs'
+//     return 'xs'
+// }
+
+export const generateUID = () => {
+    let id = "id" + Math.random().toString(16).slice(2);
+    return id;
+}
+
+export const fetchBankList = async () => {
+    const [fetchFromBankList, fetchToBankList] = await Promise.allSettled([
+        axios.get('/1st/bankdemo/api/payment/getListFromBank', { headers: authHeader() }),
+        axios.get('/1st/bankdemo/api/payment/getListBank', { headers: authHeader() }),
+    ])
+
+    if (fetchFromBankList.status === 'rejected') {
+        NotificationServices.error('Không lấy được danh sách ngân hàng phát lệnh');
+        return;
+    }
+
+    if (fetchToBankList.status === 'rejected') {
+        NotificationServices.error('Không lấy được danh sách ngân hàng nhận lệnh');
+        return;
+    }
+
+    return [fetchFromBankList, fetchToBankList]
 }

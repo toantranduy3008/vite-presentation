@@ -1,0 +1,19 @@
+.wrapper {
+    width: 100%;
+}
+
+.input {
+    text-align: right;
+    font-size: medium;
+}
+
+.numberLabel {
+    width: 30%;
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+}
+
+.track {
+    cursor: pointer;
+}

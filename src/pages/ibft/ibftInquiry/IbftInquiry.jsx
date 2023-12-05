@@ -1,12 +1,12 @@
 
 import { Button, ScrollArea, Select, TextInput } from '@mantine/core';
-import { getWithPaging } from '../../../services/DataServices';
+// import { getWithPaging } from '../../../services/DataServices';
 
 import classes from './IbftInquiry.module.css'
 const IbftInquiry = () => {
-    const handleSearch = () => {
-        getWithPaging()
-    }
+    // const handleSearch = () => {
+    //     getWithPaging()
+    // }
     return (
         <>
             <div className='flex flex-col md:flex-row gap-2 justify-center items-end px-2 py-1 border border-solid border-indigo-400'>
