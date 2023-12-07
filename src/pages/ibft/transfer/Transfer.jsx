@@ -1,12 +1,14 @@
 // import React from 'react'
 import { useEffect, useState } from "react"
-import { Button, NumberInput, Select, TextInput, Tooltip } from "@mantine/core"
+import { Button, LoadingOverlay, NumberInput, Select, Switch, TextInput, Tooltip } from "@mantine/core"
 import { ibftChannel, destinationType, fromAcc } from "../ibftConfig"
 import classes from './Transfer.module.css'
 import { IconCirclePlus, IconTrash } from "@tabler/icons-react"
 import { fetchBankList, formatVietnamese, generateUID, validateInValidAmount, validateInvalidAccount } from "../../../services/Utilities"
 import NotificationServices from "../../../services/notificationServices/NotificationServices"
-import InquiryModal from "./InquiryModal"
+import TransactionModal from "./TransactionModal"
+import { authHeader } from "../../../services/AuthServices"
+import axios from "axios"
 const Transfer = () => {
     const [transactionChannelId, setTransactionChannelId] = useState(ibftChannel[0].value)
     const [destinationTypeId, setDestinationTypeId] = useState(destinationType[0].value)
@@ -16,145 +18,34 @@ const Transfer = () => {
     const [toBankId, setToBankId] = useState(listToBank[0].value)
     const [fromAccount, setFromAccount] = useState(fromAcc[0].items[0].value)
     const [content, setContent] = useState('')
-    const [showInquiryModal, setShowInquiryModal] = useState(true)
-    const [inquiryData, setInquiryData] = useState({
-        f60: "MB" / "QR",
-        tranType: "00" / "20",
-        fromAccount: "9704aaaaa" / "",
-        content: "nội dung chuyển khoản",
-        f32: "970405",
-        f100: "970406",
-        toBankList: [
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
+    const [showInquiryModal, setShowInquiryModal] = useState(false)
+    const [loadingInquiry, setLoadingInquiry] = useState(false)
+    const [abortInquiry, setAbortInquiry] = useState(true)
+    const [responseModel, setResponseModel] = useState({
+        f60: transactionChannelId,
+        tranType: destinationTypeId,
+        fromAccount: fromAccount,
+        f32: fromBankId,
+        f100: toBankId,
+        f104: content,
+        toBankList: [{
+            f4: '',
+            f63: '',
+            f103: '',
+            f120: '',
+            inquiryResult: {
+                f11: '',
+                f39: '',
+                f63: ''
             },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-            {
-                f103: "6666688886",
-                f4: 100000,
-                f120: "NGUYEN VAN A DA CHUYEN TIEN",
-                f63: "ref code",
-                f39: "76",
-                f11: "1234556"
-            },
-        ]
+            transferResult: {
+                f11: '',
+                f39: '',
+                f63: ''
+            }
+        }]
     })
+
     const [listTransaction, setListTransaction] = useState([
         {
             hash: generateUID(),
@@ -206,6 +97,16 @@ const Transfer = () => {
         }])
     }
 
+    const handleResetTransaction = () => {
+        setListTransaction([
+            {
+                hash: generateUID(),
+                toAccount: '',
+                amount: 0
+            }
+        ])
+    }
+
     const handleRemoveTransaction = (e, index, hash) => {
         if (listTransaction.length <= 1) {
             NotificationServices.warning('Phải có ít nhất 1 giao dịch')
@@ -231,29 +132,143 @@ const Transfer = () => {
         }
     }
 
-    const handleProcessTransaction = () => {
-        console.log(listTransaction)
+    const validateRequest = () => {
         const invalidAmount = listTransaction.some(item => validateInValidAmount(item.amount))
         if (invalidAmount) {
             NotificationServices.warning('Số tiền phải lớn hơn 2,000 và nhỏ hơn 500,000,000.')
-            return
+            return false;
         }
 
         const invalidAccount = listTransaction.some(item => !validateInvalidAccount(item.toAccount))
         if (invalidAccount) {
             NotificationServices.warning('Số tài khoản/ Số thẻ không hợp lệ.')
-            return
+            return false;
         }
 
         if (content.length > 210) {
             NotificationServices.warning('Nội dung chuyển khoản dài tối đa 210 ký tự.')
-            return;
+            return false;
         }
 
-        setShowInquiryModal(!showInquiryModal)
+        return true
     }
+
+    const handleProcessTransaction = () => {
+        const valid = validateRequest()
+        if (!valid) return
+        if (abortInquiry) {
+            handleProcessTransfer()
+        }
+        else {
+            handleProcessInquiryAndTransfer()
+        }
+    }
+
+    const handleProcessTransfer = async (inquiryData = null, responseInquiryData = null, loading = false) => {
+        let request, response
+        response = request = {
+            f60: transactionChannelId,
+            tranType: destinationTypeId,
+            fromAccount: fromAccount,
+            f32: fromBankId,
+            f100: toBankId,
+            f104: content,
+            toBankList: listTransaction.map(item => {
+                return {
+                    f4: item.amount,
+                    f103: item.toAccount
+                }
+            })
+        }
+        if (inquiryData) request = inquiryData
+        if (responseInquiryData) response = responseInquiryData
+        const fetchTransferData = async () => {
+            for (let i = 0; i < request.toBankList.length; i++) {
+                const requestBody = { ...request, toBankList: request.toBankList.filter((item, index) => index === i) }
+                await axios.post('/1st/bankdemo/api/payment/fundTransferList10', requestBody, { headers: authHeader() })
+                    .then(res => {
+                        const { f11, f39, f63, f120 } = res.data[0]
+                        response.toBankList[i]['transferResult'] = {
+                            f11: f11,
+                            f39: f39,
+                            f63: f63,
+                            f120: f120
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err.response)
+                        response.toBankList[i]['transferResult'] = {
+                            f11: '',
+                            f39: '',
+                            f63: '',
+                            f120: ''
+                        }
+                    })
+            }
+        }
+        if (!loading) setLoadingInquiry(true)
+        fetchTransferData()
+            .then(() => {
+                setResponseModel(response)
+            })
+            .then(() => setShowInquiryModal(!showInquiryModal))
+            .finally(() => { setLoadingInquiry(false) })
+    }
+
+    const handleProcessInquiryAndTransfer = async () => {
+        let request, response
+        request = response = {
+            f60: transactionChannelId,
+            tranType: destinationTypeId,
+            fromAccount: fromAccount,
+            f32: fromBankId,
+            f100: toBankId,
+            f104: content,
+            toBankList: listTransaction.map(item => {
+                return {
+                    f4: item.amount,
+                    f103: item.toAccount
+                }
+            })
+        }
+        const fetchInquiryData = async () => {
+            for (let i = 0; i < request.toBankList.length; i++) {
+                const requestBody = { ...request, toBankList: request.toBankList.filter((item, index) => index === i) }
+                await axios.post('/1st/bankdemo/api/payment/fundInquiryList10', requestBody, { headers: authHeader() })
+                    .then(res => {
+                        const { f11, f39, f63, f120 } = res.data[0]
+                        request.toBankList[i].f63 = f63
+                        request.toBankList[i].f120 = f120
+                        response.toBankList[i]['inquiryResult'] = {
+                            f11: f11,
+                            f39: f39,
+                            f63: f63,
+                            f120: f120
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err.response)
+                        response.toBankList[i]['inquiryResult'] = {
+                            f11: '',
+                            f39: '',
+                            f63: '',
+                            f120: ''
+                        }
+                    })
+            }
+        }
+
+        setLoadingInquiry(true)
+        fetchInquiryData()
+            .then(() => {
+                handleProcessTransfer(request, response, true)
+            })
+            .catch((error) => console.log('error', error))
+    }
+
     return (
-        <div className="flex flex-col gap-2">
+        <div className="relative flex flex-col gap-2">
+            <LoadingOverlay visible={loadingInquiry} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
             <div className="flex flex-col md:flex-row gap-2 w-full">
                 <section className="flex flex-row md:flex-col gap-2 w-full md:w-1/3">
                     <Select
@@ -319,19 +334,28 @@ const Transfer = () => {
                 </section>
             </div>
             <div className="flex flex-col w-full md:w-1/2 gap-2">
-                <div className="flex w-full gap-2 items-center justify-between">
+                <div className="flex flex-col w-full gap-2 items-center justify-between">
                     <p className="flex w-full m-0 p-0 font-semibold uppercase">Thông tin chuyển khoản</p>
-                    <Tooltip label="Thêm giao dịch" color="#0ea5e9">
-                        <IconCirclePlus stroke={1.5} size={24} className="flex fill-green-500 text-white cursor-pointer hover:fill-green-700 hover:scale-125 transaction ease-linear duration-200" onClick={handleAddTransaction} />
-                    </Tooltip>
+                    <div className="flex w-full justify-between items-center">
+                        <Switch
+                            size="sm" onLabel="ON" offLabel="OFF"
+                            label="Bỏ qua vấn tin"
+                            checked={abortInquiry}
+                            onChange={(event) => setAbortInquiry(event.currentTarget.checked)}
+                        />
+                        <Tooltip label="Thêm giao dịch" color="#0ea5e9">
+                            <IconCirclePlus stroke={1.5} size={24} className="flex fill-green-500 text-white cursor-pointer hover:fill-green-700 hover:scale-125 transaction ease-linear duration-200" onClick={handleAddTransaction} />
+                        </Tooltip>
+                    </div>
+
                 </div>
 
                 <div className="flex flex-col w-full gap-2">
                     <div className="flex flex-row w-full gap-2">
-                        <p className="flex w-10">STT</p>
-                        <p className="flex flex-1 justify-end">Số thẻ/ Số tài khoản</p>
-                        <p className="flex flex-1 justify-end">Số tiền</p>
-                        <p className="flex  w-10 justify-end">###</p>
+                        <div className="flex w-10">STT</div>
+                        <div className="flex flex-1 justify-end text-right">Số thẻ/ Số tài khoản</div>
+                        <div className="flex flex-1 justify-end text-right">Số tiền</div>
+                        <div className="flex  w-10 justify-end">###</div>
                     </div>
                     <div className="flex flex-col gap-2 max-h-80 overflow-y-auto ">
                         {
@@ -373,11 +397,13 @@ const Transfer = () => {
                         }
                     </div>
                     <div className="flex w-full gap-2 mt-2 justify-end items-center">
-                        <Button variant="filled" onClick={handleProcessTransaction} className="hover:bg-red-600">Xác nhận</Button>
+                        <Button variant="filled" onClick={handleResetTransaction} className="hover:bg-red-600">Reset</Button>
+                        <Button variant="filled" onClick={handleProcessTransaction} className="hover:bg-teal-600">Xác nhận</Button>
+
                     </div>
                 </div>
             </div>
-            <InquiryModal data={inquiryData} opened={showInquiryModal} onClose={setShowInquiryModal} />
+            <TransactionModal data={responseModel} abortInquiry={abortInquiry} opened={showInquiryModal} onClose={setShowInquiryModal} />
         </div>
     )
 }
