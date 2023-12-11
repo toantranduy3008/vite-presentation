@@ -48,7 +48,7 @@ const Login = () => {
             .then(res => {
                 const userSession = JSON.stringify(res.data)
                 sessionStorage.setItem('userSession', userSession)
-                navigate('/bankdemo/home')
+                navigate('/bankdemo/analyst/interbank')
             })
             .catch(err => {
                 console.log(err.response.status)

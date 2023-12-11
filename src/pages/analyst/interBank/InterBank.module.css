@@ -1,0 +1,21 @@
+.wrapper {
+    width: 100%;
+    /* height: 100%; */
+}
+
+.root {
+    height: 100%;
+    width: 100%;
+}
+
+.input {
+    /* text-align: left; */
+    font-size: medium;
+    /* border-radius: 0%; */
+    height: 100%;
+    border: none;
+}
+
+.track {
+    cursor: pointer;
+}

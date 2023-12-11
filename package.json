@@ -18,10 +18,12 @@
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@vitejs/plugin-basic-ssl": "^1.0.1",
     "axios": "^1.6.1",
+    "chart.js": "^4.4.1",
     "dayjs": "^1.11.10",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.18.0",
     "sort-by": "^1.2.0"
@@ -38,6 +40,8 @@
     "postcss": "^8.4.31",
     "postcss-preset-mantine": "^1.9.1",
     "postcss-simple-vars": "^7.0.1",
+    "prettier": "^3.1.0",
+    "prettier-plugin-tailwindcss": "^0.5.9",
     "tailwindcss": "^3.3.5",
     "vite": "^4.4.5"
   }
