@@ -1,16 +1,14 @@
 // import React from 'react'
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DatePickerInput } from "@mantine/dates"
 import { Button, Select } from "@mantine/core";
 // import { fetchBankList } from "../../../services/Utilities";
-import classes from './InterBank.module.css'
-import BarChart from "../byday/BarChart";
+import classes from './AnalystByTime.module.css'
 import dayjs from "dayjs";
-// import 'dayjs/locale/vi';
-const InterBank = () => {
+import LineChart from "../byday/LineChart";
+const AnalystByTime = () => {
     const [fromDate, setFromDate] = useState(dayjs(new Date()).subtract('1', 'day'));
     const [toDate, setToDate] = useState(new Date());
-
     // const [listFromBank, setListFromBank] = useState([{ value: '970406', label: 'TH Bank' }])
     // const [fromBankId, setFromBankId] = useState(listFromBank[0].value)
     // const [listToBank, setListToBank] = useState([{ value: '970406', label: 'TH Bank' }])
@@ -31,27 +29,25 @@ const InterBank = () => {
         toDate: dayjs(toDate).format('DD/MM/YYYY'),
         viewType: "0",
         data: {
-            labels: ['ACB', 'TCB'],
+            labels: ['04/10', '05/10', '6/10', '7/10'],
             datasets: [
                 {
                     label: 'VCB',
-                    data: [1000, 2000],
+                    data: [1000, 1100, 982, 1834],
+                    borderColor: 'rgb(255, 99, 132)',
                     backgroundColor: 'rgba(255, 99, 132, 0.5)',
                 },
                 {
                     label: 'TCB',
-                    data: [2000, null],
+                    data: [2000, 1900, 1645, 1745],
+                    borderColor: 'rgb(53, 162, 235)',
                     backgroundColor: 'rgba(53, 162, 235, 0.5)',
                 },
                 {
                     label: 'BIDV',
-                    data: [3000, 5000],
-                    backgroundColor: 'rgba(100, 100, 235, 0.5)',
-                },
-                {
-                    label: 'ACB',
-                    data: [null, 4000],
-                    backgroundColor: 'rgba(53, 200, 150, 0.5)',
+                    data: [3000, 2456, 1745, 1303],
+                    borderColor: 'rgb(153, 0, 235)',
+                    backgroundColor: 'rgba(53, 162, 235, 0.5)',
                 },
             ],
         }
@@ -92,27 +88,25 @@ const InterBank = () => {
             toDate: dayjs(toDate).format('DD/MM/YYYY'),
             viewType: viewTypeId,
             data: {
-                labels: ['ACB', 'TCB'],
+                labels: ['04/10', '05/10', '6/10', '7/10'],
                 datasets: [
                     {
                         label: 'VCB',
-                        data: [1000, 2000],
+                        data: [1000, 1100, 982, 1834],
+                        borderColor: 'rgb(255, 99, 132)',
                         backgroundColor: 'rgba(255, 99, 132, 0.5)',
                     },
                     {
                         label: 'TCB',
-                        data: [2000, null],
+                        data: [2000, 1900, 1645, 1745],
+                        borderColor: 'rgb(53, 162, 235)',
                         backgroundColor: 'rgba(53, 162, 235, 0.5)',
                     },
                     {
                         label: 'BIDV',
-                        data: [3000, 5000],
-                        backgroundColor: 'rgba(100, 100, 235, 0.5)',
-                    },
-                    {
-                        label: 'ACB',
-                        data: [null, 4000],
-                        backgroundColor: 'rgba(53, 200, 150, 0.5)',
+                        data: [3000, 2456, 1745, 1303],
+                        borderColor: 'rgb(153, 0, 235)',
+                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
                     },
                 ],
             }
@@ -134,7 +128,6 @@ const InterBank = () => {
                             wrapper: classes.wrapper,
                             root: classes.root
                         }}
-                    // locale="vi"
                     />
                 </div>
                 <div className="flex flex-1 w-full">
@@ -193,13 +186,10 @@ const InterBank = () => {
                 </div>
             </section>
             <section id="chart" className="relative bg-white flex w-full h-full md:h-96 rounded-sm shadow-md hover:shadow-xl transaction duration-200">
-                <Suspense fallback={'Loading...'}>
-                    <BarChart data={barChartData} />
-                </Suspense>
-
+                <LineChart data={barChartData} />
             </section>
         </div>
     )
 }
 
-export default InterBank
+export default AnalystByTime

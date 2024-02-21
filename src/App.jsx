@@ -20,6 +20,7 @@ import BatchTransfer from './pages/ibft/batchTransfer/BatchTransfer';
 import QRCode from './pages/ibft/qrCode/QRCode';
 import IbftInquiry from './pages/ibft/ibftInquiry/IbftInquiry';
 import InterBank from './pages/analyst/interBank/InterBank';
+import AnalystByTime from './pages/analyst/bytime/AnalystByTime';
 function App() {
   return (
     <MantineProvider>
@@ -35,6 +36,7 @@ function App() {
           <Route path='/bankdemo/ibft/batch-transfer' element={<BatchTransfer />} />
           <Route path='/bankdemo/ibft/qr-code' element={<QRCode />} />
           <Route path='/bankdemo/analyst/interbank' element={<InterBank />} />
+          <Route path='/bankdemo/analyst/bytime' element={<AnalystByTime />} />
         </Route>
       </Routes>
     </MantineProvider>
