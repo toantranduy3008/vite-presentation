@@ -10,10 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mantine/core": "^7.2.1",
-    "@mantine/dates": "^7.2.1",
-    "@mantine/hooks": "^7.2.1",
-    "@mantine/notifications": "^7.2.1",
+    "@mantine/core": "^7.5.3",
+    "@mantine/dates": "^7.5.3",
+    "@mantine/hooks": "^7.5.3",
+    "@mantine/notifications": "^7.5.3",
     "@tabler/icons-react": "^2.40.0",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@vitejs/plugin-basic-ssl": "^1.0.1",

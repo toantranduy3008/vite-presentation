@@ -9,9 +9,12 @@ import {
     IconSun,
     IconDeviceDesktop
 } from '@tabler/icons-react';
-
+import { getCurrentUser } from "../../services/AuthServices";
+import { truncateString } from "../../services/Utilities";
 const Header = () => {
     const navigate = useNavigate()
+    const { username, fullName } = getCurrentUser()
+    console.log('fullname', getCurrentUser())
     const darkSystem = window.matchMedia('(prefers-color-scheme: dark)').matches
     const [theme, setTheme] = useState(getTheme())
     useEffect(() => {
@@ -50,55 +53,62 @@ const Header = () => {
             </div> */}
 
             <div className="flex basis-1/6 h-full justify-end items-center gap-2">
+                <div className="flex xs:w-fit md:w-full h-full justify-between items-center rounded-full xs:bg-none md:bg-slate-300 px-2">
+                    <div className="xs:hidden md:flex w-full h-full justify-start items-center">
+                        <p className="pl-2 text-slate-500">Xin chào, </p>
+                        <p className="font-semibold text-slate-600">{truncateString(fullName, 10)}</p>
+                    </div>
 
-                <Menu shadow="md" width={200} position="bottom-end" className="flex">
-                    <Menu.Target className={`${theme === 'light' ? 'bg-yellow-400' : theme === 'dark' ? 'bg-sky-400' : 'bg-red-400'} hover:cursor-pointer hover:shadow-md rounded-md p-1 transition ease-linear duration-200`}>
-                        {
-                            theme === 'light' ?
-                                <IconSun stroke={1.5} className="text-white h-7 w-7  hover:bg-yellow-500" /> :
-                                theme === 'dark' ?
-                                    <IconMoon stroke={1.5} className="text-white h-7 w-7 hover:bg-blue-500" /> :
-                                    <IconDeviceDesktop stroke={1.5} className="text-white h-7 w-7 hover:bg-red-500" />
-                        }
+                    <Menu shadow="md" width={200} position="bottom-end" className="flex hidden">
+                        <Menu.Target className={`${theme === 'light' ? 'bg-yellow-400' : theme === 'dark' ? 'bg-sky-400' : 'bg-red-400'} hover:cursor-pointer hover:shadow-md rounded-md p-1 transition ease-linear duration-200`}>
+                            {
+                                theme === 'light' ?
+                                    <IconSun stroke={1.5} className="text-white h-7 w-7  hover:bg-yellow-500" /> :
+                                    theme === 'dark' ?
+                                        <IconMoon stroke={1.5} className="text-white h-7 w-7 hover:bg-blue-500" /> :
+                                        <IconDeviceDesktop stroke={1.5} className="text-white h-7 w-7 hover:bg-red-500" />
+                            }
 
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        <Menu.Item
-                            leftSection={<IconSun className="w-5 h-5" />}
-                            onClick={() => handleChangeDarkMode('light')}
-                            className={`text-sm ${theme === 'light' ? 'text-sky-500 font-semibold' : ''}`}
-                        >
-                            Sáng
-                        </Menu.Item>
-                        <Menu.Item
-                            leftSection={<IconMoon className="w-5 h-5" />}
-                            onClick={() => handleChangeDarkMode('dark')}
-                            className={`text-sm ${theme === 'dark' ? 'text-sky-500 font-semibold' : ''}`}
-                        >
-                            Tối
-                        </Menu.Item>
-                        <Menu.Item leftSection={<IconDeviceDesktop className="w-5 h-5" />}
-                            onClick={() => handleChangeDarkMode('auto')}
-                            className={`text-sm ${theme === 'auto' ? 'text-sky-500 font-semibold' : ''}`}
-                        >
-                            Tự động
-                        </Menu.Item>
-                    </Menu.Dropdown>
-                </Menu>
-                <Menu shadow="md" width={200} position="bottom-end" className="flex">
-                    <Menu.Target className="bg-teal-400 hover:cursor-pointer hover:shadow-md rounded-md p-1 transition ease-linear duration-200">
-                        <IconUserCircle className=" w-7 h-7 text-white  hover:bg-teal-500" />
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        <Menu.Item
-                            color="red"
-                            leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
-                            onClick={handleLogout}
-                        >
-                            Đăng xuất
-                        </Menu.Item>
-                    </Menu.Dropdown>
-                </Menu>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            <Menu.Item
+                                leftSection={<IconSun className="w-5 h-5" />}
+                                onClick={() => handleChangeDarkMode('light')}
+                                className={`text-sm ${theme === 'light' ? 'text-sky-500 font-semibold' : ''}`}
+                            >
+                                Sáng
+                            </Menu.Item>
+                            <Menu.Item
+                                leftSection={<IconMoon className="w-5 h-5" />}
+                                onClick={() => handleChangeDarkMode('dark')}
+                                className={`text-sm ${theme === 'dark' ? 'text-sky-500 font-semibold' : ''}`}
+                            >
+                                Tối
+                            </Menu.Item>
+                            <Menu.Item leftSection={<IconDeviceDesktop className="w-5 h-5" />}
+                                onClick={() => handleChangeDarkMode('auto')}
+                                className={`text-sm ${theme === 'auto' ? 'text-sky-500 font-semibold' : ''}`}
+                            >
+                                Tự động
+                            </Menu.Item>
+                        </Menu.Dropdown>
+                    </Menu>
+                    <Menu shadow="md" width={200} position="bottom-end" className="flex">
+                        <Menu.Target className="bg-teal-400 hover:cursor-pointer hover:shadow-md rounded-full p-1 transition ease-linear duration-200">
+                            <IconUserCircle className=" w-7 h-7 text-white  hover:bg-teal-500" />
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            <Menu.Item
+                                color="red"
+                                leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
+                                onClick={handleLogout}
+                            >
+                                Đăng xuất
+                            </Menu.Item>
+                        </Menu.Dropdown>
+                    </Menu>
+                </div>
+
             </div>
         </div>
     )
