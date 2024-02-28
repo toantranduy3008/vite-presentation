@@ -22,7 +22,7 @@ export default function RootLayout() {
                     <NavBar toggle={toggle} />
                 </AppShell.Section>
             </AppShell.Navbar>
-            <AppShell.Main>
+            <AppShell.Main className='flex'>
                 <Outlet />
             </AppShell.Main>
         </AppShell>

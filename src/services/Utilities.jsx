@@ -71,6 +71,30 @@ export const generateUID = () => {
     return id;
 }
 
+export const getAcqBankList = async () => {
+    let acqBankList = localStorage.getItem('acquirer')
+    if (
+        acqBankList &&
+        typeof (acqBankList) === 'string' &&
+        Array.isArray(JSON.parse(acqBankList)) &&
+        JSON.parse(acqBankList).length > 0
+    ) {
+        return [JSON.parse(acqBankList)]
+    } else {
+        await axios.get('/bankdemo/api/bank', { headers: authHeader() })
+            .then(res => {
+                const { listBank } = res.data
+                acqBankList = listBank.map(item => {
+                    return {
+                        value: item.id,
+                        label: item.name
+                    }
+                })
+            })
+
+        return [acqBankList]
+    }
+}
 export const fetchBankList = async () => {
     let acquirer = localStorage.getItem('acquirer')
     let issuer = localStorage.getItem('issuer')
@@ -87,8 +111,8 @@ export const fetchBankList = async () => {
         return [JSON.parse(acquirer), JSON.parse(issuer)]
     } else {
         const [fetchFromBankList, fetchToBankList] = await Promise.allSettled([
-            axios.get('/1st/bankdemo/api/payment/getListFromBank', { headers: authHeader() }),
-            axios.get('/1st/bankdemo/api/payment/getListBank', { headers: authHeader() }),
+            axios.get('/1st/bankdemo/api/bank', { headers: authHeader() }),
+            axios.get('/1st/bankdemo/api/bank', { headers: authHeader() }),
         ])
 
         if (fetchFromBankList.status === 'rejected') {
@@ -120,7 +144,6 @@ export const fetchBankList = async () => {
 
         return [acquirer, issuer]
     }
-
 }
 
 export const truncateString = (str, n) => {
