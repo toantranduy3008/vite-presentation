@@ -46,15 +46,28 @@ const removeVietnameseTones = (str) => {
 }
 
 export const setBadge = (status, displayLabel = true) => {
-    return (
-        <Badge
-            size="md"
-            color={status === '00' ? 'green' : status === '68' ? 'yellow' : 'red'}
-            className="text-[10px]"
-        >
-            {status} {displayLabel && (status === '00' ? '-Thành công' : status === '68' ? '-Đang xử lý' : '-Thất bại')}
-        </Badge>
-    )
+    if (!status) {
+        return (
+            <Badge
+                size="md"
+                color='gray'
+                className="text-[10px] font-thin"
+            >
+                Chưa xử lý
+            </Badge>
+        )
+    } else {
+        return (
+            <Badge
+                size="md"
+                color={status === '00' ? 'green' : status === '68' ? 'yellow' : 'red'}
+                className="text-[10px] font-thin"
+            >
+                {status} {displayLabel && (status === '00' ? '-Thành công' : status === '68' ? '-Đang xử lý' : '-Thất bại')}
+            </Badge>
+        )
+    }
+
 }
 
 export const validateInValidAmount = amount => {
@@ -148,4 +161,9 @@ export const fetchBankList = async () => {
 
 export const truncateString = (str, n) => {
     return (str.length > n) ? str.slice(0, n - 1) + '...' : str;
+}
+
+
+export const get = (apiUrl, paging, filtersInput) => {
+    return axios.get(`${apiUrl}?${new URLSearchParams(paging).toString()}&${new URLSearchParams(filtersInput).toString()}`, { headers: authHeader() })
 }

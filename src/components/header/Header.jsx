@@ -13,8 +13,7 @@ import { getCurrentUser } from "../../services/AuthServices";
 import { truncateString } from "../../services/Utilities";
 const Header = () => {
     const navigate = useNavigate()
-    const { username, fullName } = getCurrentUser()
-    console.log('fullname', getCurrentUser())
+    const { fullName } = getCurrentUser()
     const darkSystem = window.matchMedia('(prefers-color-scheme: dark)').matches
     const [theme, setTheme] = useState(getTheme())
     useEffect(() => {

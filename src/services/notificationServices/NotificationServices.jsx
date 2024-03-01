@@ -7,9 +7,9 @@ class NotificationServices {
         notifications.show({
             title: 'Thông báo',
             message: message,
-            classNames: classes,
+            // classNames: classes,
             autoClose: 5000,
-            icon: <IconBell />
+            // icon: <IconBell />
         })
     }
 
@@ -18,9 +18,9 @@ class NotificationServices {
             color: 'green',
             title: 'Thành công',
             message: message,
-            classNames: classes,
+            // classNames: classes,
             autoClose: 5000,
-            icon: <IconCircleCheck />
+            // icon: <IconCircleCheck />
         })
     }
 
@@ -29,9 +29,9 @@ class NotificationServices {
             color: 'yellow',
             title: 'Cảnh báo',
             message: message,
-            classNames: classes,
+            // classNames: classes,
             autoClose: 5000,
-            icon: <IconAlertTriangle />
+            // icon: <IconAlertTriangle />
         })
     }
 
@@ -40,9 +40,10 @@ class NotificationServices {
             color: 'red',
             title: 'Lỗi',
             message: message,
-            classNames: classes,
+            // classNames: classes,
             autoClose: 5000,
-            icon: <IconExclamationCircle />
+            // icon: <IconExclamationCircle />,
+            // style: { color: 'red' },
         })
     }
 }

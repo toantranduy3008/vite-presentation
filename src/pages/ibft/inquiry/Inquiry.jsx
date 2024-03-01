@@ -9,7 +9,7 @@ import NotificationServices from "../../../services/notificationServices/Notific
 import axios from "axios"
 import { setBadge, numberWithCommas } from "../../../services/Utilities";
 const Inquiry = () => {
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(new Date() + 1);
     const [refCode, setRefCode] = useState('')
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])

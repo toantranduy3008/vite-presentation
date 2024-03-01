@@ -46,7 +46,6 @@ const TransactionModal = ({ data, abortInquiry, opened, onClose }) => {
                             <div className="m-0 w-40 md:w-48 flex-shrink-0 items-center justify-end p-0 text-right font-semibold">Trạng thái chuyển khoản</div>
                         </div>
                         <div className='flex flex-col'>
-                            {console.log('render', data)}
                             {
                                 data.toBankList.map((item, index) => (
 

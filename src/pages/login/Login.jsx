@@ -48,10 +48,9 @@ const Login = () => {
             .then(res => {
                 const userSession = JSON.stringify(res.data)
                 sessionStorage.setItem('userSession', userSession)
-                navigate('/bankdemo/analyst/interbank')
+                navigate('/bankdemo/new-ibft/search')
             })
             .catch(err => {
-                console.log(err.response.status)
                 const { status } = err.response
                 userRef.current.focus()
                 NotificationServices.error(`${status}: Đăng nhập không thành công!`)

@@ -12,7 +12,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/1st': {
-        target: "https://172.30.17.115:8082/",
+        target: "http://172.30.17.115:8082/",
         changeOrigin: true,
         secure: false,
         configure: (proxy, _options) => {
