@@ -22,7 +22,8 @@ import IbftInquiry from './pages/ibft/ibftInquiry/IbftInquiry';
 import InterBank from './pages/analyst/interBank/InterBank';
 import AnalystByTime from './pages/analyst/bytime/AnalystByTime';
 import { Transfer as NewTransfer } from './pages/ibft20/transfer/Transfer';
-import Search from './pages/ibft20/search/Search';
+import SearchOutGoing from './pages/ibft20/search/SearchOutGoing';
+import { SearchInComing } from './pages/ibft20/search/SearchInComing';
 function App() {
   return (
     <MantineProvider>
@@ -38,7 +39,8 @@ function App() {
           <Route path='/bankdemo/ibft/batch-transfer' element={<BatchTransfer />} />
           <Route path='/bankdemo/ibft/qr-code' element={<QRCode />} />
           <Route path='/bankdemo/new-ibft/transfer' element={<NewTransfer />} />
-          <Route path='/bankdemo/new-ibft/search-outgoing' element={<Search />} />
+          <Route path='/bankdemo/new-ibft/search-outgoing' element={<SearchOutGoing />} />
+          <Route path='/bankdemo/new-ibft/search-incoming' element={<SearchInComing />} />
           <Route path='/bankdemo/analyst/interbank' element={<InterBank />} />
           <Route path='/bankdemo/analyst/bytime' element={<AnalystByTime />} />
         </Route>
