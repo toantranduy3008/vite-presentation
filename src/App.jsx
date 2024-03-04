@@ -22,7 +22,7 @@ import IbftInquiry from './pages/ibft/ibftInquiry/IbftInquiry';
 import InterBank from './pages/analyst/interBank/InterBank';
 import AnalystByTime from './pages/analyst/bytime/AnalystByTime';
 import { Transfer as NewTransfer } from './pages/ibft20/transfer/Transfer';
-import SearchOutGoing from './pages/ibft20/search/SearchOutGoing';
+import { SearchOutGoing } from './pages/ibft20/search/SearchOutGoing';
 import { SearchInComing } from './pages/ibft20/search/SearchInComing';
 function App() {
   return (

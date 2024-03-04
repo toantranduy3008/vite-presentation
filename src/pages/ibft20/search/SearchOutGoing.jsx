@@ -5,7 +5,7 @@ import { fetchBankList, get, numberWithCommas, setBadge } from '../../../service
 import { Button, Group, LoadingOverlay, Pagination, Select, Table, TextInput } from '@mantine/core'
 import TransactionDetailModal from './TransactionDetailModal'
 
-const SearchOutGoing = () => {
+export const SearchOutGoing = () => {
     const currentDate = new Date()
     const [initData, setInitData] = useState({
         startDate: new Date(currentDate.setHours(0, 0, 0, 0)),
@@ -241,5 +241,3 @@ const SearchOutGoing = () => {
         </div>
     )
 }
-
-export default SearchOutGoing
