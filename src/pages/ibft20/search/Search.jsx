@@ -1,58 +1,56 @@
 import { DateTimePicker } from '@mantine/dates'
 import dayjs from 'dayjs'
-import React, { useEffect, useState } from 'react'
-import { get } from '../../../services/Utilities'
-import { Button, Group, Pagination, Select, Table, TextInput } from '@mantine/core'
+import { useEffect, useState } from 'react'
+import { fetchBankList, get, numberWithCommas, setBadge } from '../../../services/Utilities'
+import { Button, Group, LoadingOverlay, Pagination, Select, Table, TextInput } from '@mantine/core'
+import TransactionDetailModal from './TransactionDetailModal'
+
 const Search = () => {
     const currentDate = new Date()
     const [initData, setInitData] = useState({
         startDate: new Date(currentDate.setHours(0, 0, 0, 0)),
         endDate: new Date(currentDate.setHours(23, 59, 59, 0)),
         traceNo: '',
-        transRef: '',
-        page: '1',
-        size: '10',
-        totalPages: 1
+        transRef: ''
     })
 
+    const [showModal, setShowModal] = useState(false)
+    const [modalData, setModalData] = useState({
+        issBankName: '',
+        fromAccount: '',
+        acqBankName: '',
+        toAccount: '',
+        acqAccountName: '',
+        transTime: '',
+        transRef: '',
+        traceNo: '',
+        amount: '',
+        description: '',
+        response: ''
+    })
+    const [loading, setLoading] = useState(false)
+    const [paging, setPaging] = useState({
+        pageNo: 1,
+        pageSize: '10',
+        totalPages: 1
+    })
+    const [listBank, setListBank] = useState([])
     const [tableData, setTableData] = useState([])
-    const [rowsPerPage, setRowsPerPage] = useState([
+    const [rowsPerPage] = useState([
         { value: '10', label: '10' },
         { value: '20', label: '20' },
         { value: '30', label: '30' },
         { value: '50', label: '50' }
     ])
 
+
     useEffect(() => {
-        // const paging = {
-        //     page: 1,
-        //     size: 10,
-        //     sort: 'id,desc'
-        // }
+        const fetchData = async () => {
+            const [acquirer] = await fetchBankList()
+            setListBank(acquirer)
+        }
 
-
-        // const currentDate = new Date()
-        // let startDate = dayjs().subtract(7, 'day').format('YYYY-MM-DDTHH:mm:ss.[000Z]')
-        // let endDate = dayjs(currentDate).format('YYYY-MM-DDTHH:mm:ss.[000Z]')
-
-        // const filtersInput = {
-        //     beginDate: startDate,
-        //     endDate: endDate,
-        //     traceNo: '',
-        //     transRef: ''
-        // }
-        // get(`/1st/bankdemo/api/payment/listTrans`, paging, filtersInput).then(
-        //     (res) => {
-        //         const { data } = res
-        //         const { content, totalPages } = data
-        //         // setTotalPage(totalPages)
-        //         // setData(content)
-        //     }
-        // ).catch(
-        //     (e) => { throw new Error(e) }
-        // ).finally(
-        //     // setLoading(false)
-        // )
+        fetchData().catch((error) => console.log(error))
     }, [])
 
     const handleChangeStartDate = (data) => {
@@ -84,67 +82,99 @@ const Search = () => {
     }
 
     const handleChangeRowNum = (value) => {
-        setInitData({
-            ...initData,
-            size: value
+        setPaging({
+            ...paging,
+            pageSize: value
         })
-
-        //call api
     }
 
     const handleChangePage = (value) => {
-        setInitData({ ...initData, page: value.toString() })
-        handleSearch({ ...initData, page: value })
+        setPaging({ ...paging, pageNo: value })
+        const requestBody = {
+            page: value,
+            size: paging.pageSize,
+            startDate: initData.startDate,
+            endDate: initData.endDate,
+            traceNo: initData.traceNo,
+            transRef: initData.transRef
+        }
+        handleSearch(requestBody)
     }
 
+    const handleShowModal = (e, element) => {
+        setShowModal(true)
+        setModalData({
+            issBankName: listBank.find(b => b.value.toString() === element.bankId)?.label,
+            fromAccount: element.fromAccount,
+            acqBankName: listBank.find(b => b.value.toString() === element.benId)?.label,
+            toAccount: element.toAccount,
+            acqAccountName: element.f120,
+            transDate: element.transDate ? dayjs(element.transDate).format('DD/MM/YYYY HH:mm') : '',
+            transRef: element.transRef,
+            traceNo: element.traceNo,
+            amount: element.amount ? numberWithCommas(element.amount) : '',
+            description: element.transContent,
+            response: setBadge(element.respcode, true)
+        })
+    }
+    // const handleShowDetailTransaction = (e, item) => {
+    //     setShowModal(true)
+    //     setModalData(item)
+    // }
+
     const handleSearch = async (requestBody = null) => {
-        console.log('requestBody', typeof (requestBody), requestBody)
-        //call api
-        const paging = {
-            page: requestBody ? requestBody.page : initData.page,
-            size: requestBody ? requestBody.size : initData.size,
+        setLoading(true)
+        const pagingQuery = {
+            page: requestBody ? parseInt(requestBody.page, 10) - 1 : 0,
+            size: requestBody ? requestBody.size : paging.pageSize,
             sort: 'id,desc'
         }
-
         const filtersInput = {
             beginDate: dayjs(requestBody ? requestBody.startDate : initData.startDate).format('YYYY-MM-DDTHH:mm:ss.[000Z]'),
             endDate: dayjs(requestBody ? requestBody.endDate : initData.endDate).format('YYYY-MM-DDTHH:mm:ss.[000Z]'),
             traceNo: requestBody ? requestBody.traceNo : initData.traceNo,
             transRef: requestBody ? requestBody.transRef : initData.transRef
         }
-        get(`/1st/bankdemo/api/payment/listTrans`, paging, filtersInput).then(
+        get(`/1st/bankdemo/api/payment/listTrans`, pagingQuery, filtersInput).then(
             (res) => {
-                // const { data } = res
-                const { content, totalPages } = res.data
-                setInitData({
-                    ...initData,
+                const { content, totalPages, number } = res.data
+                setPaging({
+                    ...paging,
+                    pageNo: number + 1,
                     totalPages: totalPages
                 })
 
                 setTableData(content)
-                // setTotalPage(totalPages)
-                // setData(content)
             }
         ).catch(
             (e) => { throw new Error(e) }
         ).finally(
-            // setLoading(false)
+            () => { setLoading(false) }
         )
     }
 
     const tblRows = tableData.map((element, index) => (
-        <Table.Tr key={element.transRef}>
-            <Table.Td>{(initData.page - 1) * initData.size + index}</Table.Td>
+        <Table.Tr
+            key={`${index}_${element.transRef}`}
+            onDoubleClick={() => { setShowModal(true) }}
+            className='hover:cursor-pointer'
+        >
+            <Table.Td>{(paging.pageNo - 1) * paging.pageSize + index + 1}</Table.Td>
             <Table.Td>{element.traceNo}</Table.Td>
-            <Table.Td>{element.transRef}</Table.Td>
-            <Table.Td>{element.respcode}</Table.Td>
-            <Table.Td>{element.benId}</Table.Td>
-            <Table.Td>{element.transDate}</Table.Td>
+            <Table.Td
+                className=' hover:text-sky-700 hover:cursor-pointer font-semibold duration-150 ease-linear'
+                onClick={(e) => { handleShowModal(e, element) }}
+            >
+                {element.transRef}
+            </Table.Td>
+            <Table.Td>{setBadge(element.respcode, true)}</Table.Td>
+            <Table.Td>{listBank.find(b => b.value.toString() === element.benId).label}</Table.Td>
+            <Table.Td>{dayjs(element.transDate).format('DD/MM/YYYY HH:mm')}</Table.Td>
         </Table.Tr>
     ));
     return (
         <div className='relative flex flex-col w-full gap-2'>
-            <div id="search" className='flex w-full justify-start items-end bg-red-500 gap-1'>
+            <div id="search" className='flex w-full justify-start items-end  gap-1'>
                 <DateTimePicker
                     label="Thời gian bắt đầu"
                     value={initData.startDate}
@@ -159,10 +189,6 @@ const Search = () => {
                     label="Số truy vấn"
                     placeholder="F11"
                     value={initData.traceNo}
-                    // classNames={{
-                    //     input: classes.input,
-                    //     wrapper: classes.wrapper
-                    // }}
                     onChange={handleChangeTraceNo}
                 />
                 <TextInput
@@ -170,26 +196,20 @@ const Search = () => {
                     placeholder="F63"
                     value={initData.transRef}
                     onChange={handleChangeTransRef}
-                // classNames={{
-                //     input: classes.input,
-                //     wrapper: classes.wrapper
-                // }}
                 />
                 <Button variant="filled" className="hover:bg-teal-600" onClick={() => { handleSearch() }}>Tìm kiếm</Button>
-                <button type="button" onClick={handleSearch}>test</button>
             </div>
-            <div id="paging" className='flex w-full bg-teal-500 gap-1 items-end justify-between'>
+            <div id="paging" className='flex w-full  gap-1 items-end justify-between'>
                 <Select
                     label="Số dòng/ trang"
                     data={rowsPerPage}
-                    value={initData.size}
+                    value={paging.pageSize}
                     searchable
                     nothingFoundMessage="Không tìm thấy ..."
-                    // className="w-1/2 md:w-full"
                     maxDropdownHeight={200}
                     onChange={handleChangeRowNum}
                 />
-                <Pagination.Root total={initData.totalPages} siblings={1} boundaries={1} onChange={handleChangePage}>
+                <Pagination.Root total={paging.totalPages} siblings={1} boundaries={1} onChange={handleChangePage}>
                     <Group gap={3} justify="center">
                         <Pagination.First />
                         <Pagination.Previous />
@@ -200,8 +220,8 @@ const Search = () => {
                 </Pagination.Root>
                 {/* <Pagination total={20} siblings={1} boundaries={1} defaultValue={1} /> */}
             </div>
-            <div id="result" className='flex w-full h-full bg-white'>
-                {/* <Table.ScrollContainer minWidth={300}> */}
+            <div id="result" className='relative flex w-full h-full bg-white'>
+                <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
                 <Table stickyHeader stickyHeaderOffset={60} highlightOnHover>
                     <Table.Thead>
                         <Table.Tr>
@@ -215,8 +235,9 @@ const Search = () => {
                     </Table.Thead>
                     <Table.Tbody>{tblRows}</Table.Tbody>
                 </Table>
-                {/* </Table.ScrollContainer> */}
             </div>
+
+            <TransactionDetailModal data={modalData} opened={showModal} onClose={setShowModal} />
         </div>
     )
 }

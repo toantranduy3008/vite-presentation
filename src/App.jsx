@@ -38,7 +38,7 @@ function App() {
           <Route path='/bankdemo/ibft/batch-transfer' element={<BatchTransfer />} />
           <Route path='/bankdemo/ibft/qr-code' element={<QRCode />} />
           <Route path='/bankdemo/new-ibft/transfer' element={<NewTransfer />} />
-          <Route path='/bankdemo/new-ibft/search' element={<Search />} />
+          <Route path='/bankdemo/new-ibft/search-outgoing' element={<Search />} />
           <Route path='/bankdemo/analyst/interbank' element={<InterBank />} />
           <Route path='/bankdemo/analyst/bytime' element={<AnalystByTime />} />
         </Route>
