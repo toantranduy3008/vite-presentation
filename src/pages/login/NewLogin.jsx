@@ -58,7 +58,7 @@ const NewLogin = () => {
                     <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
                     <div className="relative flex flex-col w-96 px-10 py-15 gap-2  items-center justify-center overflow-y-auto ">
                         <img src="/bankdemo/napas-logo.svg" className="h-10 md:hidden" />
-                        <p className="flex w-full text-white text-xl font-bold uppercase justify-center items-center text-center m-0 p-0">simulator system</p>
+                        <p className="flex w-full text-white text-xl font-semibold uppercase justify-center items-center text-center m-0 p-0">ibft 2.0 simulator system</p>
                         <input
                             type="text"
                             name="username"

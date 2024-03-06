@@ -1,17 +1,9 @@
 /* eslint-disable react/prop-types */
 import { Modal } from '@mantine/core'
-import React from 'react'
 
 const TransactionDetailModal = ({ data, opened, onClose }) => {
     return (
         <Modal
-            // title={
-            //     <div className='flex flex-col w-full justify-between items-center'>
-            //         <div className="flex flex-1 justify-start items-center text-left font-bold uppercase text-sm">Thông tin giao dịch</div>
-            //         <img src='/bankdemo/napas-logo.svg' className="flex flex-1 w-auto xs:w-24 h-5 xs:h-auto align-middle border-none " />
-            //     </div>
-
-            // }
             opened={opened}
             onClose={onClose}
             withCloseButton={false}
@@ -31,8 +23,8 @@ const TransactionDetailModal = ({ data, opened, onClose }) => {
                         <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.issBankName}</div>
                     </div>
                     <div id="transaction-source" className='flex flex-row w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
-                        <div className='flex flex-1 items-center justify-start'>Tài khoản gửi</div>
-                        <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.fromAccount}</div>
+                        <div className='flex flex-1 items-center justify-start'>Nguồn gửi</div>
+                        <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.fromCardNo ? data.fromCardNo : data.fromAccount}</div>
                     </div>
                     <div id="transaction-source" className='flex flex-row w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                         <div className='flex flex-1 items-center justify-start'>Ngân hàng thụ hưởng</div>

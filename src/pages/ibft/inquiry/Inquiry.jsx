@@ -1,4 +1,4 @@
-import { ActionIcon, Divider, TextInput, LoadingOverlay, Tooltip, Accordion } from "@mantine/core";
+import { ActionIcon, Divider, TextInput, Tooltip, Accordion } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates"
 import { Suspense, useEffect, useState } from "react";
 import classes from './Inquiry.module.css'
@@ -11,11 +11,9 @@ import { setBadge, numberWithCommas } from "../../../services/Utilities";
 const Inquiry = () => {
     const [date, setDate] = useState(new Date() + 1);
     const [refCode, setRefCode] = useState('')
-    const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])
 
     useEffect(() => {
-        setLoading(true)
         const dateS = `${dayjs(date).get('date')}`.length === 1 ? `0${dayjs(date).get('date')}` : `${dayjs(date).get('date')}`
         const monthS = `${dayjs(date).get('month') + 1}`.length === 1 ? `0${dayjs(date).get('month') + 1}` : `${dayjs(date).get('month') + 1}`
         const requestBody = {
@@ -36,7 +34,6 @@ const Inquiry = () => {
                 NotificationServices.error(`${status}: ${statusText}`)
             })
             .finally(() => {
-                setLoading(false)
             })
     }, [])
 
@@ -49,7 +46,6 @@ const Inquiry = () => {
     }
 
     const handleSearchTransaction = () => {
-        setLoading(true)
         const dateS = `${dayjs(date).get('date')}`.length === 1 ? `0${dayjs(date).get('date')}` : `${dayjs(date).get('date')}`
         const monthS = `${dayjs(date).get('month') + 1}`.length === 1 ? `0${dayjs(date).get('month') + 1}` : `${dayjs(date).get('month') + 1}`
         const requestBody = {
@@ -72,7 +68,6 @@ const Inquiry = () => {
                     NotificationServices.error(`${status}: ${statusText}`)
                 })
                 .finally(() => {
-                    setLoading(false)
                 })
         }, 3000)
 

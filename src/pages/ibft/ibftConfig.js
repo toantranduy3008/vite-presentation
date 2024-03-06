@@ -12,11 +12,11 @@ export const ibftChannel = [
 export const destinationType = [
     {
         label: 'Tài khoản',
-        value: '20'
+        value: 'ACC'
     },
     {
         label: 'Thẻ',
-        value: '00'
+        value: 'PAN'
     }
 ]
 

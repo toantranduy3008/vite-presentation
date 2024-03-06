@@ -1,9 +1,8 @@
-import { Badge, Button, Loader, LoadingOverlay, NumberInput, Select, TextInput, Textarea } from '@mantine/core'
+import { Button, LoadingOverlay, NumberInput, Select, TextInput, Textarea } from '@mantine/core'
 import { useEffect, useState } from 'react'
 import { fetchBankList, formatVietnamese, numberWithCommas, setBadge, validateInValidAmount } from '../../../services/Utilities'
 import classes from './Transfer.module.css'
 import { authHeader, getCurrentUser } from '../../../services/AuthServices'
-import { destinationType } from '../../ibft/ibftConfig'
 import axios from 'axios'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
 import dayjs from 'dayjs'
@@ -46,8 +45,10 @@ export const Transfer = () => {
         })
     }
 
-    const [fromAccount, setFromAccount] = useState(sourceAccount[0].items[0].value)
-    const [destinationTypeId, setAccountType] = useState(destinationType[0].value)
+    const [fromSource] = useState([{ value: 'PAN', label: 'Thẻ' }, { value: 'ACC', label: 'Tài khoản' }])
+    const [toSource] = useState([{ value: 'PAN', label: 'Thẻ' }, { value: 'ACC', label: 'Tài khoản' }])
+    const [fromSourceValue, setFromSourceValue] = useState('ACC')
+    const [toSourceValue, setToSourceValue] = useState('ACC')
     const [initData, setInitData] = useState(
         {
             acqBankName: 'DongA Bank',
@@ -97,28 +98,19 @@ export const Transfer = () => {
         fetchData().catch((error) => console.log(error))
     }, [])
 
-    const handleChangeFromAcc = value => {
-        setFromAccount(value)
-    }
-
-    const handleChangeToAccountType = (value) => {
-        setAccountType(value)
-        setInitData({
-            ...initData,
-            acqAccountNo: '',
-            acqAccountName: '',
-            refNo: '',
-            depositStatus: '',
-            transTime: '',
-            traceNo: ''
-        })
-    }
-
     const handleChangeIssBank = (value) => {
         setIssBank({
             id: value,
             name: listBank.iss.find(b => b.value.toString() === value.toString()).label
         })
+    }
+
+    const handleChangeFromSourceValue = (value) => {
+        setFromSourceValue(value)
+    }
+
+    const handleChangeToSourceValue = (value) => {
+        setToSourceValue(value)
     }
 
     const handleChangeAcqBank = value => {
@@ -130,9 +122,15 @@ export const Transfer = () => {
         setInitData({
             ...initData,
             acqBankName: listBank.acq.find(b => b.value.toString() === value.toString()).label,
+            toAccount: '',
             depositStatus: '',
+            acqAccountNo: '',
+            acqAccountName: '',
             transTime: '',
-            traceNo: ''
+            traceNo: '',
+            refNo: '',
+            amount: 0,
+            description: ''
         })
     }
 
@@ -154,11 +152,11 @@ export const Transfer = () => {
 
     const handleSearchAccount = () => {
         if (initData.acqAccountNo) {
-            axios.get(`/1st/bankdemo/api/payment/investigatename?creditorAgent=${acqBank.id}&toAccount=${initData.acqAccountNo}&toAccountType=${destinationTypeId.toString() === '20' ? 'ACC' : 'PAN'}`, { headers: authHeader() })
+            axios.get(`/1st/bankdemo/api/payment/investigatename?creditorAgent=${acqBank.id}&toAccount=${initData.acqAccountNo}&toAccountType=${toSourceValue}`, { headers: authHeader() })
                 .then(res => {
                     const { f39, f63, f120 } = res.data
                     if (f39 !== '00') {
-                        NotificationServices.warning(`Không tìm được thông tin ${destinationTypeId.toString() === '20' ? 'tài khoản' : 'thẻ'}.`)
+                        NotificationServices.warning(`Không tìm được thông tin ${toSourceValue === 'ACC' ? 'tài khoản' : 'thẻ'}.`)
                         return;
                     }
 
@@ -171,7 +169,7 @@ export const Transfer = () => {
                     })
                 })
                 .catch(() => {
-                    NotificationServices.error(`Không tìm được thông tin ${destinationTypeId.toString() === '20' ? 'tài khoản' : 'thẻ'}.`)
+                    NotificationServices.error(`Không tìm được thông tin ${toSourceValue === 'ACC' ? 'tài khoản' : 'thẻ'}.`)
                     return;
                 })
                 .finally(() => { })
@@ -218,13 +216,13 @@ export const Transfer = () => {
             return false
         }
 
-        if (!fromAccount) {
+        if (!fromSourceValue) {
             NotificationServices.warning('Nguồn thẻ không được để trống.')
             return false
         }
 
         if (!initData.acqAccountNo) {
-            NotificationServices.warning(`${destinationTypeId.toString() === '20' ? 'Tài khoản' : 'Thẻ'} thụ hưởng không được để trống.`)
+            NotificationServices.warning(`${toSourceValue === 'ACC' ? 'Tài khoản' : 'Thẻ'} thụ hưởng không được để trống.`)
             return false
         }
 
@@ -256,7 +254,8 @@ export const Transfer = () => {
             creditorAgent: acqBank.id,
             f63: initData.refNo,
             toAccount: initData.acqAccountNo,
-            toAccountType: destinationTypeId.toString() === '20' ? 'ACC' : 'PAN'
+            fromAccountType: fromSourceValue,
+            toAccountType: toSourceValue,
         }
 
         setStatus({
@@ -310,13 +309,14 @@ export const Transfer = () => {
                             onChange={handleChangeIssBank}
                         />
                         <Select
-                            label="Nguồn"
-                            data={sourceAccount}
-                            value={fromAccount}
+                            label="Từ nguồn"
+                            data={fromSource}
+                            value={fromSourceValue}
                             searchable
                             nothingFoundMessage="Không tìm thấy ..."
                             className="w-1/2 md:w-full"
-                            onChange={handleChangeFromAcc}
+                            maxDropdownHeight={200}
+                            onChange={handleChangeFromSourceValue}
                         />
                         <TextInput
                             label="Tới thẻ/ tài khoản"
@@ -352,13 +352,14 @@ export const Transfer = () => {
                             onChange={handleChangeAcqBank}
                         />
                         <Select
-                            label="Tới"
-                            data={destinationType}
-                            value={destinationTypeId}
+                            label="Tới nguồn"
+                            data={toSource}
+                            value={toSourceValue}
                             searchable
                             nothingFoundMessage="Không tìm thấy ..."
                             className="w-1/2 md:w-full"
-                            onChange={handleChangeToAccountType}
+                            maxDropdownHeight={200}
+                            onChange={handleChangeToSourceValue}
                         />
                         <NumberInput
                             label="Số tiền"
@@ -418,22 +419,22 @@ export const Transfer = () => {
                             <div className='flex flex-1 items-center justify-start'>Ngân hàng thụ hưởng</div>
                             <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{initData.acqBankName}</div>
                         </div>
-                        {/* <Divider size="xs" variant="dashed" orientation="horizontal" className="xs:hidden lg:block" /> */}
+
                         <div id="transaction-source" className='flex flex-row w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                             <div className='flex flex-1 items-center justify-start'>Tài khoản thụ hưởng</div>
                             <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{initData.acqAccountNo}</div>
                         </div>
-                        {/* <Divider size="xs" variant="dashed" orientation="horizontal" className="xs:hidden lg:block" /> */}
+
                         <div id="transaction-source" className='flex flex-row w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                             <div className='flex flex-1 items-center justify-start'>Tên chủ tài khoản</div>
                             <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{initData.acqAccountName}</div>
                         </div>
-                        {/* <Divider size="xs" variant="dashed" orientation="horizontal" className="xs:hidden lg:block" /> */}
+
                         <div id="transaction-source" className='flex flex-row w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                             <div className='flex flex-1 items-center justify-start'>Thời gian giao dịch</div>
                             <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{initData.transTime}</div>
                         </div>
-                        {/* <Divider size="xs" variant="dashed" orientation="horizontal" className="xs:hidden lg:block" /> */}
+
                         <div id="transaction-source" className='flex flex-row w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                             <div className='flex flex-1 items-center justify-start'>Số tham chiếu</div>
                             <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{initData.refNo}</div>
@@ -442,12 +443,12 @@ export const Transfer = () => {
                             <div className='flex flex-1 items-center justify-start'>Số lưu vết</div>
                             <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{initData.traceNo}</div>
                         </div>
-                        {/* <Divider size="xs" variant="dashed" orientation="horizontal" className="xs:hidden lg:block" /> */}
+
                         <div id="transaction-source" className='flex flex-row w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                             <div className='flex flex-1 items-center justify-start'>Số tiền giao dịch</div>
                             <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{numberWithCommas(initData.amount)}</div>
                         </div>
-                        {/* <Divider size="xs" variant="dashed" orientation="horizontal" className="xs:hidden lg:block" /> */}
+
                         <div id="transaction-source" className='flex flex-row w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                             <div className='flex flex-1 items-center justify-start'>Nội dung giao dịch</div>
                             <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{initData.description}</div>

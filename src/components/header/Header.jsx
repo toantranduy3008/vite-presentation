@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Menu, rem } from "@mantine/core"
+import { Menu, rem, Tooltip } from "@mantine/core"
 import { useNavigate } from "react-router-dom";
 import { getTheme } from "../../services/Utilities";
 import {
@@ -11,6 +11,7 @@ import {
 } from '@tabler/icons-react';
 import { getCurrentUser } from "../../services/AuthServices";
 import { truncateString } from "../../services/Utilities";
+
 const Header = () => {
     const navigate = useNavigate()
     const { fullName } = getCurrentUser()
@@ -47,18 +48,15 @@ const Header = () => {
                 <img src='/bankdemo/napas-logo.svg' className=" w-auto xs:w-24 h-12 xs:h-auto align-middle border-none " />
             </div>
 
-            {/* <div className="flex flex-grow h-full xs:hidden md:flex justify-center items-center">
-                <p className="text-lg text-center font-bold md:text-xl uppercase text-indigo-700 dark:text-sky-500">Hệ thống mô phỏng giao dịch</p>
-            </div> */}
-
             <div className="flex basis-1/6 h-full justify-end items-center gap-2">
                 <div className="flex xs:w-fit md:w-full h-full justify-between items-center rounded-full xs:bg-none md:bg-slate-300 px-2">
-                    <div className="xs:hidden md:flex w-full h-full justify-start items-center">
-                        <p className="pl-2 text-slate-500">Xin chào, </p>
-                        <p className="font-semibold text-slate-600">{truncateString(fullName, 10)}</p>
-                    </div>
-
-                    <Menu shadow="md" width={200} position="bottom-end" className="flex hidden">
+                    <Tooltip label={`Xin chào, ${fullName} 😄`}>
+                        <div className="xs:hidden md:flex w-full h-full justify-start items-center">
+                            <p className="pl-2 text-slate-500">Xin chào, </p>
+                            <p className="font-semibold text-slate-600"> {truncateString(fullName, 10)}</p>
+                        </div>
+                    </Tooltip>
+                    <Menu shadow="md" width={200} position="bottom-end" className="hidden">
                         <Menu.Target className={`${theme === 'light' ? 'bg-yellow-400' : theme === 'dark' ? 'bg-sky-400' : 'bg-red-400'} hover:cursor-pointer hover:shadow-md rounded-md p-1 transition ease-linear duration-200`}>
                             {
                                 theme === 'light' ?
@@ -109,7 +107,7 @@ const Header = () => {
                 </div>
 
             </div>
-        </div>
+        </div >
     )
 }
 

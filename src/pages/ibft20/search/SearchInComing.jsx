@@ -2,8 +2,11 @@ import { DateTimePicker } from '@mantine/dates'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { fetchBankList, get, numberWithCommas, setBadge } from '../../../services/Utilities'
-import { Button, Group, LoadingOverlay, Pagination, Select, Table, TextInput } from '@mantine/core'
+import { Button, Group, LoadingOverlay, Menu, Pagination, Select, Table, TextInput } from '@mantine/core'
 import TransactionDetailModal from './TransactionDetailModal'
+import { IconDotsVertical } from '@tabler/icons-react'
+import NotificationServices from '../../../services/notificationServices/NotificationServices'
+import ReturnTransactionModal from './ReturnTransactionModal'
 
 export const SearchInComing = () => {
     const currentDate = new Date()
@@ -14,8 +17,10 @@ export const SearchInComing = () => {
         transRef: ''
     })
 
-    const [showModal, setShowModal] = useState(false)
+    const [showDetailTransactionModal, setShowDetailTransactionModal] = useState(false)
+    const [showReturnTransactionModal, setShowReturnTransactionModal] = useState(false)
     const [modalData, setModalData] = useState({
+        seqNo: '',
         issBankName: '',
         fromAccount: '',
         acqBankName: '',
@@ -101,28 +106,45 @@ export const SearchInComing = () => {
         handleSearch(requestBody)
     }
 
-    const handleShowModal = (e, element) => {
-        setShowModal(true)
+    const handleShowDetailTransactionModal = (e, data) => {
+        setShowDetailTransactionModal(true)
         setModalData({
-            issBankName: listBank.find(b => b.value.toString() === element.bankId)?.label,
-            fromAccount: element.fromAccount,
-            acqBankName: listBank.find(b => b.value.toString() === element.benId)?.label,
-            toAccount: element.toAccount,
-            acqAccountName: element.f120,
-            transDate: element.transDate ? dayjs(element.transDate).format('DD/MM/YYYY HH:mm') : '',
-            transRef: element.transRef,
-            traceNo: element.traceNo,
-            amount: element.amount ? numberWithCommas(element.amount) : '',
-            description: element.transContent,
-            response: setBadge(element.respcode, true)
+            seqNo: data.seqNo,
+            issBankName: listBank.find(b => b.value.toString() === data.bankId)?.label,
+            fromAccount: data.fromAccount,
+            acqBankName: listBank.find(b => b.value.toString() === data.benId)?.label,
+            toAccount: data.toAccount,
+            fromCardNo: data.fromCardNo,
+            acqAccountName: data.f120,
+            transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
+            transRef: data.transRef,
+            traceNo: data.traceNo,
+            amount: data.amount ? numberWithCommas(data.amount) : '',
+            description: data.transContent,
+            response: setBadge(data.respcode, true)
         })
     }
-    // const handleShowDetailTransaction = (e, item) => {
-    //     setShowModal(true)
-    //     setModalData(item)
-    // }
 
+    const handleShowReturnTransactionModal = (e, data) => {
+        setShowReturnTransactionModal(true)
+        setModalData({
+            seqNo: data.seqNo,
+            issBankName: listBank.find(b => b.value.toString() === data.bankId)?.label,
+            fromAccount: data.fromAccount,
+            acqBankName: listBank.find(b => b.value.toString() === data.benId)?.label,
+            toAccount: data.toAccount,
+            fromCardNo: data.fromCardNo,
+            acqAccountName: data.f120,
+            transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
+            transRef: data.transRef,
+            traceNo: data.traceNo,
+            amount: data.amount ? numberWithCommas(data.amount) : '',
+            description: data.transContent,
+            response: setBadge(data.respcode, true)
+        })
+    }
     const handleSearch = async (requestBody = null) => {
+        setPaging({ ...paging, pageNo: 1 })
         setLoading(true)
         const pagingQuery = {
             page: requestBody ? parseInt(requestBody.page, 10) - 1 : 0,
@@ -130,14 +152,18 @@ export const SearchInComing = () => {
             sort: 'id,desc'
         }
         const filtersInput = {
-            beginDate: dayjs(requestBody ? requestBody.startDate : initData.startDate).format('YYYY-MM-DDTHH:mm:ss.[000Z]'),
-            endDate: dayjs(requestBody ? requestBody.endDate : initData.endDate).format('YYYY-MM-DDTHH:mm:ss.[000Z]'),
+            beginDate: dayjs(requestBody ? requestBody.startDate : initData.startDate).format('YYYY-MM-DDTHH:mm:ss'),
+            endDate: dayjs(requestBody ? requestBody.endDate : initData.endDate).format('YYYY-MM-DDTHH:mm:ss'),
             traceNo: requestBody ? requestBody.traceNo : initData.traceNo,
             transRef: requestBody ? requestBody.transRef : initData.transRef
         }
-        get(`/1st/bankdemo/api/payment/listTrans`, pagingQuery, filtersInput).then(
+        get(`/1st/bankdemo/api/payment/listIncomingTrans`, pagingQuery, filtersInput).then(
             (res) => {
                 const { content, totalPages, number } = res.data
+                if (content.length === 0) {
+                    NotificationServices.info('Không tìm thấy giao dịch.')
+                    return;
+                }
                 setPaging({
                     ...paging,
                     pageNo: number + 1,
@@ -156,20 +182,52 @@ export const SearchInComing = () => {
     const tblRows = tableData.map((element, index) => (
         <Table.Tr
             key={`${index}_${element.transRef}`}
-            onDoubleClick={() => { setShowModal(true) }}
             className='hover:cursor-pointer'
         >
-            <Table.Td>{(paging.pageNo - 1) * paging.pageSize + index + 1}</Table.Td>
-            <Table.Td>{element.traceNo}</Table.Td>
+            <Table.Td>
+                {(paging.pageNo - 1) * paging.pageSize + index + 1}
+            </Table.Td>
+            <Table.Td>
+                {element.traceNo}
+            </Table.Td>
             <Table.Td
-                className=' hover:text-sky-700 hover:cursor-pointer font-semibold duration-150 ease-linear'
-                onClick={(e) => { handleShowModal(e, element) }}
+            // className=' hover:text-sky-700 hover:cursor-pointer duration-150 ease-linear'
             >
                 {element.transRef}
             </Table.Td>
-            <Table.Td>{setBadge(element.respcode, true)}</Table.Td>
-            <Table.Td>{listBank.find(b => b.value.toString() === element.benId).label}</Table.Td>
-            <Table.Td>{dayjs(element.transDate).format('DD/MM/YYYY HH:mm')}</Table.Td>
+            <Table.Td>
+                {numberWithCommas(element.amount)}
+            </Table.Td>
+            <Table.Td>
+                {setBadge(element.respcode, true)}
+            </Table.Td>
+            <Table.Td>
+                {listBank.find(b => b.value.toString() === element.benId).label}
+            </Table.Td>
+            <Table.Td>
+                {dayjs(element.transDate).format('DD/MM/YYYY HH:mm')}
+            </Table.Td>
+            <Table.Td>
+                <Menu shadow="md" width={100} position="bottom-end" offset={0} className="flex">
+                    <Menu.Target className=" hover:cursor-pointer hover:shadow-md rounded-full p-1 transition ease-linear duration-200">
+                        <IconDotsVertical className="w-6 h-6 text-slate-700 hover:text-white hover:bg-sky-700" />
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                        <Menu.Item
+                            className='text-slate-700 hover:bg-sky-700 hover:font-semibold hover:text-white'
+                            onClick={(e) => { handleShowDetailTransactionModal(e, element) }}
+                        >
+                            Chi tiết
+                        </Menu.Item>
+                        <Menu.Item
+                            className='text-slate-700 hover:bg-sky-700 hover:font-semibold hover:text-white'
+                            onClick={(e) => { handleShowReturnTransactionModal(e, element) }}
+                        >
+                            Hoàn trả
+                        </Menu.Item>
+                    </Menu.Dropdown>
+                </Menu>
+            </Table.Td>
         </Table.Tr>
     ));
     return (
@@ -209,7 +267,13 @@ export const SearchInComing = () => {
                     maxDropdownHeight={200}
                     onChange={handleChangeRowNum}
                 />
-                <Pagination.Root total={paging.totalPages} siblings={1} boundaries={1} onChange={handleChangePage}>
+                <Pagination.Root
+                    total={paging.totalPages}
+                    value={paging.pageNo}
+                    siblings={1}
+                    boundaries={1}
+                    onChange={handleChangePage}
+                >
                     <Group gap={3} justify="center">
                         <Pagination.First />
                         <Pagination.Previous />
@@ -218,7 +282,6 @@ export const SearchInComing = () => {
                         <Pagination.Last />
                     </Group>
                 </Pagination.Root>
-                {/* <Pagination total={20} siblings={1} boundaries={1} defaultValue={1} /> */}
             </div>
             <div id="result" className='relative flex w-full h-full bg-white'>
                 <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
@@ -228,16 +291,19 @@ export const SearchInComing = () => {
                             <Table.Th>Stt</Table.Th>
                             <Table.Th>Số lưu vết</Table.Th>
                             <Table.Th>Số tham chiếu</Table.Th>
+                            <Table.Th>Số tiền</Table.Th>
                             <Table.Th>Trạng thái giao dịch</Table.Th>
                             <Table.Th>Ngân hàng thụ hưởng</Table.Th>
                             <Table.Th>Thời gian giao dịch</Table.Th>
+                            <Table.Th></Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>{tblRows}</Table.Tbody>
                 </Table>
             </div>
 
-            <TransactionDetailModal data={modalData} opened={showModal} onClose={setShowModal} />
+            <TransactionDetailModal data={modalData} opened={showDetailTransactionModal} onClose={setShowDetailTransactionModal} />
+            <ReturnTransactionModal data={modalData} opened={showReturnTransactionModal} onClose={setShowReturnTransactionModal} />
         </div>
     )
 }
