@@ -1,7 +1,7 @@
 import { DateTimePicker } from '@mantine/dates'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
-import { fetchBankList, get, numberWithCommas, setBadge } from '../../../services/Utilities'
+import { fetchBankList, get, maskRefCode, numberWithCommas, setBadge } from '../../../services/Utilities'
 import { Button, Group, LoadingOverlay, Menu, Pagination, Select, Table, TextInput } from '@mantine/core'
 import TransactionDetailModal from './TransactionDetailModal'
 import { IconDotsVertical } from '@tabler/icons-react'
@@ -193,7 +193,7 @@ export const SearchInComing = () => {
             <Table.Td
             // className=' hover:text-sky-700 hover:cursor-pointer duration-150 ease-linear'
             >
-                {element.transRef}
+                {maskRefCode(element.transRef)}
             </Table.Td>
             <Table.Td>
                 {numberWithCommas(element.amount)}

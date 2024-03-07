@@ -163,7 +163,15 @@ export const truncateString = (str, n) => {
     return (str.length > n) ? str.slice(0, n - 1) + '...' : str;
 }
 
-
 export const get = (apiUrl, paging, filtersInput) => {
     return axios.get(`${apiUrl}?${new URLSearchParams(paging).toString()}&${new URLSearchParams(filtersInput).toString()}`, { headers: authHeader() })
+}
+
+export const maskRefCode = (refCode) => {
+    if (refCode) {
+        if (refCode.length < 8) return refCode
+        return refCode.substring(refCode.length - 8)
+    }
+
+    return refCode
 }

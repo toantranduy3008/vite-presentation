@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Modal } from '@mantine/core'
+import { maskRefCode } from '../../../services/Utilities'
 
 const TransactionDetailModal = ({ data, opened, onClose }) => {
     return (
@@ -48,7 +49,7 @@ const TransactionDetailModal = ({ data, opened, onClose }) => {
 
                     <div id="transaction-source" className='flex flex-row w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                         <div className='flex flex-1 items-center justify-start'>Số tham chiếu</div>
-                        <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.transRef}</div>
+                        <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{maskRefCode(data.transRef)}</div>
                     </div>
                     <div id="transaction-source" className='flex flex-row w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                         <div className='flex flex-1 items-center justify-start'>Số lưu vết</div>

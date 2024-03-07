@@ -1,6 +1,6 @@
 import { Button, LoadingOverlay, NumberInput, Select, TextInput, Textarea } from '@mantine/core'
 import { useEffect, useState } from 'react'
-import { fetchBankList, formatVietnamese, numberWithCommas, setBadge, validateInValidAmount } from '../../../services/Utilities'
+import { fetchBankList, formatVietnamese, maskRefCode, numberWithCommas, setBadge, validateInValidAmount } from '../../../services/Utilities'
 import classes from './Transfer.module.css'
 import { authHeader, getCurrentUser } from '../../../services/AuthServices'
 import axios from 'axios'
@@ -377,7 +377,7 @@ export const Transfer = () => {
                         <TextInput
                             label="Số tham chiếu"
                             disabled
-                            value={initData.refNo}
+                            value={maskRefCode(initData.refNo)}
                             classNames={{
                                 input: classes.input,
                                 wrapper: classes.wrapper
@@ -437,7 +437,7 @@ export const Transfer = () => {
 
                         <div id="transaction-source" className='flex flex-row w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                             <div className='flex flex-1 items-center justify-start'>Số tham chiếu</div>
-                            <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{initData.refNo}</div>
+                            <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{maskRefCode(initData.refNo)}</div>
                         </div>
                         <div id="transaction-source" className='flex flex-row w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                             <div className='flex flex-1 items-center justify-start'>Số lưu vết</div>
