@@ -1,8 +1,8 @@
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { LoadingOverlay } from "@mantine/core"
-import axios from "axios"
 import NotificationServices from "../../services/notificationServices/NotificationServices"
+import axiosInstance from "../../services/axiosInstance"
 const NewLogin = () => {
     const navigate = useNavigate()
     const [username, setUsername] = useState('')
@@ -35,19 +35,26 @@ const NewLogin = () => {
         }
 
         setLoading(true)
-        axios.post('/1st/bankdemo/api/auth/signin', {
-            username: username,
-            password: password
-        })
+        axiosInstance.post('/api/bankdemo/api/auth/signin',
+            {
+                username: username,
+                password: password
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // withCredentials: false,
+            })
             .then(res => {
                 const userSession = JSON.stringify(res.data)
                 sessionStorage.setItem('userSession', userSession)
                 navigate('/bankdemo/new-ibft/search-outgoing')
             })
             .catch(err => {
-                const { status } = err.response
-                userRef.current.focus()
-                NotificationServices.error(`${status}: Đăng nhập không thành công!`)
+                // const { status } = err.response
+                // userRef.current.focus()
+                // NotificationServices.error(`${status}: Đăng nhập không thành công!`)
             })
             .finally(() => setLoading(false))
     }

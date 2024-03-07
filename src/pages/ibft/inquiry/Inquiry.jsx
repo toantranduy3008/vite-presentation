@@ -6,8 +6,9 @@ import { IconDiscountCheck, IconSearch } from "@tabler/icons-react";
 import dayjs from "dayjs"
 import { authHeader } from "../../../services/AuthServices";
 import NotificationServices from "../../../services/notificationServices/NotificationServices";
-import axios from "axios"
+
 import { setBadge, numberWithCommas } from "../../../services/Utilities";
+import axiosInstance from "../../../services/axiosInstance";
 const Inquiry = () => {
     const [date, setDate] = useState(new Date() + 1);
     const [refCode, setRefCode] = useState('')
@@ -20,7 +21,7 @@ const Inquiry = () => {
             f13: `${monthS}${dateS}`
         }
 
-        axios.post('/1st/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
+        axiosInstance.post('/api/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
             .then(res => {
                 setData(res.data.payload)
                 if (res.data.payload.length === 0) {
@@ -54,7 +55,7 @@ const Inquiry = () => {
         }
 
         setTimeout(() => {
-            axios.post('/1st/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
+            axiosInstance.post('/api/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
                 .then(res => {
                     setData(res.data.payload)
                     if (res.data.payload.length === 0) {
@@ -71,7 +72,7 @@ const Inquiry = () => {
                 })
         }, 3000)
 
-        // axios.post('/1st/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
+        // axios.post('/api/bankdemo/api/payment/tranStatus', requestBody, { headers: authHeader() })
         //     .then(res => {
         //         setData(res.data.payload)
         //         if (res.data.payload.length === 0) {

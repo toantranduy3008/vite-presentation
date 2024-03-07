@@ -8,7 +8,8 @@ import { fetchBankList, formatVietnamese, generateUID, validateInValidAmount, va
 import NotificationServices from "../../../services/notificationServices/NotificationServices"
 import TransactionModal from "./TransactionModal"
 import { authHeader } from "../../../services/AuthServices"
-import axios from "axios"
+
+import axiosInstance from "../../../services/axiosInstance"
 const Transfer = () => {
     const [transactionChannelId, setTransactionChannelId] = useState(ibftChannel[0].value)
     const [destinationTypeId, setDestinationTypeId] = useState(destinationType[0].value)
@@ -185,7 +186,7 @@ const Transfer = () => {
         const fetchTransferData = async () => {
             for (let i = 0; i < request.toBankList.length; i++) {
                 const requestBody = { ...request, toBankList: request.toBankList.filter((item, index) => index === i) }
-                await axios.post('/1st/bankdemo/api/payment/fundTransferList10', requestBody, { headers: authHeader() })
+                await axiosInstance.post('/api/bankdemo/api/payment/fundTransferList10', requestBody, { headers: authHeader() })
                     .then(res => {
                         const { f11, f39, f63, f120 } = res.data[0]
                         response.toBankList[i]['transferResult'] = {
@@ -234,7 +235,7 @@ const Transfer = () => {
         const fetchInquiryData = async () => {
             for (let i = 0; i < request.toBankList.length; i++) {
                 const requestBody = { ...request, toBankList: request.toBankList.filter((item, index) => index === i) }
-                await axios.post('/1st/bankdemo/api/payment/fundInquiryList10', requestBody, { headers: authHeader() })
+                await axiosInstance.post('/api/bankdemo/api/payment/fundInquiryList10', requestBody, { headers: authHeader() })
                     .then(res => {
                         const { f11, f39, f63, f120 } = res.data[0]
                         request.toBankList[i].f63 = f63

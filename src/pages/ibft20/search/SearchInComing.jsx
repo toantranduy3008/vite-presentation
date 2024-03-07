@@ -36,16 +36,15 @@ export const SearchInComing = () => {
     const [loading, setLoading] = useState(false)
     const [paging, setPaging] = useState({
         pageNo: 1,
-        pageSize: '10',
+        pageSize: '30',
         totalPages: 1
     })
     const [listBank, setListBank] = useState([])
     const [tableData, setTableData] = useState([])
     const [rowsPerPage] = useState([
-        { value: '10', label: '10' },
-        { value: '20', label: '20' },
         { value: '30', label: '30' },
-        { value: '50', label: '50' }
+        { value: '50', label: '50' },
+        { value: '100', label: '100' }
     ])
 
 
@@ -157,20 +156,23 @@ export const SearchInComing = () => {
             traceNo: requestBody ? requestBody.traceNo : initData.traceNo,
             transRef: requestBody ? requestBody.transRef : initData.transRef
         }
-        get(`/1st/bankdemo/api/payment/listIncomingTrans`, pagingQuery, filtersInput).then(
+        get(`/api/bankdemo/api/payment/listIncomingTrans`, pagingQuery, filtersInput).then(
             (res) => {
-                const { content, totalPages, number } = res.data
+                const { content, totalPages, number, totalElements } = res.data
+                setTableData(content)
                 if (content.length === 0) {
                     NotificationServices.info('Không tìm thấy giao dịch.')
                     return;
                 }
+
+                // if (parseInt(pagingQuery.page) === 0) NotificationServices.info(`Tìm thấy ${totalElements} giao dịch.`)
                 setPaging({
                     ...paging,
                     pageNo: number + 1,
                     totalPages: totalPages
                 })
 
-                setTableData(content)
+
             }
         ).catch(
             (e) => { throw new Error(e) }

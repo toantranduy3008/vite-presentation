@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react'
 import { fetchBankList, formatVietnamese, maskRefCode, numberWithCommas, setBadge, validateInValidAmount } from '../../../services/Utilities'
 import classes from './Transfer.module.css'
 import { authHeader, getCurrentUser } from '../../../services/AuthServices'
-import axios from 'axios'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
 import dayjs from 'dayjs'
+import axiosInstance from '../../../services/axiosInstance'
 export const Transfer = () => {
     const { bankId, accountNumber, cardNo } = getCurrentUser()
     let sourceAccount = []
@@ -152,7 +152,7 @@ export const Transfer = () => {
 
     const handleSearchAccount = () => {
         if (initData.acqAccountNo) {
-            axios.get(`/1st/bankdemo/api/payment/investigatename?creditorAgent=${acqBank.id}&toAccount=${initData.acqAccountNo}&toAccountType=${toSourceValue}`, { headers: authHeader() })
+            axiosInstance.get(`/api/bankdemo/api/payment/investigatename?creditorAgent=${acqBank.id}&toAccount=${initData.acqAccountNo}&toAccountType=${toSourceValue}`, { headers: authHeader() })
                 .then(res => {
                     const { f39, f63, f120 } = res.data
                     if (f39 !== '00') {
@@ -262,7 +262,7 @@ export const Transfer = () => {
             ...status,
             deposit: 'PROCESSING'
         })
-        axios.post('/1st/bankdemo/api/payment/fundtransfer', requestBody, { headers: authHeader() })
+        axiosInstance.post('/api/bankdemo/api/payment/fundtransfer', requestBody, { headers: authHeader() })
             .then(
                 res => {
                     const { f11, f39, transDate } = res.data

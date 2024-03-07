@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react"
 import { Button, LoadingOverlay, PasswordInput, TextInput } from "@mantine/core"
-import axios from "axios"
+
 import { useNavigate } from "react-router-dom"
 import NotificationServices from "../../services/notificationServices/NotificationServices"
+import axiosInstance from "../../services/axiosInstance"
 const Login = () => {
     const navigate = useNavigate()
     const [username, setUsername] = useState('')
@@ -41,7 +42,7 @@ const Login = () => {
         }
 
         setLoading(true)
-        axios.post('/1st/bankdemo/api/auth/signin', {
+        axiosInstance.post('/api/bankdemo/api/auth/signin', {
             username: username,
             password: password
         })
