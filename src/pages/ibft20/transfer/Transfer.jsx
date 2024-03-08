@@ -87,7 +87,7 @@ export const Transfer = () => {
         name: listBank.iss[0].label,
     })
 
-    const [showResultModal, setShowResultModal] = useState(true)
+    const [showResultModal, setShowResultModal] = useState(false)
     const [transResult, setTransResult] = useState({
         amount: 0,
         depositStatus: '00',
