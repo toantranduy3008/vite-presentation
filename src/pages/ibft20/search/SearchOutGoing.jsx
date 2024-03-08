@@ -1,11 +1,12 @@
 import { DateTimePicker } from '@mantine/dates'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
-import { fetchBankList, get, maskRefCode, numberWithCommas, setBadge } from '../../../services/Utilities'
+import { fetchBankList, maskRefCode, numberWithCommas, setBadge } from '../../../services/Utilities'
 import { Button, Group, LoadingOverlay, Menu, Pagination, Select, Table, TextInput } from '@mantine/core'
 import TransactionDetailModal from './TransactionDetailModal'
 import { IconDotsVertical } from '@tabler/icons-react'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
+import { SearchAPI } from '../../../apis/SearchAPI'
 
 export const SearchOutGoing = () => {
     const currentDate = new Date()
@@ -88,16 +89,6 @@ export const SearchOutGoing = () => {
             ...paging,
             pageSize: value
         })
-
-        // const requestBody = {
-        //     page: 1,
-        //     size: value,
-        //     startDate: initData.startDate,
-        //     endDate: initData.endDate,
-        //     traceNo: initData.traceNo,
-        //     transRef: initData.transRef
-        // }
-        // handleSearch(requestBody)
     }
 
     const handleChangePage = (value) => {
@@ -146,27 +137,27 @@ export const SearchOutGoing = () => {
             traceNo: requestBody ? requestBody.traceNo : initData.traceNo,
             transRef: requestBody ? requestBody.transRef : initData.transRef
         }
-        get(`/api/bankdemo/api/payment/listTrans`, pagingQuery, filtersInput).then(
-            (res) => {
-                const { content, totalPages, number } = res.data
-                setTableData(content)
-                if (content.length === 0) {
-                    NotificationServices.info('Không tìm thấy giao dịch.')
-                    return;
-                }
+        SearchAPI.outgoing(`/bankdemo/api/payment/listTrans`, pagingQuery, filtersInput)
+            .then(
+                (response) => {
+                    const { content, totalPages, number } = response
+                    setTableData(content)
+                    if (content.length === 0) {
+                        NotificationServices.info('Không tìm thấy giao dịch.')
+                        return;
+                    }
 
-                // if (parseInt(pagingQuery.page) === 0) NotificationServices.info(`Tìm thấy ${totalElements} giao dịch.`)
-                setPaging({
-                    ...paging,
-                    pageNo: number + 1,
-                    totalPages: totalPages
-                })
-            }
-        ).catch(
-            (e) => { throw new Error(e) }
-        ).finally(
-            () => { setLoading(false) }
-        )
+                    setPaging({
+                        ...paging,
+                        pageNo: number + 1,
+                        totalPages: totalPages
+                    })
+                }
+            ).catch(
+                (e) => { throw new Error(e) }
+            ).finally(
+                () => { setLoading(false) }
+            )
     }
 
     const tblRows = tableData.map((element, index) => (
@@ -180,9 +171,7 @@ export const SearchOutGoing = () => {
             <Table.Td>
                 {element.traceNo}
             </Table.Td>
-            <Table.Td
-            // className=' hover:text-sky-700 hover:cursor-pointer duration-150 ease-linear'
-            >
+            <Table.Td>
                 {maskRefCode(element.transRef)}
             </Table.Td>
             <Table.Td>
@@ -227,7 +216,6 @@ export const SearchOutGoing = () => {
                     label="Thời gian kết thúc"
                     value={initData.endDate}
                     onChange={handleChangeEndDate}
-                // minDate={initData.startDate}
                 />
                 <TextInput
                     label="Số truy vấn"

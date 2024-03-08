@@ -1,13 +1,13 @@
 import { DateTimePicker } from '@mantine/dates'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
-import { fetchBankList, get, maskRefCode, numberWithCommas, setBadge } from '../../../services/Utilities'
+import { fetchBankList, maskRefCode, numberWithCommas, setBadge } from '../../../services/Utilities'
 import { Button, Group, LoadingOverlay, Menu, Pagination, Select, Table, TextInput } from '@mantine/core'
 import TransactionDetailModal from './TransactionDetailModal'
 import { IconDotsVertical } from '@tabler/icons-react'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
 import ReturnTransactionModal from './ReturnTransactionModal'
-
+import { SearchAPI } from '../../../apis/SearchAPI'
 export const SearchInComing = () => {
     const currentDate = new Date()
     const [initData, setInitData] = useState({
@@ -156,29 +156,28 @@ export const SearchInComing = () => {
             traceNo: requestBody ? requestBody.traceNo : initData.traceNo,
             transRef: requestBody ? requestBody.transRef : initData.transRef
         }
-        get(`/api/bankdemo/api/payment/listIncomingTrans`, pagingQuery, filtersInput).then(
-            (res) => {
-                const { content, totalPages, number } = res.data
-                setTableData(content)
-                if (content.length === 0) {
-                    NotificationServices.info('Không tìm thấy giao dịch.')
-                    return;
+
+        SearchAPI.incoming(`/bankdemo/api/payment/listIncomingTrans`, pagingQuery, filtersInput)
+            .then(
+                (response) => {
+                    const { content, totalPages, number } = response
+                    setTableData(content)
+                    if (content.length === 0) {
+                        NotificationServices.info('Không tìm thấy giao dịch.')
+                        return;
+                    }
+
+                    setPaging({
+                        ...paging,
+                        pageNo: number + 1,
+                        totalPages: totalPages
+                    })
                 }
-
-                // if (parseInt(pagingQuery.page) === 0) NotificationServices.info(`Tìm thấy ${totalElements} giao dịch.`)
-                setPaging({
-                    ...paging,
-                    pageNo: number + 1,
-                    totalPages: totalPages
-                })
-
-
-            }
-        ).catch(
-            (e) => { throw new Error(e) }
-        ).finally(
-            () => { setLoading(false) }
-        )
+            ).catch(
+                (e) => { throw new Error(e) }
+            ).finally(
+                () => { setLoading(false) }
+            )
     }
 
     const tblRows = tableData.map((element, index) => (
