@@ -44,7 +44,6 @@ const NewLogin = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                // withCredentials: false,
             })
             .then(res => {
                 const userSession = JSON.stringify(res.data)
@@ -52,9 +51,9 @@ const NewLogin = () => {
                 navigate('/bankdemo/new-ibft/search-outgoing')
             })
             .catch(err => {
-                // const { status } = err.response
-                // userRef.current.focus()
-                // NotificationServices.error(`${status}: Đăng nhập không thành công!`)
+                const { status } = err.response
+                userRef.current.focus()
+                NotificationServices.error(`${status}: Đăng nhập không thành công!`)
             })
             .finally(() => setLoading(false))
     }

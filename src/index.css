@@ -5,29 +5,29 @@
 @layer base {
     :root {
         --navbar-color-gradient-from: #e6e9f0;
-        --navbar-color-gradient-to: #eef1f5;
-        --navbar-hover-bg-color: #3a7bd5;
-        --navbar-hover-text-color: #fff;
-        --color-content: #000;
+        /* --navbar-color-gradient-to: #eef1f5; */
+        /* --navbar-hover-bg-color: #3a7bd5; */
+        /* --navbar-hover-text-color: #fff; */
+        /* --color-content: #000; */
     }
 
     @media (prefers-color-scheme:dark) {
-        :root {
+        /* :root {
             --navbar-color-gradient-from: #434343;
             --navbar-color-gradient-to: #000000;
             --navbar-hover-bg-color: #3a7bd5;
             --navbar-hover-text-color: #fff;
             --color-content: #fff;
-        }
+        } */
     }
 
-    :root[class='dark'] {
+    /* :root[class='dark'] {
         --navbar-color-gradient-from: #434343;
         --navbar-color-gradient-to: #000000;
         --navbar-hover--bg-color: #3a7bd5;
         --navbar-hover-text-color: #fff;
         --color-content: #fff;
-    }
+    } */
 
     html,
     body {

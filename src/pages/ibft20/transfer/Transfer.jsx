@@ -2,10 +2,12 @@ import { Button, LoadingOverlay, NumberInput, Select, TextInput, Textarea } from
 import { useEffect, useState } from 'react'
 import { fetchBankList, formatVietnamese, maskRefCode, numberWithCommas, setBadge, validateInValidAmount } from '../../../services/Utilities'
 import classes from './Transfer.module.css'
-import { authHeader, getCurrentUser } from '../../../services/AuthServices'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
 import dayjs from 'dayjs'
-import axiosInstance from '../../../services/axiosInstance'
+import { TransferAPI } from '../../../apis/transferAPI'
+import { getCurrentUser } from '../../../services/AuthServices'
+import { TransferResultModal } from './TransferResultModal'
+
 export const Transfer = () => {
     const { bankId, accountNumber, cardNo } = getCurrentUser()
     let sourceAccount = []
@@ -65,8 +67,8 @@ export const Transfer = () => {
     )
 
     const [status, setStatus] = useState({
-        inquiry: 'PENDING',
-        deposit: 'PENDING',
+        inquiry: false,
+        deposit: false,
 
     })
 
@@ -83,6 +85,19 @@ export const Transfer = () => {
     const [issBank, setIssBank] = useState({
         id: listBank.iss[0].value,
         name: listBank.iss[0].label,
+    })
+
+    const [showResultModal, setShowResultModal] = useState(true)
+    const [transResult, setTransResult] = useState({
+        amount: 0,
+        depositStatus: '00',
+        acqBankName: '',
+        acqAccountNo: '',
+        acqAccountName: '',
+        transTime: '',
+        refNo: '',
+        traceNo: '',
+        description: ''
     })
 
     useEffect(() => {
@@ -152,9 +167,10 @@ export const Transfer = () => {
 
     const handleSearchAccount = () => {
         if (initData.acqAccountNo) {
-            axiosInstance.get(`/api/bankdemo/api/payment/investigatename?creditorAgent=${acqBank.id}&toAccount=${initData.acqAccountNo}&toAccountType=${toSourceValue}`, { headers: authHeader() })
-                .then(res => {
-                    const { f39, f63, f120 } = res.data
+            setStatus({ ...status, inquiry: true })
+            TransferAPI.inquiry(acqBank.id, initData.acqAccountNo, toSourceValue, true)
+                .then(response => {
+                    const { f39, f63, f120 } = response
                     if (f39 !== '00') {
                         NotificationServices.warning(`Không tìm được thông tin ${toSourceValue === 'ACC' ? 'tài khoản' : 'thẻ'}.`)
                         return;
@@ -168,11 +184,12 @@ export const Transfer = () => {
                         traceNo: ''
                     })
                 })
-                .catch(() => {
-                    NotificationServices.error(`Không tìm được thông tin ${toSourceValue === 'ACC' ? 'tài khoản' : 'thẻ'}.`)
+                .catch(error => {
+                    const { status } = error.response
+                    NotificationServices.error(`${status}: Không tìm được thông tin ${toSourceValue === 'ACC' ? 'tài khoản' : 'thẻ'}.`)
                     return;
                 })
-                .finally(() => { })
+                .finally(() => { setStatus({ ...status, inquiry: false }) })
         }
     }
 
@@ -260,41 +277,49 @@ export const Transfer = () => {
 
         setStatus({
             ...status,
-            deposit: 'PROCESSING'
+            deposit: true
         })
-        axiosInstance.post('/api/bankdemo/api/payment/fundtransfer', requestBody, { headers: authHeader() })
-            .then(
-                res => {
-                    const { f11, f39, transDate } = res.data
-                    console.log(dayjs(transDate).format('DD/MM/YYYY HH:mm'))
-                    setInitData({
-                        ...initData,
-                        transTime: dayjs(transDate).format('DD/MM/YYYY HH:mm'),
-                        traceNo: f11,
-                        depositStatus: f39
-                    })
-
-                }
-            )
-            .catch(err => {
-                const { status } = err.response
+        TransferAPI.transfer(requestBody, true)
+            .then(response => {
+                const { f11, f39, transDate } = response
                 setInitData({
                     ...initData,
-                    depositStatus: status.toString()
+                    transTime: dayjs(transDate).format('DD/MM/YYYY HH:mm'),
+                    traceNo: f11,
+                    depositStatus: f39
                 })
-                NotificationServices.error(`${status}: Không thể thực hiện giao dịch.`)
+
+                setTransResult({
+                    amount: initData.amount,
+                    depositStatus: f39,
+                    acqBankName: initData.acqBankName,
+                    acqAccountNo: initData.acqAccountNo,
+                    acqAccountName: initData.acqAccountName,
+                    transTime: dayjs(transDate).format('DD/MM/YYYY HH:mm'),
+                    refNo: initData.refNo,
+                    traceNo: f11,
+                    description: initData.description
+                })
+            })
+            .then(() => { setShowResultModal(true) })
+            .catch(error => {
+                console.log('error: ', error)
+                // setInitData({
+                //                 ...initData,
+                //                 depositStatus: status.toString()
+                //             })
             })
             .finally(() => {
                 setStatus({
                     ...status,
-                    deposit: 'PENDING'
+                    deposit: false
                 })
             })
     }
     return (
         <div className="relative flex w-full gap-2">
             <div className='relative flex flex-col basis-2/3 w-full h-full gap-2 p-2 bg-white'>
-                <LoadingOverlay visible={status.deposit.toUpperCase() === 'PROCESSING'} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+                <LoadingOverlay visible={status.deposit || status.inquiry} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
                 <div className='flex xs:flex-col md:flex-row w-full  gap-2'>
                     <div className='flex flex-col basis-1/2'>
                         <Select
@@ -401,7 +426,7 @@ export const Transfer = () => {
                     <Button variant="filled" className="hover:bg-teal-600" onClick={handleTransfer}>Xác nhận</Button>
                 </div>
             </div>
-            <div className='flex basis-1/3 flex-col w-full h-full gap-2 p-2 bg-white'>
+            <div className='flex basis-1/3 flex-col w-full h-full gap-2 p-2 bg-white hidden'>
                 <div id="logo-napas" className="flex w-full justify-center items-center">
                     <img src='/bankdemo/napas-logo.svg' className=" w-auto xs:w-24 h-10 xs:h-auto align-middle border-none " />
                 </div>
@@ -456,6 +481,8 @@ export const Transfer = () => {
                     </div>
                 </div>
             </div>
+
+            <TransferResultModal data={transResult} opened={showResultModal} onClose={setShowResultModal} />
         </div >
     )
 }

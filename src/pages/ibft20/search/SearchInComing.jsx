@@ -158,7 +158,7 @@ export const SearchInComing = () => {
         }
         get(`/api/bankdemo/api/payment/listIncomingTrans`, pagingQuery, filtersInput).then(
             (res) => {
-                const { content, totalPages, number, totalElements } = res.data
+                const { content, totalPages, number } = res.data
                 setTableData(content)
                 if (content.length === 0) {
                     NotificationServices.info('Không tìm thấy giao dịch.')
