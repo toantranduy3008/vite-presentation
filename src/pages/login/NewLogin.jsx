@@ -2,7 +2,7 @@ import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { LoadingOverlay } from "@mantine/core"
 import NotificationServices from "../../services/notificationServices/NotificationServices"
-import axiosInstance from "../../services/axiosInstance"
+import { SignInAPI } from "../../apis/SignInAPI"
 const NewLogin = () => {
     const navigate = useNavigate()
     const [username, setUsername] = useState('')
@@ -35,18 +35,13 @@ const NewLogin = () => {
         }
 
         setLoading(true)
-        axiosInstance.post('/api/bankdemo/api/auth/signin',
-            {
-                username: username,
-                password: password
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then(res => {
-                const userSession = JSON.stringify(res.data)
+        const requestBody = {
+            username: username,
+            password: password
+        }
+        SignInAPI.signIn(requestBody, true)
+            .then(response => {
+                const userSession = JSON.stringify(response)
                 sessionStorage.setItem('userSession', userSession)
                 navigate('/bankdemo/new-ibft/search-outgoing')
             })

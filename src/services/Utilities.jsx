@@ -1,7 +1,8 @@
 import { Badge } from "@mantine/core";
 import { authHeader } from "./AuthServices";
 import NotificationServices from "./notificationServices/NotificationServices";
-import axiosInstance from "./axiosInstance";
+import axios from "axios";
+import { BankAPI } from "../apis/BankAPI";
 export const getTheme = () => {
     return localStorage.theme ? localStorage.theme : 'auto'
 }
@@ -94,7 +95,7 @@ export const getAcqBankList = async () => {
     ) {
         return [JSON.parse(acqBankList)]
     } else {
-        await axiosInstance.get('/bankdemo/api/bank', { headers: authHeader() })
+        await axios.get('/bankdemo/api/bank', { headers: authHeader() })
             .then(res => {
                 const { listBank } = res.data
                 acqBankList = listBank.map(item => {
@@ -124,8 +125,8 @@ export const fetchBankList = async () => {
         return [JSON.parse(acquirer), JSON.parse(issuer)]
     } else {
         const [fetchFromBankList, fetchToBankList] = await Promise.allSettled([
-            axiosInstance.get('/api/bankdemo/api/bank', { headers: authHeader() }),
-            axiosInstance.get('/api/bankdemo/api/bank', { headers: authHeader() }),
+            BankAPI.getAll(),
+            BankAPI.getAll(),
         ])
 
         if (fetchFromBankList.status === 'rejected') {
@@ -161,10 +162,6 @@ export const fetchBankList = async () => {
 
 export const truncateString = (str, n) => {
     return (str.length > n) ? str.slice(0, n - 1) + '...' : str;
-}
-
-export const get = (apiUrl, paging, filtersInput) => {
-    return axiosInstance.get(`${apiUrl}?${new URLSearchParams(paging).toString()}&${new URLSearchParams(filtersInput).toString()}`, { headers: authHeader() })
 }
 
 export const maskRefCode = (refCode) => {

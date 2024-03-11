@@ -4,7 +4,7 @@ import { fetchBankList, formatVietnamese, maskRefCode, numberWithCommas, setBadg
 import classes from './Transfer.module.css'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
 import dayjs from 'dayjs'
-import { TransferAPI } from '../../../apis/transferAPI'
+import { TransferAPI } from '../../../apis/TransferAPI'
 import { getCurrentUser } from '../../../services/AuthServices'
 import { TransferResultModal } from './TransferResultModal'
 

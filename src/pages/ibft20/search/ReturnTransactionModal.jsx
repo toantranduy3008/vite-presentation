@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
 import { Button, Modal, NumberInput, Textarea, LoadingOverlay } from '@mantine/core'
 import { useState } from 'react'
-import { authHeader } from '../../../services/AuthServices'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
-import axiosInstance from '../../../services/axiosInstance'
+import { ReturnTransactionAPI } from '../../../apis/ReturnTransactionAPI'
 
 const ReturnTransactionModal = ({ data, opened, onClose }) => {
     const { seqNo } = data
@@ -24,7 +23,8 @@ const ReturnTransactionModal = ({ data, opened, onClose }) => {
             amount: amount,
             reason: reason
         }
-        axiosInstance.post('/api/bankdemo/api/payment/returnIbft', requestBody, { headers: authHeader() })
+
+        ReturnTransactionAPI.returnTransaction(requestBody, true)
             .then(res => {
                 const { responseCode } = res.data
                 if (responseCode === 0) {
