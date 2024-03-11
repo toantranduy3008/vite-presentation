@@ -304,10 +304,7 @@ export const Transfer = () => {
             .then(() => { setShowResultModal(true) })
             .catch(error => {
                 console.log('error: ', error)
-                // setInitData({
-                //                 ...initData,
-                //                 depositStatus: status.toString()
-                //             })
+                NotificationServices.error('Không thể thực hiện giao dịch.')
             })
             .finally(() => {
                 setStatus({

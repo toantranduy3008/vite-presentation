@@ -15,7 +15,7 @@ const NavBar = ({ toggle }) => {
                         label={item.label}
                         leftSection={item.icon ? item.icon : <IconFolder size={16} />}
                         stroke={1.5}
-                        className={`font-semibold ${pathname.includes(item.href) ? 'text-sky-500 border-l-2 border-solid border-indigo-400' : ''} hover:bg-navbarHoverBgColor hover:text-navbarHoverTextColor`}
+                        className={`font-semibold ${pathname.includes(item.href) ? 'bg-indigo-400 text-white border-l-2 border-solid border-indigo-400' : ''} hover:bg-orange-500 hover:text-white`}
                         component={RouterLink}
                         to={item.href}
                         onClick={toggle}
@@ -32,7 +32,7 @@ const NavBar = ({ toggle }) => {
                                     to={`${item.href}${subItem.href}`}
                                     onClick={toggle}
                                     active={pathname === `${item.href}${subItem.href}`}
-                                    className={`${pathname === `${item.href}${subItem.href}` ? 'text-sky-500 border-l-2 border-solid border-indigo-400' : 'border-l-2 border-solid border-slate-200'} hover:bg-navbarHoverBgColor hover:text-navbarHoverTextColor`}
+                                    className={`${pathname === `${item.href}${subItem.href}` ? 'text-sky-500 border-l-2 border-solid border-indigo-400' : 'border-l-2 border-solid border-slate-200'} hover:bg-orange-500 hover:text-white`}
                                 />
                             ))
                         }
