@@ -35,8 +35,9 @@ const ReturnTransactionModal = ({ data, opened, onClose }) => {
                 }
             })
             .catch(err => {
-                const { status } = err.response
-                NotificationServices.error(`${status}: Không thể thực hiện giao dịch hoàn trả`)
+                console.log('error: ', err)
+                // const { status } = err.response
+                NotificationServices.error(`Không thể thực hiện giao dịch hoàn trả.`)
             })
             .finally(() => {
                 setLoading(false)

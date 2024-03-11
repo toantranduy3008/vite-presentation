@@ -46,9 +46,9 @@ const NewLogin = () => {
                 navigate('/bankdemo/new-ibft/search-outgoing')
             })
             .catch(err => {
-                const { status } = err.response
+                console.log('Login error: ', err)
                 userRef.current.focus()
-                NotificationServices.error(`${status}: Đăng nhập không thành công!`)
+                NotificationServices.error(`Đăng nhập không thành công!`)
             })
             .finally(() => setLoading(false))
     }

@@ -67,7 +67,7 @@ const TransactionDetailModal = ({ data, opened, onClose }) => {
                     </div>
 
                     <div id="transaction-source" className='flex flex-row w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
-                        <div className='flex flex-1 items-center justify-start'>Trạng thái</div>
+                        <div className='flex flex-1 items-center justify-start'>TTGD tại Napas</div>
                         <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.response}</div>
                     </div>
                 </div>

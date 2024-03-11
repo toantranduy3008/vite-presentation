@@ -2,7 +2,7 @@ import axios from "axios"
 import NotificationServices from "../../services/notificationServices/NotificationServices"
 
 export const api = axios.create({
-    baseURL: 'http://172.30.17.115:8082',
+    baseURL: '',
 })
 
 const errorHandler = (error) => {

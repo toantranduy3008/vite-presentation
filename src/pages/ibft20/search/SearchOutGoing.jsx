@@ -266,7 +266,7 @@ export const SearchOutGoing = () => {
                             <Table.Th>Số lưu vết</Table.Th>
                             <Table.Th>Số tham chiếu</Table.Th>
                             <Table.Th>Số tiền</Table.Th>
-                            <Table.Th>Trạng thái giao dịch</Table.Th>
+                            <Table.Th>TTGD tại Napas</Table.Th>
                             <Table.Th>Ngân hàng thụ hưởng</Table.Th>
                             <Table.Th>Thời gian giao dịch</Table.Th>
                             <Table.Th></Table.Th>

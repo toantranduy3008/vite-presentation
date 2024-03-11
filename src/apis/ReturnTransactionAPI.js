@@ -9,7 +9,7 @@ export const ReturnTransactionAPI = {
             method: "POST",
             data: requestBody,
             headers: authHeader(),
-            signal: cancel ? cancelApiObject[this.signIn.name].handleRequestCancellation().signal : undefined,
+            signal: cancel ? cancelApiObject[this.returnTransaction.name].handleRequestCancellation().signal : undefined,
         })
 
         return response.data
