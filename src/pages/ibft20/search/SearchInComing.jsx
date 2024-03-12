@@ -107,40 +107,42 @@ export const SearchInComing = () => {
 
     const handleShowDetailTransactionModal = (e, data) => {
         setShowDetailTransactionModal(true)
-        setModalData({
-            seqNo: data.seqNo,
-            issBankName: listBank.find(b => b.value.toString() === data.bankId)?.label,
-            fromAccount: data.fromAccount,
-            acqBankName: listBank.find(b => b.value.toString() === data.benId)?.label,
-            toAccount: data.toAccount,
-            fromCardNo: data.fromCardNo,
-            acqAccountName: data.f120,
-            transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
-            transRef: data.transRef,
-            traceNo: data.traceNo,
-            amount: data.amount ? numberWithCommas(data.amount) : '',
-            description: data.transContent,
-            response: setBadge(data.respcode, true)
-        })
+        // setModalData({
+        //     seqNo: data.seqNo,
+        //     issBankName: listBank.find(b => b.value.toString() === data.bankId)?.label,
+        //     fromAccount: data.fromAccount,
+        //     acqBankName: listBank.find(b => b.value.toString() === data.benId)?.label,
+        //     toAccount: data.toAccount,
+        //     fromCardNo: data.fromCardNo,
+        //     acqAccountName: data.f120,
+        //     transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
+        //     transRef: data.transRef,
+        //     traceNo: data.traceNo,
+        //     amount: data.amount ? numberWithCommas(data.amount) : '',
+        //     description: data.transContent,
+        //     response: setBadge(data.respcode, true)
+        // })
+        setModalData(createModalData(data))
     }
 
     const handleShowReturnTransactionModal = (e, data) => {
         setShowReturnTransactionModal(true)
-        setModalData({
-            seqNo: data.seqNo,
-            issBankName: listBank.find(b => b.value.toString() === data.bankId)?.label,
-            fromAccount: data.fromAccount,
-            acqBankName: listBank.find(b => b.value.toString() === data.benId)?.label,
-            toAccount: data.toAccount,
-            fromCardNo: data.fromCardNo,
-            acqAccountName: data.f120,
-            transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
-            transRef: data.transRef,
-            traceNo: data.traceNo,
-            amount: data.amount ? numberWithCommas(data.amount) : '',
-            description: data.transContent,
-            response: setBadge(data.respcode, true)
-        })
+        // setModalData({
+        //     seqNo: data.seqNo,
+        //     issBankName: listBank.find(b => b.value.toString() === data.bankId)?.label,
+        //     fromAccount: data.fromAccount,
+        //     acqBankName: listBank.find(b => b.value.toString() === data.benId)?.label,
+        //     toAccount: data.toAccount,
+        //     fromCardNo: data.fromCardNo,
+        //     acqAccountName: data.f120,
+        //     transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
+        //     transRef: data.transRef,
+        //     traceNo: data.traceNo,
+        //     amount: data.amount ? numberWithCommas(data.amount) : '',
+        //     description: data.transContent,
+        //     response: setBadge(data.respcode, true)
+        // })
+        setModalData(createModalData(data))
     }
     const handleSearch = async (requestBody = null) => {
         setPaging({ ...paging, pageNo: 1 })
@@ -180,6 +182,24 @@ export const SearchInComing = () => {
             )
     }
 
+    const createModalData = (data) => {
+        return {
+            seqNo: data.seqNo,
+            issBankName: listBank.find(b => b.value.toString() === data.bankId)?.label,
+            fromAccount: data.fromAccount,
+            fromCardNo: data.fromCardNo,
+            acqBankName: listBank.find(b => b.value.toString() === data.benId)?.label,
+            toAccount: data.toAccount,
+            acqAccountName: data.f120,
+            transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
+            transRef: data.transRef,
+            traceNo: data.traceNo,
+            amount: data.amount ? numberWithCommas(data.amount) : '',
+            description: data.transContent,
+            response: setBadge(data.respcode, true)
+        }
+    }
+
     const tblRows = tableData.map((element, index) => (
         <Table.Tr
             key={`${index}_${element.transRef}`}
@@ -215,13 +235,13 @@ export const SearchInComing = () => {
                     </Menu.Target>
                     <Menu.Dropdown>
                         <Menu.Item
-                            className='text-slate-700 hover:bg-sky-700 hover:font-semibold hover:text-white'
+                            className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
                             onClick={(e) => { handleShowDetailTransactionModal(e, element) }}
                         >
                             Chi tiết
                         </Menu.Item>
                         <Menu.Item
-                            className='text-slate-700 hover:bg-sky-700 hover:font-semibold hover:text-white'
+                            className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
                             onClick={(e) => { handleShowReturnTransactionModal(e, element) }}
                         >
                             Hoàn trả

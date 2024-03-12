@@ -7,6 +7,7 @@ import TransactionDetailModal from './TransactionDetailModal'
 import { IconDotsVertical } from '@tabler/icons-react'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
 import { SearchAPI } from '../../../apis/SearchAPI'
+import JsonViewerModal from './JsonViewerModal'
 
 export const SearchOutGoing = () => {
     const currentDate = new Date()
@@ -18,6 +19,7 @@ export const SearchOutGoing = () => {
     })
 
     const [showModal, setShowModal] = useState(false)
+    const [showJsonViewerModal, setShowJsonViewerModal] = useState(true)
     const [modalData, setModalData] = useState({
         seqNo: '',
         issBankName: '',
@@ -107,21 +109,12 @@ export const SearchOutGoing = () => {
 
     const handleShowDetailTransactionModal = (e, data) => {
         setShowModal(true)
-        setModalData({
-            seqNo: data.seqNo,
-            issBankName: listBank.find(b => b.value.toString() === data.bankId)?.label,
-            fromAccount: data.fromAccount,
-            fromCardNo: data.fromCardNo,
-            acqBankName: listBank.find(b => b.value.toString() === data.benId)?.label,
-            toAccount: data.toAccount,
-            acqAccountName: data.f120,
-            transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
-            transRef: data.transRef,
-            traceNo: data.traceNo,
-            amount: data.amount ? numberWithCommas(data.amount) : '',
-            description: data.transContent,
-            response: setBadge(data.respcode, true)
-        })
+        setModalData(createModalData(data))
+    }
+
+    const handleShowJsonViewerModal = (e, data) => {
+        setShowJsonViewerModal(true)
+        setModalData(createModalData(data))
     }
 
     const handleSearch = async (requestBody = null) => {
@@ -160,6 +153,24 @@ export const SearchOutGoing = () => {
             )
     }
 
+    const createModalData = (data) => {
+        return {
+            seqNo: data.seqNo,
+            issBankName: listBank.find(b => b.value.toString() === data.bankId)?.label,
+            fromAccount: data.fromAccount,
+            fromCardNo: data.fromCardNo,
+            acqBankName: listBank.find(b => b.value.toString() === data.benId)?.label,
+            toAccount: data.toAccount,
+            acqAccountName: data.f120,
+            transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
+            transRef: data.transRef,
+            traceNo: data.traceNo,
+            amount: data.amount ? numberWithCommas(data.amount) : '',
+            description: data.transContent,
+            response: setBadge(data.respcode, true)
+        }
+    }
+
     const tblRows = tableData.map((element, index) => (
         <Table.Tr
             key={`${index}_${element.transRef}`}
@@ -187,16 +198,22 @@ export const SearchOutGoing = () => {
                 {dayjs(element.transDate).format('DD/MM/YYYY HH:mm')}
             </Table.Td>
             <Table.Td>
-                <Menu shadow="md" width={100} position="bottom-end" offset={0} className="flex">
+                <Menu shadow="md" width={200} position="bottom-end" offset={0} className="flex">
                     <Menu.Target className=" hover:cursor-pointer hover:shadow-md rounded-full p-1 transition ease-linear duration-200">
                         <IconDotsVertical className="w-6 h-6 text-slate-700 hover:text-white hover:bg-sky-700" />
                     </Menu.Target>
                     <Menu.Dropdown>
                         <Menu.Item
-                            className='text-slate-700 hover:bg-sky-700 hover:font-semibold hover:text-white'
+                            className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
                             onClick={(e) => { handleShowDetailTransactionModal(e, element) }}
                         >
                             Chi tiết
+                        </Menu.Item>
+                        <Menu.Item
+                            className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
+                            onClick={(e) => { handleShowJsonViewerModal(e, element) }}
+                        >
+                            Tra cứu bản tin
                         </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
@@ -277,6 +294,7 @@ export const SearchOutGoing = () => {
             </div>
 
             <TransactionDetailModal data={modalData} opened={showModal} onClose={setShowModal} />
+            <JsonViewerModal data={modalData} opened={showJsonViewerModal} onClose={setShowJsonViewerModal} />
         </div>
     )
 }

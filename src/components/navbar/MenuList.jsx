@@ -14,7 +14,7 @@ export const MenuList = [
             {
                 label: 'Chuyển khoản',
                 href: '/transfer',
-            },
+            }
         ]
     }
 ]
