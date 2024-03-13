@@ -185,6 +185,13 @@ export const Transfer = () => {
                     })
                 })
                 .catch(error => {
+                    setInitData({
+                        ...initData,
+                        acqAccountName: '',
+                        refNo: '',
+                        transTime: '',
+                        traceNo: ''
+                    })
                     const { status } = error.response
                     NotificationServices.error(`${status}: Không tìm được thông tin ${toSourceValue === 'ACC' ? 'tài khoản' : 'thẻ'}.`)
                     return;

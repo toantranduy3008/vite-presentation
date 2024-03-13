@@ -52,7 +52,7 @@ export const setBadge = (status, displayLabel = true) => {
             <Badge
                 size="md"
                 color='gray'
-                className="text-[10px] font-thin"
+                className="text-[10px]"
             >
                 Chưa xử lý
             </Badge>
@@ -62,7 +62,7 @@ export const setBadge = (status, displayLabel = true) => {
             <Badge
                 size="md"
                 color={status === '00' ? 'green' : status === '68' ? 'yellow' : 'red'}
-                className="text-[10px] font-thin"
+                className="text-[10px]"
             >
                 {status} {displayLabel && (status === '00' ? '-Thành công' : status === '68' ? '-Đang xử lý' : '-Thất bại')}
             </Badge>

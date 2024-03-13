@@ -19,7 +19,7 @@ export const SearchOutGoing = () => {
     })
 
     const [showModal, setShowModal] = useState(false)
-    const [showJsonViewerModal, setShowJsonViewerModal] = useState(true)
+    const [showJsonViewerModal, setShowJsonViewerModal] = useState(false)
     const [modalData, setModalData] = useState({
         seqNo: '',
         issBankName: '',
@@ -157,9 +157,11 @@ export const SearchOutGoing = () => {
         return {
             seqNo: data.seqNo,
             issBankName: listBank.find(b => b.value.toString() === data.bankId)?.label,
+            bankId: data.bankId,
             fromAccount: data.fromAccount,
             fromCardNo: data.fromCardNo,
             acqBankName: listBank.find(b => b.value.toString() === data.benId)?.label,
+            benId: data.benId,
             toAccount: data.toAccount,
             acqAccountName: data.f120,
             transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
@@ -192,7 +194,7 @@ export const SearchOutGoing = () => {
                 {setBadge(element.respcode, true)}
             </Table.Td>
             <Table.Td>
-                {listBank.find(b => b.value.toString() === element.benId).label}
+                {listBank.find(b => b.value.toString() === element.benId)?.label}
             </Table.Td>
             <Table.Td>
                 {dayjs(element.transDate).format('DD/MM/YYYY HH:mm')}
@@ -202,7 +204,9 @@ export const SearchOutGoing = () => {
                     <Menu.Target className=" hover:cursor-pointer hover:shadow-md rounded-full p-1 transition ease-linear duration-200">
                         <IconDotsVertical className="w-6 h-6 text-slate-700 hover:text-white hover:bg-sky-700" />
                     </Menu.Target>
-                    <Menu.Dropdown>
+                    <Menu.Dropdown
+                    //className='!bg-sky-400 '
+                    >
                         <Menu.Item
                             className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
                             onClick={(e) => { handleShowDetailTransactionModal(e, element) }}

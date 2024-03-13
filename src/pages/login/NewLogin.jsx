@@ -1,6 +1,6 @@
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import { LoadingOverlay } from "@mantine/core"
+import { Button, LoadingOverlay, PasswordInput, TextInput } from "@mantine/core"
 import NotificationServices from "../../services/notificationServices/NotificationServices"
 import { SignInAPI } from "../../apis/SignInAPI"
 const NewLogin = () => {
@@ -57,37 +57,33 @@ const NewLogin = () => {
             <div className="flex w-full h-full backdrop-blur-sm justify-center items-center">
                 <div className="relative flex bg-white/50 h-96 max-h-full justify-center items-center ">
                     <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-                    <div className="relative flex flex-col w-96 px-10 py-15 gap-2  items-center justify-center overflow-y-auto ">
+                    <div className="relative flex flex-col h-full w-96 px-10 py-15 gap-2 items-center justify-center overflow-y-auto ">
                         <img src="/bankdemo/napas-logo.svg" className="h-10 md:hidden" />
                         <p className="flex w-full text-white text-xl font-semibold uppercase justify-center items-center text-center m-0 p-0">ibft 2.0 simulator system</p>
-                        <input
-                            type="text"
-                            name="username"
-                            id="username"
+                        <TextInput
+                            placeholder="Tài khoản"
                             value={username}
                             onChange={handleChangeUsername}
-                            placeholder="Tài khoản"
-                            className="w-full px-2 py-2 border-none outline-none placeholder:italic"
                             autoComplete="off"
-                            ref={userRef} />
-                        <input
-                            type="password"
-                            name="password"
-                            id="password"
+                            className="w-full"
+                            ref={userRef}
+                        />
+                        <PasswordInput
+                            placeholder="Mật khẩu"
                             value={password}
                             onChange={handleChangePassword}
-                            placeholder="Mật khẩu"
                             autoComplete="off"
-                            className="w-full px-2 py-2 border-none outline-none placeholder:italic"
-                            ref={passRef} />
+                            className="w-full"
+                            ref={passRef}
+                        />
                         {errorMsg && errorMsg.length > 0 && <p className="flex w-full m-0 p-0 text-red-900 justify-start items-center ">* {errorMsg}</p>}
-                        <button
-                            type="button"
-                            className="w-full px-1 py-2 border-none outline-none bg-indigo-500 text-white hover:bg-indigo-800/80 hover:cursor-pointer"
+                        <Button
+                            className=" bg-indigo-500 text-white hover:bg-indigo-800/80 hover:cursor-pointer"
+                            fullWidth
                             onClick={handleLogin}
                         >
                             Đăng nhập
-                        </button>
+                        </Button>
                     </div>
 
                     <div className="relative hidden md:flex md:flex-col w-96 px-10 py-15 gap-2 items-center justify-center overflow-y-auto">
