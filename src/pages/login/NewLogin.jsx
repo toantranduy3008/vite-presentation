@@ -43,7 +43,7 @@ const NewLogin = () => {
             .then(response => {
                 const userSession = JSON.stringify(response)
                 sessionStorage.setItem('userSession', userSession)
-                navigate('/bankdemo/new-ibft/search-outgoing')
+                navigate('/bankdemo/app/new-ibft/search-outgoing')
             })
             .catch(err => {
                 console.log('Login error: ', err)

@@ -147,7 +147,10 @@ export const SearchOutGoing = () => {
                     })
                 }
             ).catch(
-                (e) => { throw new Error(e) }
+                () => {
+                    //throw new Error(e) 
+                    NotificationServices.error('Không thể tìm kiếm giao dịch.')
+                }
             ).finally(
                 () => { setLoading(false) }
             )

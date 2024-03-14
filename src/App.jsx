@@ -17,19 +17,22 @@ import QRCode from './pages/ibft/qrCode/QRCode';
 import { Transfer as NewTransfer } from './pages/ibft20/transfer/Transfer';
 import { SearchOutGoing } from './pages/ibft20/search/SearchOutGoing';
 import { SearchInComing } from './pages/ibft20/search/SearchInComing';
+import ErrorPage from './pages/ErrorPage';
 function App() {
   return (
     <MantineProvider>
       <Notifications />
       <Routes>
-        <Route path='/bankdemo/login' element={<NewLogin />} />
+        <Route path='/bankdemo/app/login' element={<NewLogin />} />
+        {/* <Route path='*' element={<ErrorPage />} errorElement={<ErrorPage />} /> */}
         <Route element={<ProtectedRoute><RootLayout /></ProtectedRoute>}>
           <Route path='/bankdemo/' element={<SearchOutGoing />} />
-          <Route path='/bankdemo/ibft/batch-transfer' element={<BatchTransfer />} />
-          <Route path='/bankdemo/ibft/qr-code' element={<QRCode />} />
-          <Route path='/bankdemo/new-ibft/transfer' element={<NewTransfer />} />
-          <Route path='/bankdemo/new-ibft/search-outgoing' element={<SearchOutGoing />} />
-          <Route path='/bankdemo/new-ibft/search-incoming' element={<SearchInComing />} />
+          <Route path='/bankdemo/app/' element={<SearchOutGoing />} />
+          <Route path='/bankdemo/app/ibft/batch-transfer' element={<BatchTransfer />} />
+          <Route path='/bankdemo/app/ibft/qr-code' element={<QRCode />} />
+          <Route path='/bankdemo/app/new-ibft/transfer' element={<NewTransfer />} />
+          <Route path='/bankdemo/app/new-ibft/search-outgoing' element={<SearchOutGoing />} />
+          <Route path='/bankdemo/app/new-ibft/search-incoming' element={<SearchInComing />} />
         </Route>
       </Routes>
     </MantineProvider>

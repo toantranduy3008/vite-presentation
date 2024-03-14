@@ -1,7 +1,7 @@
 export const MenuList = [
     {
         label: 'IBFT 2.0',
-        href: '/bankdemo/new-ibft',
+        href: '/bankdemo/app/new-ibft',
         subMenu: [
             {
                 label: 'Tìm kiếm giao dịch chiều đi',

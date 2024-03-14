@@ -12,7 +12,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/bankdemo/api': {
-        target: "https://ips-stg.napas.com.vn:8082/",
+        target: "http://ips-stg.napas.com.vn:8082/",
         changeOrigin: true,
         secure: false,
         configure: (proxy, _options) => {
