@@ -122,10 +122,28 @@ export const Transfer = () => {
 
     const handleChangeFromSourceValue = (value) => {
         setFromSourceValue(value)
+        setInitData({
+            ...initData,
+            acqAccountNo: '',
+            acqAccountName: '',
+            refNo: '',
+            depositStatus: '',
+            transTime: '',
+            traceNo: ''
+        })
     }
 
     const handleChangeToSourceValue = (value) => {
         setToSourceValue(value)
+        setInitData({
+            ...initData,
+            acqAccountNo: '',
+            acqAccountName: '',
+            refNo: '',
+            depositStatus: '',
+            transTime: '',
+            traceNo: ''
+        })
     }
 
     const handleChangeAcqBank = value => {
@@ -245,6 +263,11 @@ export const Transfer = () => {
             return false
         }
 
+        if (!toSourceValue) {
+            NotificationServices.warning('Nguồn chuyển tới không được để trống.')
+            return false
+        }
+
         if (!initData.acqAccountNo) {
             NotificationServices.warning(`${toSourceValue === 'ACC' ? 'Tài khoản' : 'Thẻ'} thụ hưởng không được để trống.`)
             return false
@@ -293,7 +316,10 @@ export const Transfer = () => {
                     ...initData,
                     transTime: dayjs(transDate).format('DD/MM/YYYY HH:mm'),
                     traceNo: f11,
-                    depositStatus: f39
+                    depositStatus: f39,
+                    acqAccountNo: '',
+                    acqAccountName: '',
+                    refNo: ''
                 })
 
                 setTransResult({

@@ -186,9 +186,11 @@ export const SearchInComing = () => {
         return {
             seqNo: data.seqNo,
             issBankName: listBank.find(b => b.value.toString() === data.bankId)?.label,
+            bankId: data.bankId,
             fromAccount: data.fromAccount,
             fromCardNo: data.fromCardNo,
             acqBankName: listBank.find(b => b.value.toString() === data.benId)?.label,
+            benId: data.benId,
             toAccount: data.toAccount,
             acqAccountName: data.f120,
             transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',

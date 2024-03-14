@@ -216,6 +216,7 @@ export const SearchOutGoing = () => {
                         <Menu.Item
                             className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
                             onClick={(e) => { handleShowJsonViewerModal(e, element) }}
+                            disabled
                         >
                             Tra cứu bản tin
                         </Menu.Item>
