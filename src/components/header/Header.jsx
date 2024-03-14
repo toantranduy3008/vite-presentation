@@ -40,7 +40,7 @@ const Header = () => {
 
     const handleLogout = () => {
         sessionStorage.removeItem('userSession')
-        navigate('/bankdemo/login')
+        navigate('/bankdemo/app/login')
     }
     return (
         <div className="flex flex-row w-full h-full justify-between items-center p-2">
