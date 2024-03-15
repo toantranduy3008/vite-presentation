@@ -24,7 +24,7 @@ function App() {
       <Notifications />
       <Routes>
         <Route path='/bankdemo/app/login' element={<NewLogin />} />
-        {/* <Route path='*' element={<ErrorPage />} errorElement={<ErrorPage />} /> */}
+        <Route path='*' element={<ErrorPage />} />
         <Route element={<ProtectedRoute><RootLayout /></ProtectedRoute>}>
           <Route path='/bankdemo/' element={<SearchOutGoing />} />
           <Route path='/bankdemo/app/' element={<SearchOutGoing />} />
