@@ -49,11 +49,11 @@ const Header = () => {
             </div>
 
             <div className="flex basis-1/6 h-full justify-end items-center gap-2">
-                <div className="flex xs:w-fit md:w-full h-full justify-between items-center rounded-full xs:bg-none md:bg-indigo-400 px-2">
+                <div className="flex xs:w-fit md:w-fit h-full justify-between items-center rounded-full xs:bg-none lg:bg-indigo-400 px-2 gap-2">
                     <Tooltip label={`Xin chào, ${fullName} 😄`}>
-                        <div className="xs:hidden md:flex w-full h-full justify-start items-center">
-                            <p className="pl-2 text-white">Xin chào, </p>
-                            <p className="font-semibold text-white"> {` ${truncateString(fullName, 10)}`}</p>
+                        <div className="xs:hidden lg:flex w-full h-full justify-start items-center">
+                            {/* <p className="pl-2 text-white">Xin chào, </p> */}
+                            <p className="font-semibold text-white flex justify-center items-center w-full"> {` ${truncateString(fullName, 12)}`}</p>
                         </div>
                     </Tooltip>
                     <Menu shadow="md" width={200} position="bottom-end" className="hidden">
