@@ -319,7 +319,9 @@ export const Transfer = () => {
                     depositStatus: f39,
                     acqAccountNo: '',
                     acqAccountName: '',
-                    refNo: ''
+                    refNo: '',
+                    amount: 0,
+                    description: ''
                 })
 
                 setTransResult({
@@ -348,7 +350,7 @@ export const Transfer = () => {
     }
     return (
         <div className="relative flex w-full gap-2">
-            <div className='relative flex flex-col basis-2/3 w-full h-full gap-2 p-2 bg-white'>
+            <div className='relative flex flex-col md:basis-2/3 w-full h-full gap-2 p-2 bg-white'>
                 <LoadingOverlay visible={status.deposit || status.inquiry} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
                 <div className='flex xs:flex-col md:flex-row w-full  gap-2'>
                     <div className='flex flex-col basis-1/2'>
@@ -358,7 +360,7 @@ export const Transfer = () => {
                             value={issBank.id}
                             searchable
                             nothingFoundMessage="Không tìm thấy ..."
-                            className="w-1/2 md:w-full"
+                            className="w-full"
                             maxDropdownHeight={200}
                             disabled
                             onChange={handleChangeIssBank}
@@ -369,7 +371,7 @@ export const Transfer = () => {
                             value={fromSourceValue}
                             searchable
                             nothingFoundMessage="Không tìm thấy ..."
-                            className="w-1/2 md:w-full"
+                            className="w-full"
                             maxDropdownHeight={200}
                             onChange={handleChangeFromSourceValue}
                         />
@@ -402,7 +404,7 @@ export const Transfer = () => {
                             value={acqBank.id}
                             searchable
                             nothingFoundMessage="Không tìm thấy ..."
-                            className="w-1/2 md:w-full"
+                            className="w-full"
                             maxDropdownHeight={200}
                             onChange={handleChangeAcqBank}
                         />
@@ -412,7 +414,7 @@ export const Transfer = () => {
                             value={toSourceValue}
                             searchable
                             nothingFoundMessage="Không tìm thấy ..."
-                            className="w-1/2 md:w-full"
+                            className="w-full"
                             maxDropdownHeight={200}
                             onChange={handleChangeToSourceValue}
                         />
