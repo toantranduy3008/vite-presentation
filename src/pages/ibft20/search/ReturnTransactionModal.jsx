@@ -1,47 +1,52 @@
 /* eslint-disable react/prop-types */
 import { Button, Modal, NumberInput, Textarea, LoadingOverlay } from '@mantine/core'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
 import { ReturnTransactionAPI } from '../../../apis/ReturnTransactionAPI'
 
 const ReturnTransactionModal = ({ data, opened, onClose }) => {
-    const { seqNo } = data
-    const [amount, setAmount] = useState(0)
-    const [reason, setReason] = useState('')
+    const { seqNo, amount, reason } = data
+    const [returnAmount, setReturnAmount] = useState(amount)
+    const [returnReason, setReturnReason] = useState('')
     const [loading, setLoading] = useState(false)
+    useEffect(() => {
+        setReturnAmount(amount)
+        setReturnReason('')
+    }, [])
     const handleChangeAmount = (value) => {
-        setAmount(value)
+        setReturnAmount(value)
     }
 
     const handleChangeReason = (e) => {
-        setReason(e.target.value)
+        console.log(e.target.value)
+        setReturnReason(e.target.value)
     }
 
     const handleConfirmReturn = () => {
         const requestBody = {
             seqNo: seqNo,
-            amount: amount,
-            reason: reason
+            amount: parseInt(returnAmount ? returnAmount : amount),
+            reason: returnReason
         }
 
-        ReturnTransactionAPI.returnTransaction(requestBody, true)
-            .then(res => {
-                const { responseCode } = res.data
-                if (responseCode === 0) {
-                    NotificationServices.success('Hoàn trả thành công.')
-                    onClose()
-                } else {
-                    NotificationServices.warning('Hoàn trả không thành công.')
-                }
-            })
-            .catch(err => {
-                console.log('error: ', err)
-                // const { status } = err.response
-                NotificationServices.error(`Không thể thực hiện giao dịch hoàn trả.`)
-            })
-            .finally(() => {
-                setLoading(false)
-            })
+        // ReturnTransactionAPI.returnTransaction(requestBody, true)
+        //     .then(res => {
+        //         const { responseCode } = res.data
+        //         if (responseCode === 0) {
+        //             NotificationServices.success('Hoàn trả thành công.')
+        //             onClose()
+        //         } else {
+        //             NotificationServices.warning('Hoàn trả không thành công.')
+        //         }
+        //     })
+        //     .catch(err => {
+        //         console.log('error: ', err)
+        //         // const { status } = err.response
+        //         NotificationServices.error(`Không thể thực hiện giao dịch hoàn trả.`)
+        //     })
+        //     .finally(() => {
+        //         setLoading(false)
+        //     })
     }
     return (
         <Modal
@@ -64,14 +69,8 @@ const ReturnTransactionModal = ({ data, opened, onClose }) => {
                     <NumberInput
                         label="Số tiền"
                         placeholder="Số tiền"
-                        // classNames={{
-                        //     input: classes.input,
-                        //     wrapper: classes.wrapper
-                        // }}
-                        // value={initData.amount}
-                        // onChange={(data) => handleChangeAmount(data)}
                         onChange={handleChangeAmount}
-                        value={amount}
+                        value={returnAmount}
                         allowNegative={false}
                         thousandSeparator=","
                         hideControls
@@ -79,8 +78,8 @@ const ReturnTransactionModal = ({ data, opened, onClose }) => {
                     <Textarea
                         label="Lý do hoàn trả"
                         placeholder="Lý do hoàn trả"
-                        value={reason}
-                        onChange={handleChangeReason}
+                        value={returnReason}
+                        onChange={() => { handleChangeReason }}
                     />
                 </div>
                 <div id="transaction-detail" className='flex flex-col w-full gap-1'>

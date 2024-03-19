@@ -30,7 +30,7 @@ export const SearchOutGoing = () => {
         transTime: '',
         transRef: '',
         traceNo: '',
-        amount: '',
+        amount: 0,
         description: '',
         response: ''
     })
@@ -170,7 +170,7 @@ export const SearchOutGoing = () => {
             transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
             transRef: data.transRef,
             traceNo: data.traceNo,
-            amount: data.amount ? numberWithCommas(data.amount) : '',
+            amount: data.amount ? data.amount : 0,
             description: data.transContent,
             response: setBadge(data.respcode, true)
         }

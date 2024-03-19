@@ -29,7 +29,7 @@ export const SearchInComing = () => {
         transTime: '',
         transRef: '',
         traceNo: '',
-        amount: '',
+        amount: 0,
         description: '',
         response: ''
     })
@@ -107,41 +107,11 @@ export const SearchInComing = () => {
 
     const handleShowDetailTransactionModal = (e, data) => {
         setShowDetailTransactionModal(true)
-        // setModalData({
-        //     seqNo: data.seqNo,
-        //     issBankName: listBank.find(b => b.value.toString() === data.bankId)?.label,
-        //     fromAccount: data.fromAccount,
-        //     acqBankName: listBank.find(b => b.value.toString() === data.benId)?.label,
-        //     toAccount: data.toAccount,
-        //     fromCardNo: data.fromCardNo,
-        //     acqAccountName: data.f120,
-        //     transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
-        //     transRef: data.transRef,
-        //     traceNo: data.traceNo,
-        //     amount: data.amount ? numberWithCommas(data.amount) : '',
-        //     description: data.transContent,
-        //     response: setBadge(data.respcode, true)
-        // })
         setModalData(createModalData(data))
     }
 
     const handleShowReturnTransactionModal = (e, data) => {
         setShowReturnTransactionModal(true)
-        // setModalData({
-        //     seqNo: data.seqNo,
-        //     issBankName: listBank.find(b => b.value.toString() === data.bankId)?.label,
-        //     fromAccount: data.fromAccount,
-        //     acqBankName: listBank.find(b => b.value.toString() === data.benId)?.label,
-        //     toAccount: data.toAccount,
-        //     fromCardNo: data.fromCardNo,
-        //     acqAccountName: data.f120,
-        //     transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
-        //     transRef: data.transRef,
-        //     traceNo: data.traceNo,
-        //     amount: data.amount ? numberWithCommas(data.amount) : '',
-        //     description: data.transContent,
-        //     response: setBadge(data.respcode, true)
-        // })
         setModalData(createModalData(data))
     }
     const handleSearch = async (requestBody = null) => {
@@ -199,9 +169,10 @@ export const SearchInComing = () => {
             transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
             transRef: data.transRef,
             traceNo: data.traceNo,
-            amount: data.amount ? numberWithCommas(data.amount) : '',
+            amount: data.amount ? data.amount : 0,
             description: data.transContent,
-            response: setBadge(data.respcode, true)
+            response: setBadge(data.respcode, true),
+            reason: ''
         }
     }
 

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Modal } from '@mantine/core'
-import { maskRefCode } from '../../../services/Utilities'
+import { maskRefCode, numberWithCommas } from '../../../services/Utilities'
 
 const TransactionDetailModal = ({ data, opened, onClose }) => {
     return (
@@ -35,7 +35,7 @@ const TransactionDetailModal = ({ data, opened, onClose }) => {
                             </div>
                             <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                                 <div className='flex flex-1 items-center justify-start'>Số tiền giao dịch</div>
-                                <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.amount}</div>
+                                <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{numberWithCommas(data.amount)}</div>
                             </div>
 
                             <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
