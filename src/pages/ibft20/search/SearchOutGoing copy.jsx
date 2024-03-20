@@ -6,20 +6,21 @@ import { Button, Group, LoadingOverlay, Menu, Pagination, Select, Table, TextInp
 import TransactionDetailModal from './TransactionDetailModal'
 import { IconDotsVertical } from '@tabler/icons-react'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
-import ReturnTransactionModal from './ReturnTransactionModal'
 import { SearchAPI } from '../../../apis/SearchAPI'
-import { ReturnTransactionAPI } from '../../../apis/ReturnTransactionAPI'
-export const SearchInComing = () => {
+import JsonViewerModal from './JsonViewerModal'
+
+export const SearchOutGoing = () => {
     const currentDate = new Date()
-    const [lookupParams, setLookupParams] = useState({
+    const [initData, setInitData] = useState({
         startDate: new Date(currentDate.setHours(0, 0, 0, 0)),
         endDate: new Date(currentDate.setHours(23, 59, 59, 0)),
         traceNo: '',
         transRef: ''
     })
-    const [showDetailTransactionModal, setShowDetailTransactionModal] = useState(false)
-    const [showReturnTransactionModal, setShowReturnTransactionModal] = useState(false)
-    const [detailTransactionData, setDetailTransactionData] = useState({
+
+    const [showModal, setShowModal] = useState(false)
+    const [showJsonViewerModal, setShowJsonViewerModal] = useState(false)
+    const [modalData, setModalData] = useState({
         seqNo: '',
         issBankName: '',
         fromAccount: '',
@@ -32,11 +33,6 @@ export const SearchInComing = () => {
         amount: 0,
         description: '',
         response: ''
-    })
-    const [returnTransactionData, setReturnTransactionData] = useState({
-        seqNo: '',
-        amount: 0,
-        reason: ''
     })
     const [loading, setLoading] = useState(false)
     const [paging, setPaging] = useState({
@@ -59,34 +55,33 @@ export const SearchInComing = () => {
             setListBank(acquirer)
         }
 
-        fetchData()
-            .catch(() => { })
+        fetchData().catch((error) => console.log(error))
     }, [])
 
     const handleChangeStartDate = (data) => {
-        setLookupParams({
-            ...lookupParams,
+        setInitData({
+            ...initData,
             startDate: data
         })
     }
 
     const handleChangeEndDate = (data) => {
-        setLookupParams({
-            ...lookupParams,
+        setInitData({
+            ...initData,
             endDate: data
         })
     }
 
     const handleChangeTraceNo = (e) => {
-        setLookupParams({
-            ...lookupParams,
+        setInitData({
+            ...initData,
             traceNo: e.target.value
         })
     }
 
     const handleChangeTransRef = (e) => {
-        setLookupParams({
-            ...lookupParams,
+        setInitData({
+            ...initData,
             transRef: e.target.value
         })
     }
@@ -103,29 +98,26 @@ export const SearchInComing = () => {
         const requestBody = {
             page: value,
             size: paging.pageSize,
-            startDate: lookupParams.startDate,
-            endDate: lookupParams.endDate,
-            traceNo: lookupParams.traceNo,
-            transRef: lookupParams.transRef
+            startDate: initData.startDate,
+            endDate: initData.endDate,
+            traceNo: initData.traceNo,
+            transRef: initData.transRef
         }
+
         handleSearch(requestBody)
     }
 
     const handleShowDetailTransactionModal = (e, data) => {
-        setShowDetailTransactionModal(true)
-        setDetailTransactionData(createModalData(data))
+        setShowModal(true)
+        setModalData(createModalData(data))
     }
 
-    const handleShowReturnTransactionModal = (e, data) => {
-        setShowReturnTransactionModal(true)
-        setReturnTransactionData({
-            seqNo: data.seqNo,
-            amount: data.amount,
-            reason: ''
-        })
+    const handleShowJsonViewerModal = (e, data) => {
+        setShowJsonViewerModal(true)
+        setModalData(createModalData(data))
     }
+
     const handleSearch = async (requestBody = null) => {
-        setPaging({ ...paging, pageNo: 1 })
         setLoading(true)
         const pagingQuery = {
             page: requestBody ? parseInt(requestBody.page, 10) - 1 : 0,
@@ -133,13 +125,12 @@ export const SearchInComing = () => {
             sort: 'id,desc'
         }
         const filtersInput = {
-            beginDate: dayjs(requestBody ? requestBody.startDate : lookupParams.startDate).format('YYYY-MM-DDTHH:mm:ss'),
-            endDate: dayjs(requestBody ? requestBody.endDate : lookupParams.endDate).format('YYYY-MM-DDTHH:mm:ss'),
-            traceNo: requestBody ? requestBody.traceNo : lookupParams.traceNo,
-            transRef: requestBody ? requestBody.transRef : lookupParams.transRef
+            beginDate: dayjs(requestBody ? requestBody.startDate : initData.startDate).format('YYYY-MM-DDTHH:mm:ss'),
+            endDate: dayjs(requestBody ? requestBody.endDate : initData.endDate).format('YYYY-MM-DDTHH:mm:ss'),
+            traceNo: requestBody ? requestBody.traceNo : initData.traceNo,
+            transRef: requestBody ? requestBody.transRef : initData.transRef
         }
-
-        SearchAPI.incoming(`/bankdemo/api/payment/listIncomingTrans`, pagingQuery, filtersInput)
+        SearchAPI.outgoing(`/bankdemo/api/payment/listTrans`, pagingQuery, filtersInput)
             .then(
                 (response) => {
                     const { content, totalPages, number } = response
@@ -157,6 +148,7 @@ export const SearchInComing = () => {
                 }
             ).catch(
                 () => {
+                    //throw new Error(e) 
                     NotificationServices.error('Không thể tìm kiếm giao dịch.')
                 }
             ).finally(
@@ -180,30 +172,8 @@ export const SearchInComing = () => {
             traceNo: data.traceNo,
             amount: data.amount ? data.amount : 0,
             description: data.transContent,
-            response: setBadge(data.respcode, true),
-            reason: ''
+            response: setBadge(data.respcode, true)
         }
-    }
-    const onChangeReturnData = (data) => {
-        setReturnTransactionData(data)
-    }
-    const onSubmitReturnTransaction = (data) => {
-        // ReturnTransactionAPI.returnTransaction(data, true)
-        //     .then(res => {
-        //         const { responseCode } = res.data
-        //         if (responseCode === 0) {
-        //             NotificationServices.success('Hoàn trả thành công.')
-        //             setShowReturnTransactionModal(false)
-        //         } else {
-        //             NotificationServices.warning('Hoàn trả không thành công.')
-        //         }
-        //     })
-        //     .catch(() => {
-        //         NotificationServices.error(`Không thể thực hiện giao dịch hoàn trả.`)
-        //     })
-        //     .finally(() => {
-        //         // setLoading(false)
-        //     })
     }
 
     const tblRows = tableData.map((element, index) => (
@@ -217,9 +187,7 @@ export const SearchInComing = () => {
             <Table.Td>
                 {element.traceNo}
             </Table.Td>
-            <Table.Td
-            // className=' hover:text-sky-700 hover:cursor-pointer duration-150 ease-linear'
-            >
+            <Table.Td>
                 {maskRefCode(element.transRef)}
             </Table.Td>
             <Table.Td>
@@ -229,17 +197,19 @@ export const SearchInComing = () => {
                 {setBadge(element.respcode, true)}
             </Table.Td>
             <Table.Td>
-                {listBank.find(b => b.value.toString() === element.benId).label}
+                {listBank.find(b => b.value.toString() === element.benId)?.label}
             </Table.Td>
             <Table.Td>
                 {dayjs(element.transDate).format('DD/MM/YYYY HH:mm')}
             </Table.Td>
             <Table.Td>
-                <Menu shadow="md" width={100} position="bottom-end" offset={0} className="flex">
+                <Menu shadow="md" width={200} position="bottom-end" offset={0} className="flex">
                     <Menu.Target className=" hover:cursor-pointer hover:shadow-md rounded-full p-1 transition ease-linear duration-200">
                         <IconDotsVertical className="w-6 h-6 text-slate-700 hover:text-white hover:bg-sky-700" />
                     </Menu.Target>
-                    <Menu.Dropdown>
+                    <Menu.Dropdown
+                    //className='!bg-sky-400 '
+                    >
                         <Menu.Item
                             className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
                             onClick={(e) => { handleShowDetailTransactionModal(e, element) }}
@@ -248,9 +218,10 @@ export const SearchInComing = () => {
                         </Menu.Item>
                         <Menu.Item
                             className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
-                            onClick={(e) => { handleShowReturnTransactionModal(e, element) }}
+                            onClick={(e) => { handleShowJsonViewerModal(e, element) }}
+                            disabled
                         >
-                            Hoàn trả
+                            Tra cứu bản tin
                         </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
@@ -262,24 +233,25 @@ export const SearchInComing = () => {
             <div id="search" className='flex w-full justify-start items-end  gap-1'>
                 <DateTimePicker
                     label="Thời gian bắt đầu"
-                    value={lookupParams.startDate}
+                    value={initData.startDate}
                     onChange={handleChangeStartDate}
+                    maxDate={initData.endDate}
                 />
                 <DateTimePicker
                     label="Thời gian kết thúc"
-                    value={lookupParams.endDate}
+                    value={initData.endDate}
                     onChange={handleChangeEndDate}
                 />
                 <TextInput
                     label="Số truy vấn"
                     placeholder="F11"
-                    value={lookupParams.traceNo}
+                    value={initData.traceNo}
                     onChange={handleChangeTraceNo}
                 />
                 <TextInput
                     label="Số tham chiếu"
                     placeholder="F63"
-                    value={lookupParams.transRef}
+                    value={initData.transRef}
                     onChange={handleChangeTransRef}
                 />
                 <Button variant="filled" className="hover:bg-teal-600" onClick={() => { handleSearch() }}>Tìm kiếm</Button>
@@ -329,19 +301,8 @@ export const SearchInComing = () => {
                 </Table>
             </div>
 
-            <TransactionDetailModal
-                data={detailTransactionData}
-                opened={showDetailTransactionModal}
-                onClose={setShowDetailTransactionModal}
-            />
-            <ReturnTransactionModal
-                data={returnTransactionData}
-                opened={showReturnTransactionModal}
-                onClose={setShowReturnTransactionModal}
-                onChangeReturnData={onChangeReturnData}
-                onSubmitReturnTransaction={onSubmitReturnTransaction}
-            />
-
+            <TransactionDetailModal data={modalData} opened={showModal} onClose={setShowModal} />
+            <JsonViewerModal data={modalData} opened={showJsonViewerModal} onClose={setShowJsonViewerModal} />
         </div>
     )
 }
