@@ -36,7 +36,8 @@ export const SearchInComing = () => {
     const [returnTransactionData, setReturnTransactionData] = useState({
         seqNo: '',
         amount: 0,
-        reason: ''
+        reason: '',
+        test: ''
     })
     const [loading, setLoading] = useState(false)
     const [paging, setPaging] = useState({
@@ -185,25 +186,28 @@ export const SearchInComing = () => {
         }
     }
     const onChangeReturnData = (data) => {
+        console.log('change: ', data)
         setReturnTransactionData(data)
     }
     const onSubmitReturnTransaction = (data) => {
-        // ReturnTransactionAPI.returnTransaction(data, true)
-        //     .then(res => {
-        //         const { responseCode } = res.data
-        //         if (responseCode === 0) {
-        //             NotificationServices.success('Hoàn trả thành công.')
-        //             setShowReturnTransactionModal(false)
-        //         } else {
-        //             NotificationServices.warning('Hoàn trả không thành công.')
-        //         }
-        //     })
-        //     .catch(() => {
-        //         NotificationServices.error(`Không thể thực hiện giao dịch hoàn trả.`)
-        //     })
-        //     .finally(() => {
-        //         // setLoading(false)
-        //     })
+        console.log('submit: ', data)
+        ReturnTransactionAPI.returnTransaction(data, true)
+            .then(res => {
+                const { responseCode } = res
+                if (responseCode === '00') {
+                    NotificationServices.success('Hoàn trả thành công.')
+                    setShowReturnTransactionModal(false)
+                } else {
+                    NotificationServices.warning('Hoàn trả không thành công.')
+                }
+            })
+            .catch((e) => {
+                console.log(e)
+                NotificationServices.error(`Không thể thực hiện giao dịch hoàn trả.`)
+            })
+            .finally(() => {
+                // setLoading(false)
+            })
     }
 
     const tblRows = tableData.map((element, index) => (
