@@ -33,6 +33,27 @@ export const SearchAPI = {
         })
 
         return response.data
+    },
+    returnHistory: async function (seqNo, cancel = false) {
+        const response = await api.request({
+            url: `/bankdemo/api/payment/${seqNo}/returnRequests`,
+            method: "GET",
+            headers: authHeader(),
+            signal: cancel ? cancelApiObject[this.returnHistory.name].handleRequestCancellation().signal : undefined,
+        })
+
+        return response.data
+    },
+    returnTransaction: async function (requestBody, cancel = false) {
+        const response = await api.request({
+            url: `/bankdemo/api/payment/returnIbft`,
+            method: "POST",
+            data: requestBody,
+            headers: authHeader(),
+            signal: cancel ? cancelApiObject[this.returnTransaction.name].handleRequestCancellation().signal : undefined,
+        })
+
+        return response.data
     }
 }
 

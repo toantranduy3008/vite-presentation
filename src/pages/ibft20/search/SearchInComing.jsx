@@ -8,7 +8,6 @@ import { IconDotsVertical } from '@tabler/icons-react'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
 import ReturnTransactionModal from './ReturnTransactionModal'
 import { SearchAPI } from '../../../apis/SearchAPI'
-import { ReturnTransactionAPI } from '../../../apis/ReturnTransactionAPI'
 import JsonViewerModal from './JsonViewerModal'
 export const SearchInComing = () => {
     const currentDate = new Date()
@@ -122,8 +121,32 @@ export const SearchInComing = () => {
     }
 
     const handleShowJsonViewerModal = (e, data) => {
-        setShowJsonViewerModal(true)
-        setDetailTransactionData(createModalData(data))
+        // setShowJsonViewerModal(true)
+        // setDetailTransactionData(createModalData(data))
+        SearchAPI.returnHistory(data.seqNo, true)
+            .then(
+                (response) => {
+                    console.log('history: ', response)
+                    // const { content, totalPages, number } = response
+                    // setTableData(content)
+                    // if (content.length === 0) {
+                    //     NotificationServices.info('Không tìm thấy giao dịch.')
+                    //     return;
+                    // }
+
+                    // setPaging({
+                    //     ...paging,
+                    //     pageNo: number + 1,
+                    //     totalPages: totalPages
+                    // })
+                }
+            ).catch(
+                () => {
+                    NotificationServices.error('Không thể tìm kiếm giao dịch.')
+                }
+            ).finally(
+                () => { setLoading(false) }
+            )
     }
 
     const handleShowReturnTransactionModal = (e, data) => {
@@ -203,7 +226,7 @@ export const SearchInComing = () => {
     const onSubmitReturnTransaction = (data) => {
         if (data.amount < 2000 || !data.amount) return NotificationServices.warning('Số tiền hoàn trả không hợp lệ.')
         if (!data.reason.trim()) return NotificationServices.warning('Lý do hoàn trả không được để trống.')
-        ReturnTransactionAPI.returnTransaction(data, true)
+        SearchAPI.returnTransaction(data, true)
             .then(res => {
                 const { responseCode } = res
                 if (responseCode === '00') {
@@ -300,7 +323,6 @@ export const SearchInComing = () => {
                         <Menu.Item
                             className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
                             onClick={(e) => { handleShowJsonViewerModal(e, element) }}
-                        // disabled
                         >
                             Tra cứu bản tin
                         </Menu.Item>
