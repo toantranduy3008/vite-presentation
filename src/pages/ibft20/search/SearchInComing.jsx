@@ -31,7 +31,8 @@ export const SearchInComing = () => {
         traceNo: '',
         amount: 0,
         description: '',
-        response: ''
+        response: '',
+        returnedAmount: 0
     })
     const [returnTransactionData, setReturnTransactionData] = useState({
         seqNo: '',
