@@ -9,6 +9,7 @@ import NotificationServices from '../../../services/notificationServices/Notific
 import ReturnTransactionModal from './ReturnTransactionModal'
 import { SearchAPI } from '../../../apis/SearchAPI'
 import { ReturnTransactionAPI } from '../../../apis/ReturnTransactionAPI'
+import JsonViewerModal from './JsonViewerModal'
 export const SearchOutGoing = () => {
     const currentDate = new Date()
     const [lookupParams, setLookupParams] = useState({
@@ -19,6 +20,7 @@ export const SearchOutGoing = () => {
     })
     const [showDetailTransactionModal, setShowDetailTransactionModal] = useState(false)
     const [showReturnTransactionModal, setShowReturnTransactionModal] = useState(false)
+    const [showJsonViewerModal, setShowJsonViewerModal] = useState(false)
     const [detailTransactionData, setDetailTransactionData] = useState({
         seqNo: '',
         issBankName: '',
@@ -169,6 +171,11 @@ export const SearchOutGoing = () => {
             )
     }
 
+    const handleShowJsonViewerModal = (e, data) => {
+        setShowJsonViewerModal(true)
+        setDetailTransactionData(createModalData(data))
+    }
+
     const createModalData = (data) => {
         return {
             seqNo: data.seqNo,
@@ -290,6 +297,13 @@ export const SearchOutGoing = () => {
                         >
                             Tra cứu TTGD tại NHTH
                         </Menu.Item>
+                        <Menu.Item
+                            className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
+                            onClick={(e) => { handleShowJsonViewerModal(e, element) }}
+                            disabled
+                        >
+                            Tra cứu bản tin
+                        </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
             </Table.Td>
@@ -380,7 +394,7 @@ export const SearchOutGoing = () => {
                 onChangeReturnData={onChangeReturnData}
                 onSubmitReturnTransaction={onSubmitReturnTransaction}
             />
-
+            <JsonViewerModal data={detailTransactionData} opened={showJsonViewerModal} onClose={setShowJsonViewerModal} />
         </div>
     )
 }
