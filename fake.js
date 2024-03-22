@@ -70,3 +70,24 @@ export const fake = [
         "returnedAmount": 1000000
     }
 ]
+
+export const fakeHis = [
+    {
+        "id": 23,
+        "creationDateTime": "2024-03-22T09:56:28Z",
+        "transactionAmount": 11000,
+        "caseId": "030097042803221656282024002698840930",
+        "systemTrace": "661485",
+        "referenceNumber": "408216661485",
+        "responseCode": "00"
+    },
+    {
+        "id": 22,
+        "creationDateTime": "2024-03-22T09:44:00Z",
+        "transactionAmount": 11000,
+        "caseId": "030097042803221644002024006727840930",
+        "systemTrace": "320424",
+        "referenceNumber": "408216320424",
+        "responseCode": "12"
+    }
+]
