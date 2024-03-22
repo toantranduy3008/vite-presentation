@@ -32,15 +32,23 @@ const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransacti
         >
             <div className='relative flex flex-col w-full h-full gap-1'>
                 {/* <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} /> */}
-                <div className='flex flex-col w-full justify-start items-start gap-1'>
+                <div className='flex flex-col w-full justify-start items-start gap-1 border-0 border-b border-dashed border-indigo-200'>
                     <img src='/bankdemo/napas-logo.svg' className="flex flex-1 w-auto xs:w-24 h-5 xs:h-auto align-middle border-none " />
                     <div className="flex flex-1 justify-start items-center text-left font-bold uppercase italic text-slate-700 text-base">Thông tin giao dịch hoàn trả</div>
-
                 </div>
                 <div id="transaction-detail" className='flex flex-col w-full gap-1'>
+                    <div className="flex gap-2">
+                        <p className='m-0'>Số tham chiếu giao dịch gốc: </p>
+                        <p className='m-0 font-semibold'>{data.transRef}</p>
+                    </div>
+                    <div className="flex gap-2">
+                        <p className='m-0'>Số lưu vết giao dịch gốc: </p>
+                        <p className='m-0 font-semibold'>{data.traceNo}</p>
+                    </div>
+
                     <NumberInput
-                        label="Số tiền"
-                        placeholder="Số tiền"
+                        label="Số tiền hoàn trả"
+                        placeholder="Số tiền hoàn trả"
                         onChange={handleChangeAmount}
                         value={data.amount}
                         allowNegative={false}

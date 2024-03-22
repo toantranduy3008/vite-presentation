@@ -37,7 +37,8 @@ export const SearchInComing = () => {
         seqNo: '',
         amount: 0,
         reason: '',
-        test: ''
+        traceNo: '',
+        transRef: ''
     })
     const [loading, setLoading] = useState(false)
     const [paging, setPaging] = useState({
@@ -121,8 +122,10 @@ export const SearchInComing = () => {
         setShowReturnTransactionModal(true)
         setReturnTransactionData({
             seqNo: data.seqNo,
-            amount: data.amount,
-            reason: ''
+            amount: data.amount - data.returnedAmount,
+            reason: '',
+            traceNo: data.traceNo,
+            transRef: maskRefCode(data.transRef)
         })
     }
     const handleSearch = async (requestBody = null) => {
@@ -182,28 +185,51 @@ export const SearchInComing = () => {
             amount: data.amount ? data.amount : 0,
             description: data.transContent,
             response: setBadge(data.respcode, true),
+            returnedAmount: data.returnedAmount,
             reason: ''
         }
     }
     const onChangeReturnData = (data) => {
-        console.log('change: ', data)
         setReturnTransactionData(data)
     }
     const onSubmitReturnTransaction = (data) => {
-        console.log('submit: ', data)
+        if (data.amount < 2000 || !data.amount) return NotificationServices.warning('Số tiền hoàn trả không hợp lệ.')
+        if (!data.reason.trim()) return NotificationServices.warning('Lý do hoàn trả không được để trống.')
         ReturnTransactionAPI.returnTransaction(data, true)
             .then(res => {
                 const { responseCode } = res
                 if (responseCode === '00') {
-                    NotificationServices.success('Hoàn trả thành công.')
+                    NotificationServices.success('Gửi yêu cầu hoành trả thành công.')
                     setShowReturnTransactionModal(false)
                 } else {
-                    NotificationServices.warning('Hoàn trả không thành công.')
+                    NotificationServices.warning('Gửi yêu cầu hoàn trả không thành công.')
                 }
             })
+            .then(() => { handleSearch() })
             .catch((e) => {
                 console.log(e)
-                NotificationServices.error(`Không thể thực hiện giao dịch hoàn trả.`)
+                NotificationServices.error(`Không thể gửi yêu cầu hoàn trả.`)
+            })
+            .finally(() => {
+                // setLoading(false)
+            })
+    }
+
+    const handleInvestigateTransaction = (e, data) => {
+        SearchAPI.investigate({ seqNo: data.seqNo }, true)
+            .then(res => {
+                const { responseCode } = res
+                if (responseCode === '00') {
+                    NotificationServices.success('Gửi yêu cầu tra cứu thành công.')
+                    setShowReturnTransactionModal(false)
+                } else {
+                    NotificationServices.warning('Gửi yêu cầu tra cứu không thành công.')
+                }
+            })
+            .then(() => { handleSearch() })
+            .catch((e) => {
+                console.log(e)
+                NotificationServices.error(`Không thể gửi yêu cầu tra cứu.`)
             })
             .finally(() => {
                 // setLoading(false)
@@ -221,13 +247,14 @@ export const SearchInComing = () => {
             <Table.Td>
                 {element.traceNo}
             </Table.Td>
-            <Table.Td
-            // className=' hover:text-sky-700 hover:cursor-pointer duration-150 ease-linear'
-            >
+            <Table.Td>
                 {maskRefCode(element.transRef)}
             </Table.Td>
             <Table.Td>
                 {numberWithCommas(element.amount)}
+            </Table.Td>
+            <Table.Td>
+                {numberWithCommas(element.returnedAmount)}
             </Table.Td>
             <Table.Td>
                 {setBadge(element.respcode, true)}
@@ -239,7 +266,7 @@ export const SearchInComing = () => {
                 {dayjs(element.transDate).format('DD/MM/YYYY HH:mm')}
             </Table.Td>
             <Table.Td>
-                <Menu shadow="md" width={100} position="bottom-end" offset={0} className="flex">
+                <Menu shadow="md" width={200} position="bottom-end" offset={0} className="flex">
                     <Menu.Target className=" hover:cursor-pointer hover:shadow-md rounded-full p-1 transition ease-linear duration-200">
                         <IconDotsVertical className="w-6 h-6 text-slate-700 hover:text-white hover:bg-sky-700" />
                     </Menu.Target>
@@ -255,6 +282,12 @@ export const SearchInComing = () => {
                             onClick={(e) => { handleShowReturnTransactionModal(e, element) }}
                         >
                             Hoàn trả
+                        </Menu.Item>
+                        <Menu.Item
+                            className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
+                            onClick={(e) => { handleInvestigateTransaction(e, element) }}
+                        >
+                            Tra cứu TTGD tại NHTH
                         </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
@@ -323,6 +356,7 @@ export const SearchInComing = () => {
                             <Table.Th>Số lưu vết</Table.Th>
                             <Table.Th>Số tham chiếu</Table.Th>
                             <Table.Th>Số tiền</Table.Th>
+                            <Table.Th>Số tiền đã hoàn trả</Table.Th>
                             <Table.Th>TTGD tại Napas</Table.Th>
                             <Table.Th>Ngân hàng thụ hưởng</Table.Th>
                             <Table.Th>Thời gian giao dịch</Table.Th>

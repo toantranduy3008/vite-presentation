@@ -23,6 +23,17 @@ export const SearchAPI = {
 
         return response.data
     },
+    investigate: async function (requestBody, cancel = false) {
+        const response = await api.request({
+            url: `bankdemo/api/invest/payment`,
+            method: "POST",
+            data: requestBody,
+            headers: authHeader(),
+            signal: cancel ? cancelApiObject[this.investigate.name].handleRequestCancellation().signal : undefined,
+        })
+
+        return response.data
+    }
 }
 
 const cancelApiObject = defineCancelApiObject(SearchAPI)

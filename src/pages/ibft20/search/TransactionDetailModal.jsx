@@ -37,7 +37,10 @@ const TransactionDetailModal = ({ data, opened, onClose }) => {
                                 <div className='flex flex-1 items-center justify-start'>Số tiền giao dịch</div>
                                 <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{numberWithCommas(data.amount)}</div>
                             </div>
-
+                            <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
+                                <div className='flex flex-1 items-center justify-start'>Số tiền đã hoàn trả</div>
+                                <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{numberWithCommas(data.returnedAmount)}</div>
+                            </div>
                             <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                                 <div className='flex flex-1 items-center justify-start'>Số lưu vết</div>
                                 <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.traceNo}</div>
@@ -45,13 +48,7 @@ const TransactionDetailModal = ({ data, opened, onClose }) => {
                             <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                                 <div className='flex flex-1 items-center justify-start'>Thời gian giao dịch</div>
                                 <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.transDate}</div>
-
                             </div>
-                            <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
-                                <div className='flex flex-1 items-center justify-start'>Nội dung giao dịch</div>
-                                <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.description}</div>
-                            </div>
-
                         </div>
                         <div className='flex flex-col flex-1 w-full h-full justify-center items-start'>
                             <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
@@ -63,7 +60,7 @@ const TransactionDetailModal = ({ data, opened, onClose }) => {
                                 <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.benId}</div>
                             </div>
                             <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
-                                <div className='flex flex-1 items-center justify-start'>Tài khoản thụ hưởng</div>
+                                <div className='flex flex-1 items-center justify-start'>Nguồn thụ hưởng</div>
                                 <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.toAccount}</div>
                             </div>
                             <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
@@ -77,6 +74,10 @@ const TransactionDetailModal = ({ data, opened, onClose }) => {
                             <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                                 <div className='flex flex-1 items-center justify-start'>TTGD tại Napas</div>
                                 <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.response}</div>
+                            </div>
+                            <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
+                                <div className='flex flex-1 items-center justify-start'>Nội dung giao dịch</div>
+                                <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.description}</div>
                             </div>
                         </div>
                     </div>
