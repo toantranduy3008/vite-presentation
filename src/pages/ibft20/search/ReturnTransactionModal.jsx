@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
-import { Button, Modal, NumberInput, Textarea, LoadingOverlay, TextInput, Tabs, Table } from '@mantine/core'
+import { Button, Modal, NumberInput, Textarea, LoadingOverlay, Tabs, Table, Badge } from '@mantine/core'
 import { useState } from 'react'
 import { SearchAPI } from '../../../apis/SearchAPI'
 import { numberWithCommas } from '../../../services/Utilities'
 import dayjs from 'dayjs'
+import NotificationServices from '../../../services/notificationServices/NotificationServices'
 
 const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransaction, onChangeReturnData }) => {
     const [returnReason, setReturnReason] = useState('')
@@ -31,12 +32,12 @@ const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransacti
                     }
                 ).catch(
                     () => {
-                        //NotificationServices.error('Không thể tìm kiếm giao dịch.')
+                        setHistoryData([])
+                        NotificationServices.error('Không thể tìm kiếm lịch sử hoàn trả.')
                     }
                 ).finally(
                     () => {
                         setLoading(false)
-
                     }
                 )
         }
@@ -59,8 +60,15 @@ const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransacti
             <Table.Td>
                 {dayjs(element.creationDateTime).format('DD/MM/YYYY HH:mm')}
             </Table.Td>
-            <Table.Td>
-                {element.responseCode}
+            <Table.Td
+                className='flex justify-start items-center'
+            >
+                <Badge
+                    color={element.responseCode === null ? 'gray' : element.responseCode === '00' ? 'green' : 'red'}
+                >
+                    {element.responseCode === null ? 'Không có phản hồi' : element.responseCode === '00' ? `Thành công (00)` : `Thất bại (${element.responseCode})`}
+                </Badge>
+
             </Table.Td>
             <Table.Td>
                 {element.reason}
@@ -72,7 +80,7 @@ const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransacti
             opened={opened}
             onClose={onClose}
             withCloseButton={false}
-            size={"lg"}
+            size={"50%"}
             centered
             className='flex flex-col'
         >
@@ -84,7 +92,6 @@ const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransacti
                 </div>
                 <div id="transaction-detail" className='flex flex-col w-full gap-1'>
                     <Tabs
-                        // value={activeTab} 
                         onChange={handleChangeTab}
                         defaultValue="return"
                     >
@@ -99,38 +106,58 @@ const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransacti
 
                         <Tabs.Panel value="return">
                             <div className='flex flex-col w-full h-full gap-1 py-1'>
-                                <div className="flex gap-2">
-                                    <p className='m-0'>Số tham chiếu giao dịch gốc: </p>
-                                    <p className='m-0 font-semibold'>{data.transRef}</p>
+                                <div id="root-info" className='flex xs:flex-col lg:flex-row basis-1/2 h-full w-full gap-1 justify-center items-start'>
+                                    <div className='flex flex-col w-full items-start justify-center'>
+                                        <div className="flex gap-2">
+                                            <p className='m-0'>Số tham chiếu giao dịch gốc: </p>
+                                            <p className='m-0 font-semibold'>{data.transRef}</p>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <p className='m-0'>Số lưu vết giao dịch gốc: </p>
+                                            <p className='m-0 font-semibold'>{data.traceNo}</p>
+                                        </div>
+                                    </div>
+                                    <div className='flex flex-col w-full items-start justify-center'>
+                                        <div className="flex gap-2">
+                                            <p className='m-0'>Số tiền giao dịch gốc: </p>
+                                            <p className='m-0 font-semibold'>{numberWithCommas(data.rootAmount)}</p>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <p className='m-0'>Số tiền đã hoàn trả: </p>
+                                            <p className='m-0 font-semibold'>{numberWithCommas(data.returnedAmount)}</p>
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <div className="flex gap-2">
-                                    <p className='m-0'>Số lưu vết giao dịch gốc: </p>
-                                    <p className='m-0 font-semibold'>{data.traceNo}</p>
+                                <div id="return-info" className='flex flex-col basis-1/2 h-full lg:w-1/2 gap-1 justify-center items-start'>
+                                    <p className='flex justify-center items-center m-0'>Số tiền hoàn trả</p>
+                                    <NumberInput
+                                        placeholder="Số tiền hoàn trả"
+                                        onChange={handleChangeAmount}
+                                        value={data.amount}
+                                        allowNegative={false}
+                                        thousandSeparator=","
+                                        hideControls
+                                        className='w-full'
+                                    />
+                                    <p className='flex justify-center items-center m-0'>Lý do hoàn trả</p>
+                                    <Textarea
+                                        placeholder="Lý do hoàn trả"
+                                        value={returnReason}
+                                        onChange={handleChangeReason}
+                                        className='w-full'
+                                    />
+                                    <div id='transaction-action' className='flex w-full  justify-end items-center gap-2'>
+                                        <Button
+                                            variant="filled"
+                                            className="hover:bg-teal-600"
+                                            onClick={handleConfirmReturn}
+                                        >
+                                            Xác nhận
+                                        </Button>
+                                    </div>
                                 </div>
-                                <NumberInput
-                                    label="Số tiền hoàn trả"
-                                    placeholder="Số tiền hoàn trả"
-                                    onChange={handleChangeAmount}
-                                    value={data.amount}
-                                    allowNegative={false}
-                                    thousandSeparator=","
-                                    hideControls
-                                />
-                                <Textarea
-                                    label="Lý do hoàn trả"
-                                    placeholder="Lý do hoàn trả"
-                                    value={returnReason}
-                                    onChange={handleChangeReason}
-                                />
-                                <div id='transaction-action' className='flex w-full  justify-end items-center gap-2'>
-                                    <Button
-                                        variant="filled"
-                                        className="hover:bg-teal-600"
-                                        onClick={handleConfirmReturn}
-                                    >
-                                        Xác nhận
-                                    </Button>
-                                </div>
+
                             </div>
 
                             <div id="transaction-detail" className='flex flex-col w-full gap-1'>
@@ -146,7 +173,7 @@ const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransacti
                                             <Table.Th>Stt</Table.Th>
                                             <Table.Th>Số tiền</Table.Th>
                                             <Table.Th>Thời gian</Table.Th>
-                                            <Table.Th>Mã code</Table.Th>
+                                            <Table.Th>Trạng thái</Table.Th>
                                             <Table.Th>Lý do</Table.Th>
                                         </Table.Tr>
                                     </Table.Thead>

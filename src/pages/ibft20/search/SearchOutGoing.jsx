@@ -40,7 +40,9 @@ export const SearchOutGoing = () => {
         amount: 0,
         reason: '',
         traceNo: '',
-        transRef: ''
+        transRef: '',
+        rootAmount: 0,
+        returnedAmount: 0
     })
     const [loading, setLoading] = useState(false)
     const [paging, setPaging] = useState({
@@ -127,13 +129,16 @@ export const SearchOutGoing = () => {
     }
 
     const handleShowReturnTransactionModal = (e, data) => {
+        console.log('data: ', data)
         setShowReturnTransactionModal(true)
         setReturnTransactionData({
             seqNo: data.seqNo,
             amount: data.amount - data.returnedAmount,
             reason: '',
             traceNo: data.traceNo,
-            transRef: maskRefCode(data.transRef)
+            transRef: maskRefCode(data.transRef),
+            rootAmount: data.amount,
+            returnedAmount: data.returnedAmount
         })
     }
     const handleSearch = async (requestBody = null) => {

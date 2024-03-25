@@ -14,7 +14,7 @@ import { truncateString } from "../../services/Utilities";
 
 const Header = () => {
     const navigate = useNavigate()
-    const { fullName, bankId, cardNo, accountNumber } = getCurrentUser()
+    const { fullName, bankId, cardNo, accountNumber, username } = getCurrentUser()
     const darkSystem = window.matchMedia('(prefers-color-scheme: dark)').matches
     const [theme, setTheme] = useState(getTheme())
     useEffect(() => {
@@ -94,9 +94,13 @@ const Header = () => {
                         <Menu.Target className="bg-teal-400 hover:cursor-pointer hover:shadow-md rounded-full p-1 transition ease-linear duration-200">
                             <IconUserCircle className=" w-7 h-7 text-white  hover:bg-orange-500" />
                         </Menu.Target>
-                        <Menu.Dropdown>
-                            <div className="flex flex-col gap-1">
+                        <Menu.Dropdown className="flex flex-col gap-1">
+                            <div className="flex flex-col gap-1 py-2 rounded-sm shadow-sm hover:shadow-md transition duration-150 ease-linear bg-slate-100">
                                 <p className="flex m-0 pl-1 text-sm italic text-indigo-400">{fullName}</p>
+                                <div className="flex gap-1">
+                                    <p className="flex m-0 pl-1 text-sm">Tài khoản:</p>
+                                    <p className="flex m-0 pl-1 text-sm italic text-indigo-400"> {username}</p>
+                                </div>
                                 <div className="flex gap-1">
                                     <p className="flex m-0 pl-1 text-sm">Bank ID:</p>
                                     <p className="flex m-0 pl-1 text-sm italic text-indigo-400"> {bankId}</p>

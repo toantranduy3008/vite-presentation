@@ -11,8 +11,9 @@ import { SearchAPI } from '../../../apis/SearchAPI'
 import JsonViewerModal from './JsonViewerModal'
 export const SearchInComing = () => {
     const currentDate = new Date()
+    const previousWeek = new Date(dayjs().subtract(1, 'w'))
     const [lookupParams, setLookupParams] = useState({
-        startDate: new Date(currentDate.setHours(0, 0, 0, 0)),
+        startDate: new Date(previousWeek.setHours(0, 0, 0, 0)),
         endDate: new Date(currentDate.setHours(23, 59, 59, 0)),
         traceNo: '',
         transRef: ''
@@ -40,7 +41,9 @@ export const SearchInComing = () => {
         amount: 0,
         reason: '',
         traceNo: '',
-        transRef: ''
+        transRef: '',
+        returnedAmount: 0,
+        rootAmount: 0
     })
     const [loading, setLoading] = useState(false)
     const [paging, setPaging] = useState({
@@ -64,6 +67,9 @@ export const SearchInComing = () => {
         }
 
         fetchData()
+            .then(() => {
+                handleSearch()
+            })
             .catch(() => { })
     }, [])
 
@@ -121,32 +127,9 @@ export const SearchInComing = () => {
     }
 
     const handleShowJsonViewerModal = (e, data) => {
-        // setShowJsonViewerModal(true)
+        setShowJsonViewerModal(true)
         // setDetailTransactionData(createModalData(data))
-        SearchAPI.returnHistory(data.seqNo, true)
-            .then(
-                (response) => {
-                    console.log('history: ', response)
-                    // const { content, totalPages, number } = response
-                    // setTableData(content)
-                    // if (content.length === 0) {
-                    //     NotificationServices.info('Không tìm thấy giao dịch.')
-                    //     return;
-                    // }
 
-                    // setPaging({
-                    //     ...paging,
-                    //     pageNo: number + 1,
-                    //     totalPages: totalPages
-                    // })
-                }
-            ).catch(
-                () => {
-                    NotificationServices.error('Không thể tìm kiếm giao dịch.')
-                }
-            ).finally(
-                () => { setLoading(false) }
-            )
     }
 
     const handleShowReturnTransactionModal = (e, data) => {
@@ -156,7 +139,9 @@ export const SearchInComing = () => {
             amount: data.amount - data.returnedAmount,
             reason: '',
             traceNo: data.traceNo,
-            transRef: maskRefCode(data.transRef)
+            transRef: maskRefCode(data.transRef),
+            rootAmount: data.amount,
+            returnedAmount: data.returnedAmount
         })
     }
     const handleSearch = async (requestBody = null) => {
