@@ -23,13 +23,23 @@ export const SearchAPI = {
 
         return response.data
     },
-    investigate: async function (requestBody, cancel = false) {
+    investigateTransaction: async function (requestBody, cancel = false) {
         const response = await api.request({
             url: `bankdemo/api/invest/payment`,
             method: "POST",
             data: requestBody,
             headers: authHeader(),
-            signal: cancel ? cancelApiObject[this.investigate.name].handleRequestCancellation().signal : undefined,
+            signal: cancel ? cancelApiObject[this.investigateTransaction.name].handleRequestCancellation().signal : undefined,
+        })
+
+        return response.data
+    },
+    investigateMessage: async function (apiUrl, paging, filtersInput, cancel = false) {
+        const response = await api.request({
+            url: `${apiUrl}?${new URLSearchParams(paging).toString()}&${new URLSearchParams(filtersInput).toString()}`,
+            method: "GET",
+            headers: authHeader(),
+            signal: cancel ? cancelApiObject[this.investigateMessage.name].handleRequestCancellation().signal : undefined,
         })
 
         return response.data

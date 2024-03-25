@@ -228,7 +228,7 @@ export const SearchOutGoing = () => {
     }
 
     const handleInvestigateTransaction = (e, data) => {
-        SearchAPI.investigate({ seqNo: data.seqNo }, true)
+        SearchAPI.investigateTransaction({ seqNo: data.seqNo }, true)
             .then(res => {
                 const { responseCode } = res
                 if (responseCode === '00') {
