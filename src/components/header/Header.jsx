@@ -14,7 +14,7 @@ import { truncateString } from "../../services/Utilities";
 
 const Header = () => {
     const navigate = useNavigate()
-    const { fullName } = getCurrentUser()
+    const { fullName, bankId, cardNo, accountNumber } = getCurrentUser()
     const darkSystem = window.matchMedia('(prefers-color-scheme: dark)').matches
     const [theme, setTheme] = useState(getTheme())
     useEffect(() => {
@@ -95,6 +95,22 @@ const Header = () => {
                             <IconUserCircle className=" w-7 h-7 text-white  hover:bg-orange-500" />
                         </Menu.Target>
                         <Menu.Dropdown>
+                            <div className="flex flex-col gap-1">
+                                <p className="flex m-0 pl-1 text-sm italic text-indigo-400">{fullName}</p>
+                                <div className="flex gap-1">
+                                    <p className="flex m-0 pl-1 text-sm">Bank ID:</p>
+                                    <p className="flex m-0 pl-1 text-sm italic text-indigo-400"> {bankId}</p>
+                                </div>
+                                <div className="flex gap-1">
+                                    <p className="flex m-0 pl-1 text-sm">Số tài khoản:</p>
+                                    <p className="flex m-0 pl-1 text-sm italic text-indigo-400"> {accountNumber}</p>
+                                </div>
+                                <div className="flex gap-1">
+                                    <p className="flex m-0 pl-1 text-sm">Số thẻ:</p>
+                                    <p className="flex m-0 pl-1 text-sm italic text-indigo-400"> {cardNo}</p>
+                                </div>
+
+                            </div>
                             <Menu.Item
                                 color="red"
                                 leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}

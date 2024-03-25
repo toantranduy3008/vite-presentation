@@ -121,32 +121,9 @@ export const SearchOutGoing = () => {
     }
 
     const handleShowJsonViewerModal = (e, data) => {
-        // setShowJsonViewerModal(true)
+        setShowJsonViewerModal(true)
         // setDetailTransactionData(createModalData(data))
-        SearchAPI.returnHistory(data.seqNo, true)
-            .then(
-                (response) => {
-                    console.log('history: ', response)
-                    // const { content, totalPages, number } = response
-                    // setTableData(content)
-                    // if (content.length === 0) {
-                    //     NotificationServices.info('Không tìm thấy giao dịch.')
-                    //     return;
-                    // }
 
-                    // setPaging({
-                    //     ...paging,
-                    //     pageNo: number + 1,
-                    //     totalPages: totalPages
-                    // })
-                }
-            ).catch(
-                () => {
-                    NotificationServices.error('Không thể tìm kiếm giao dịch.')
-                }
-            ).finally(
-                () => { setLoading(false) }
-            )
     }
 
     const handleShowReturnTransactionModal = (e, data) => {
