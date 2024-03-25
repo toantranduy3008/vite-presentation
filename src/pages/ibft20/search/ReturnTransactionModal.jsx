@@ -71,7 +71,7 @@ const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransacti
 
             </Table.Td>
             <Table.Td>
-                {element.reason}
+                {element.contentTransfers}
             </Table.Td>
         </Table.Tr>
     ))
