@@ -8,7 +8,6 @@ import { IconDotsVertical } from '@tabler/icons-react'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
 import ReturnTransactionModal from './ReturnTransactionModal'
 import { SearchAPI } from '../../../apis/SearchAPI'
-import JsonViewerModal from './JsonViewerModal'
 export const SearchInComing = () => {
     const currentDate = new Date()
     const previousWeek = new Date(dayjs().subtract(1, 'w'))
@@ -20,7 +19,6 @@ export const SearchInComing = () => {
     })
     const [showDetailTransactionModal, setShowDetailTransactionModal] = useState(false)
     const [showReturnTransactionModal, setShowReturnTransactionModal] = useState(false)
-    const [showJsonViewerModal, setShowJsonViewerModal] = useState(false)
     const [detailTransactionData, setDetailTransactionData] = useState({
         seqNo: '',
         issBankName: '',
@@ -401,7 +399,6 @@ export const SearchInComing = () => {
                 onChangeReturnData={onChangeReturnData}
                 onSubmitReturnTransaction={onSubmitReturnTransaction}
             />
-            <JsonViewerModal data={detailTransactionData} opened={showJsonViewerModal} onClose={setShowJsonViewerModal} />
         </div>
     )
 }

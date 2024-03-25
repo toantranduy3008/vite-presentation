@@ -8,7 +8,6 @@ import { IconDotsVertical } from '@tabler/icons-react'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
 import ReturnTransactionModal from './ReturnTransactionModal'
 import { SearchAPI } from '../../../apis/SearchAPI'
-import JsonViewerModal from './JsonViewerModal'
 export const SearchOutGoing = () => {
     const currentDate = new Date()
     const [lookupParams, setLookupParams] = useState({
@@ -398,7 +397,6 @@ export const SearchOutGoing = () => {
                 onChangeReturnData={onChangeReturnData}
                 onSubmitReturnTransaction={onSubmitReturnTransaction}
             />
-            <JsonViewerModal data={detailTransactionData} opened={showJsonViewerModal} onClose={setShowJsonViewerModal} />
         </div>
     )
 }
