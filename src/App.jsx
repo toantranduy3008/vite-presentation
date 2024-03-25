@@ -17,6 +17,7 @@ import QRCode from './pages/ibft/qrCode/QRCode';
 import { Transfer as NewTransfer } from './pages/ibft20/transfer/Transfer';
 import { SearchOutGoing } from './pages/ibft20/search/SearchOutGoing';
 import { SearchInComing } from './pages/ibft20/search/SearchInComing';
+import InvestigateMessage from './pages/ibft20/search/InvestigateMessage';
 import ErrorPage from './pages/ErrorPage';
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path='/bankdemo/app/new-ibft/transfer' element={<NewTransfer />} />
           <Route path='/bankdemo/app/new-ibft/search-outgoing' element={<SearchOutGoing />} />
           <Route path='/bankdemo/app/new-ibft/search-incoming' element={<SearchInComing />} />
+          <Route path='/bankdemo/app/new-ibft/invest-message' element={<InvestigateMessage />} />
         </Route>
       </Routes>
     </MantineProvider>

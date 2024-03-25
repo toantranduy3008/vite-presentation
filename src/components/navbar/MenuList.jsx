@@ -14,6 +14,10 @@ export const MenuList = [
             {
                 label: 'Chuyển khoản',
                 href: '/transfer',
+            },
+            {
+                label: 'Tra cứu bản tin',
+                href: '/invest-message',
             }
         ]
     }
