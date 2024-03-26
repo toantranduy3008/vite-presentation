@@ -1,14 +1,23 @@
 import { ActionIcon, Button, CopyButton, Group, LoadingOverlay, Pagination, Select, Table, TextInput, Tooltip } from '@mantine/core'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SearchAPI } from '../../../apis/SearchAPI'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
 import { IconCheck, IconCopy, IconEye } from '@tabler/icons-react'
 import JsonViewerModal from './JsonViewerModal'
 import dayjs from 'dayjs'
 import { listRowsPerPage } from '../../../configs/GlobalConfig'
+import { DateTimePicker } from '@mantine/dates'
 const InvestigateMessage = () => {
     const [loading, setLoading] = useState(false)
-    const [transRef, setTransRef] = useState('')
+    // const [transRef, setTransRef] = useState('')
+    const currentDate = new Date()
+    const previousWeek = new Date(dayjs().subtract(1, 'w'))
+    const [lookupParams, setLookupParams] = useState({
+        startDate: new Date(previousWeek.setHours(0, 0, 0, 0)),
+        endDate: new Date(currentDate.setHours(23, 59, 59, 0)),
+        traceNo: '',
+        transRef: ''
+    })
     const [investData, setInvestData] = useState([])
     const [pagingParams, setPagingParams] = useState({
         pageNo: 1,
@@ -18,8 +27,22 @@ const InvestigateMessage = () => {
     const [rowsPerPage] = useState(listRowsPerPage)
     const [showJsonModal, setShowJsonModal] = useState(false)
     const [jsonData, setJsonData] = useState('')
+    useEffect(() => { handleSearch() }, [])
     const handleChangeTransRef = (e) => {
-        setTransRef(e.target.value)
+        setLookupParams({ ...lookupParams, transRef: e.target.value })
+    }
+    const handleChangeStartDate = (data) => {
+        setLookupParams({
+            ...lookupParams,
+            startDate: data
+        })
+    }
+
+    const handleChangeEndDate = (data) => {
+        setLookupParams({
+            ...lookupParams,
+            endDate: data
+        })
     }
     const handleChangeRowNum = (value) => {
         setPagingParams({
@@ -33,7 +56,7 @@ const InvestigateMessage = () => {
         const requestBody = {
             page: value,
             size: pagingParams.pageSize,
-            transRef: transRef
+            transRef: lookupParams.transRef
         }
         handleSearch(requestBody)
     }
@@ -46,11 +69,12 @@ const InvestigateMessage = () => {
         setLoading(true)
         const pagingQuery = {
             page: requestBody ? parseInt(requestBody.page, 10) - 1 : 0,
-            size: requestBody ? requestBody.size : pagingParams.pageSize,
-            sort: 'id,desc'
+            size: requestBody ? requestBody.size : pagingParams.pageSize
         }
         const filtersInput = {
-            transRef: requestBody ? requestBody.transRef : transRef
+            transRef: requestBody ? requestBody.transRef : lookupParams.transRef,
+            sentBefore: dayjs(requestBody ? requestBody.endDate : lookupParams.endDate).format('YYYY-MM-DDTHH:mm:ss'),
+            sentAfter: dayjs(requestBody ? requestBody.startDate : lookupParams.startDate).format('YYYY-MM-DDTHH:mm:ss'),
         }
 
         SearchAPI.investigateMessage(`/bankdemo/api/payment/isoMessageHistory`, pagingQuery, filtersInput)
@@ -111,7 +135,7 @@ const InvestigateMessage = () => {
             <Table.Td>
                 {dayjs(element.senderDateTime).format('DD/MM/YYYY HH:mm')}
             </Table.Td>
-            <Table.Td>
+            <Table.Td className='capitalize'>
                 {element.messageIdentifier}
             </Table.Td>
             <Table.Td>
@@ -131,10 +155,20 @@ const InvestigateMessage = () => {
     return (
         <div className='relative flex flex-col w-full gap-2'>
             <div id="lookup-params" className='flex w-full justify-start items-end  gap-1'>
+                <DateTimePicker
+                    label="Thời gian bắt đầu"
+                    value={lookupParams.startDate}
+                    onChange={handleChangeStartDate}
+                />
+                <DateTimePicker
+                    label="Thời gian kết thúc"
+                    value={lookupParams.endDate}
+                    onChange={handleChangeEndDate}
+                />
                 <TextInput
                     label="Số tham chiếu"
                     placeholder="F63"
-                    value={transRef}
+                    value={lookupParams.transRef}
                     onChange={handleChangeTransRef}
                 />
                 <Button variant="filled" className="hover:bg-teal-600" onClick={() => { handleSearch() }}>Tìm kiếm</Button>
