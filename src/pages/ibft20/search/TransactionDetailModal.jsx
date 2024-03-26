@@ -42,6 +42,10 @@ const TransactionDetailModal = ({ data, opened, onClose }) => {
                                 <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{numberWithCommas(data.returnedAmount)}</div>
                             </div>
                             <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
+                                <div className='flex flex-1 items-center justify-start'>Trạng thái quyết toán</div>
+                                <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.settlementStatus}</div>
+                            </div>
+                            <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                                 <div className='flex flex-1 items-center justify-start'>Số lưu vết</div>
                                 <div className='flex flex-1 w-full text-right font-semibold items-center justify-end'>{data.traceNo}</div>
                             </div>

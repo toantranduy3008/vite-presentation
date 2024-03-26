@@ -1,23 +1,23 @@
-import { Button, Group, LoadingOverlay, Pagination, Select, Table, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Button, CopyButton, Group, LoadingOverlay, Pagination, Select, Table, TextInput, Tooltip } from '@mantine/core'
 import { useState } from 'react'
 import { SearchAPI } from '../../../apis/SearchAPI'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
-import { IconCopy, IconEye } from '@tabler/icons-react'
-import { fake } from '../../fake'
+import { IconCheck, IconCopy, IconEye } from '@tabler/icons-react'
+import JsonViewerModal from './JsonViewerModal'
+import dayjs from 'dayjs'
+import { listRowsPerPage } from '../../../configs/GlobalConfig'
 const InvestigateMessage = () => {
     const [loading, setLoading] = useState(false)
     const [transRef, setTransRef] = useState('')
-    const [investData, setInvestData] = useState(fake)
+    const [investData, setInvestData] = useState([])
     const [pagingParams, setPagingParams] = useState({
         pageNo: 1,
         pageSize: '30',
         totalPages: 1
     })
-    const [rowsPerPage] = useState([
-        { value: '30', label: '30' },
-        { value: '50', label: '50' },
-        { value: '100', label: '100' }
-    ])
+    const [rowsPerPage] = useState(listRowsPerPage)
+    const [showJsonModal, setShowJsonModal] = useState(false)
+    const [jsonData, setJsonData] = useState('')
     const handleChangeTransRef = (e) => {
         setTransRef(e.target.value)
     }
@@ -37,6 +37,10 @@ const InvestigateMessage = () => {
         }
         handleSearch(requestBody)
     }
+    const handleShowJsonModal = data => {
+        setShowJsonModal(true)
+        setJsonData(JSON.parse(data.rawJson))
+    }
     const handleSearch = async (requestBody = null) => {
         setPagingParams({ ...pagingParams, pageNo: 1 })
         setLoading(true)
@@ -49,7 +53,7 @@ const InvestigateMessage = () => {
             transRef: requestBody ? requestBody.transRef : transRef
         }
 
-        SearchAPI.investigateMessage(`/bankdemo/api/payment/listIncomingTrans`, pagingQuery, filtersInput)
+        SearchAPI.investigateMessage(`/bankdemo/api/payment/isoMessageHistory`, pagingQuery, filtersInput)
             .then(
                 (response) => {
                     const { content, totalPages, number } = response
@@ -82,16 +86,46 @@ const InvestigateMessage = () => {
                 {(pagingParams.pageNo - 1) * pagingParams.pageSize + index + 1}
             </Table.Td>
             <Table.Td className=''>
-                <Tooltip label="Copy">
-                    <IconCopy className="w-6 h-6 text-slate-700 hover:text-indigo-700 hover:scale-125 transition ease-linear duration-150" />
+                <CopyButton value={JSON.stringify(JSON.parse(element.rawJson), null, 2)} timeout={1000}>
+                    {({ copied, copy }) => (
+                        <Tooltip label={copied ? 'Copied' : 'Copy'} position="top">
+                            <ActionIcon variant="transparent" onClick={copy}>
+                                {copied ? (
+                                    <IconCheck />
+                                ) : (
+                                    <IconCopy className="w-6 h-6 text-slate-700 hover:text-indigo-700 hover:scale-125 transition ease-linear duration-150" />
+                                )}
+                            </ActionIcon>
+                        </Tooltip>
+                    )}
+                </CopyButton>
+            </Table.Td>
+            <Table.Td>
+                <Tooltip label="Chi tiết">
+                    <IconEye
+                        className="w-6 h-6 text-slate-700 hover:text-indigo-700 hover:scale-125 transition ease-linear duration-150"
+                        onClick={() => { handleShowJsonModal(element) }}
+                    />
                 </Tooltip>
             </Table.Td>
             <Table.Td>
-                <IconEye className="w-6 h-6 text-slate-700 hover:text-white " />
+                {dayjs(element.senderDateTime).format('DD/MM/YYYY HH:mm')}
             </Table.Td>
             <Table.Td>
-                {JSON.stringify(element)}
+                {element.messageIdentifier}
             </Table.Td>
+            <Table.Td>
+                {element.direction}
+            </Table.Td>
+            <Table.Td>
+                {element.relatedLog}
+            </Table.Td>
+            <Table.Td>
+                {element.senderReference}
+            </Table.Td>
+            {/* <Table.Td>
+                {JSON.stringify(JSON.parse(element.rawJson))}
+            </Table.Td> */}
         </Table.Tr>
     ));
     return (
@@ -133,7 +167,7 @@ const InvestigateMessage = () => {
             </div>
             <div id="result" className='relative flex w-full h-full bg-white'>
                 <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-                <Table.ScrollContainer maw={'100%'}>
+                <Table.ScrollContainer maw={'100%'} className='w-full'>
                     <Table
                         highlightOnHover
                     >
@@ -142,13 +176,19 @@ const InvestigateMessage = () => {
                                 <Table.Th>Stt</Table.Th>
                                 <Table.Th></Table.Th>
                                 <Table.Th></Table.Th>
-                                <Table.Th>Bản tin</Table.Th>
+                                <Table.Th>Thời gian</Table.Th>
+                                <Table.Th>Loại</Table.Th>
+                                <Table.Th>Chiều</Table.Th>
+                                <Table.Th>HTTP Response</Table.Th>
+                                <Table.Th>Sender Reference</Table.Th>
+                                {/* <Table.Th>Bản tin</Table.Th> */}
                             </Table.Tr>
                         </Table.Thead>
                         <Table.Tbody>{tblRows}</Table.Tbody>
                     </Table>
                 </Table.ScrollContainer>
             </div>
+            <JsonViewerModal data={jsonData} onClose={setShowJsonModal} opened={showJsonModal} />
         </div>
     )
 }

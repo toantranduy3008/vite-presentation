@@ -8,6 +8,7 @@ import { IconDotsVertical } from '@tabler/icons-react'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
 import ReturnTransactionModal from './ReturnTransactionModal'
 import { SearchAPI } from '../../../apis/SearchAPI'
+import { listRowsPerPage } from '../../../configs/GlobalConfig'
 export const SearchInComing = () => {
     const currentDate = new Date()
     const previousWeek = new Date(dayjs().subtract(1, 'w'))
@@ -32,7 +33,8 @@ export const SearchInComing = () => {
         amount: 0,
         description: '',
         response: '',
-        returnedAmount: 0
+        returnedAmount: 0,
+        settlementStatus: ''
     })
     const [returnTransactionData, setReturnTransactionData] = useState({
         seqNo: '',
@@ -51,13 +53,7 @@ export const SearchInComing = () => {
     })
     const [listBank, setListBank] = useState([])
     const [tableData, setTableData] = useState([])
-    const [rowsPerPage] = useState([
-        { value: '30', label: '30' },
-        { value: '50', label: '50' },
-        { value: '100', label: '100' }
-    ])
-
-
+    const [rowsPerPage] = useState(listRowsPerPage)
     useEffect(() => {
         const fetchData = async () => {
             const [acquirer] = await fetchBankList()
@@ -194,7 +190,8 @@ export const SearchInComing = () => {
             description: data.transContent,
             response: setBadge(data.respcode, true),
             returnedAmount: data.returnedAmount,
-            reason: ''
+            reason: '',
+            settlementStatus: data.settlementStatus
         }
     }
     const onChangeReturnData = (data) => {
@@ -268,6 +265,9 @@ export const SearchInComing = () => {
                 {setBadge(element.respcode, true)}
             </Table.Td>
             <Table.Td>
+                {element.settlementStatus}
+            </Table.Td>
+            <Table.Td>
                 {listBank.find(b => b.value.toString() === element.benId).label}
             </Table.Td>
             <Table.Td>
@@ -294,7 +294,7 @@ export const SearchInComing = () => {
                         <Menu.Item
                             className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
                             onClick={(e) => { handleInvestigateTransaction(e, element) }}
-                            disabled={!element.respcode || element.respcode !== '68'}
+                            disabled
                         >
                             Tra cứu TTGD tại NHTH
                         </Menu.Item>
@@ -367,6 +367,7 @@ export const SearchInComing = () => {
                             <Table.Th>Số tiền</Table.Th>
                             <Table.Th>Số tiền đã hoàn trả</Table.Th>
                             <Table.Th>TTGD tại Napas</Table.Th>
+                            <Table.Th>TT quyết toán</Table.Th>
                             <Table.Th>Ngân hàng thụ hưởng</Table.Th>
                             <Table.Th>Thời gian giao dịch</Table.Th>
                             <Table.Th></Table.Th>
