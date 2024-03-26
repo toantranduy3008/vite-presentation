@@ -124,12 +124,6 @@ export const SearchInComing = () => {
         setDetailTransactionData(createModalData(data))
     }
 
-    const handleShowJsonViewerModal = (e, data) => {
-        setShowJsonViewerModal(true)
-        // setDetailTransactionData(createModalData(data))
-
-    }
-
     const handleShowReturnTransactionModal = (e, data) => {
         setShowReturnTransactionModal(true)
         setReturnTransactionData({
@@ -300,14 +294,9 @@ export const SearchInComing = () => {
                         <Menu.Item
                             className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
                             onClick={(e) => { handleInvestigateTransaction(e, element) }}
+                            disabled={!element.respcode || element.respcode !== '68'}
                         >
                             Tra cứu TTGD tại NHTH
-                        </Menu.Item>
-                        <Menu.Item
-                            className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
-                            onClick={(e) => { handleShowJsonViewerModal(e, element) }}
-                        >
-                            Tra cứu bản tin
                         </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>

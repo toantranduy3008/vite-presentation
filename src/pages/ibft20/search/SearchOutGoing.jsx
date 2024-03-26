@@ -10,15 +10,15 @@ import ReturnTransactionModal from './ReturnTransactionModal'
 import { SearchAPI } from '../../../apis/SearchAPI'
 export const SearchOutGoing = () => {
     const currentDate = new Date()
+    const previousWeek = new Date(dayjs().subtract(1, 'w'))
     const [lookupParams, setLookupParams] = useState({
-        startDate: new Date(currentDate.setHours(0, 0, 0, 0)),
+        startDate: new Date(previousWeek.setHours(0, 0, 0, 0)),
         endDate: new Date(currentDate.setHours(23, 59, 59, 0)),
         traceNo: '',
         transRef: ''
     })
     const [showDetailTransactionModal, setShowDetailTransactionModal] = useState(false)
     const [showReturnTransactionModal, setShowReturnTransactionModal] = useState(false)
-    const [showJsonViewerModal, setShowJsonViewerModal] = useState(false)
     const [detailTransactionData, setDetailTransactionData] = useState({
         seqNo: '',
         issBankName: '',
@@ -40,8 +40,8 @@ export const SearchOutGoing = () => {
         reason: '',
         traceNo: '',
         transRef: '',
-        rootAmount: 0,
-        returnedAmount: 0
+        returnedAmount: 0,
+        rootAmount: 0
     })
     const [loading, setLoading] = useState(false)
     const [paging, setPaging] = useState({
@@ -65,6 +65,9 @@ export const SearchOutGoing = () => {
         }
 
         fetchData()
+            .then(() => {
+                handleSearch()
+            })
             .catch(() => { })
     }, [])
 
@@ -128,7 +131,6 @@ export const SearchOutGoing = () => {
     }
 
     const handleShowReturnTransactionModal = (e, data) => {
-        console.log('data: ', data)
         setShowReturnTransactionModal(true)
         setReturnTransactionData({
             seqNo: data.seqNo,
@@ -155,7 +157,7 @@ export const SearchOutGoing = () => {
             transRef: requestBody ? requestBody.transRef : lookupParams.transRef
         }
 
-        SearchAPI.incoming(`/bankdemo/api/payment/listIncomingTrans`, pagingQuery, filtersInput)
+        SearchAPI.outgoing(`/bankdemo/api/payment/listTrans`, pagingQuery, filtersInput)
             .then(
                 (response) => {
                     const { content, totalPages, number } = response
@@ -292,20 +294,16 @@ export const SearchOutGoing = () => {
                         <Menu.Item
                             className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
                             onClick={(e) => { handleShowReturnTransactionModal(e, element) }}
+                            disabled
                         >
                             Hoàn trả
                         </Menu.Item>
                         <Menu.Item
                             className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
                             onClick={(e) => { handleInvestigateTransaction(e, element) }}
+                            disabled={!element.respcode || element.respcode !== '68'}
                         >
                             Tra cứu TTGD tại NHTH
-                        </Menu.Item>
-                        <Menu.Item
-                            className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
-                            onClick={(e) => { handleShowJsonViewerModal(e, element) }}
-                        >
-                            Tra cứu bản tin
                         </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>

@@ -25,7 +25,7 @@ export const SearchAPI = {
     },
     investigateTransaction: async function (requestBody, cancel = false) {
         const response = await api.request({
-            url: `bankdemo/api/invest/payment`,
+            url: `/bankdemo/api/invest/payment`,
             method: "POST",
             data: requestBody,
             headers: authHeader(),
