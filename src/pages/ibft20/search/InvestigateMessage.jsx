@@ -28,6 +28,7 @@ const InvestigateMessage = () => {
     const [rowsPerPage] = useState(listRowsPerPage)
     const [showJsonModal, setShowJsonModal] = useState(false)
     const [jsonData, setJsonData] = useState('')
+    const [pagingDataDescription, setPagingDataDescription] = useState('Từ 0 đến 0/ 0 kết quả')
     useEffect(() => { handleSearch() }, [])
     const handleChangeTransRef = (e) => {
         setLookupParams({ ...lookupParams, transRef: e.target.value })
@@ -62,12 +63,9 @@ const InvestigateMessage = () => {
             startDate: lookupParams.startDate,
         }
 
-        console.log('requestBody', requestBody)
         handleSearch(requestBody)
     }
     const handleShowJsonModal = data => {
-        console.log('data: ', data)
-
         setJsonData({
             request: data.rawJson ? JSON.parse(data?.rawJson) : "",
             response: data.relatedLog ? JSON.parse(data.relatedLog?.rawJson) : ""
@@ -90,13 +88,14 @@ const InvestigateMessage = () => {
         SearchAPI.investigateMessage(`/bankdemo/api/payment/isoMessageHistory`, pagingQuery, filtersInput)
             .then(
                 (response) => {
-                    const { content, totalPages, number } = response
+                    const { content, totalPages, number, numberOfElements, totalElements } = response
                     setInvestData(content)
                     if (content.length === 0) {
                         NotificationServices.info('Không tìm thấy bản tin.')
                         return;
                     }
 
+                    setPagingDataDescription(`Từ ${pagingQuery.size * number + 1} đến ${pagingQuery.size * number + numberOfElements} / ${totalElements} kết quả`)
                     setPagingParams({
                         ...pagingParams,
                         pageNo: number + 1,
@@ -105,6 +104,8 @@ const InvestigateMessage = () => {
                 }
             ).catch(
                 () => {
+                    setInvestData([])
+                    setPagingDataDescription(`Từ 0 đến 0 / 0 kết quả`)
                     NotificationServices.error('Không thể tìm kiếm bản tin.')
                 }
             ).finally(
@@ -201,6 +202,7 @@ const InvestigateMessage = () => {
                 <Button variant="filled" className="hover:bg-teal-600" onClick={() => { handleSearch() }}>Tìm kiếm</Button>
             </div>
             <div id="paging" className='flex w-full  gap-1 items-end justify-between'>
+
                 <Select
                     label="Số dòng/ trang"
                     data={rowsPerPage}
@@ -210,21 +212,25 @@ const InvestigateMessage = () => {
                     maxDropdownHeight={200}
                     onChange={handleChangeRowNum}
                 />
-                <Pagination.Root
-                    total={pagingParams.totalPages}
-                    value={pagingParams.pageNo}
-                    siblings={1}
-                    boundaries={1}
-                    onChange={handleChangePage}
-                >
-                    <Group gap={3} justify="center">
-                        <Pagination.First />
-                        <Pagination.Previous />
-                        <Pagination.Items />
-                        <Pagination.Next />
-                        <Pagination.Last />
-                    </Group>
-                </Pagination.Root>
+                <div className='flex gap-4 '>
+                    <p className='flex p-0 m-0 italic text-indigo-400 justify-end items-end'>{pagingDataDescription}</p>
+                    <Pagination.Root
+                        total={pagingParams.totalPages}
+                        value={pagingParams.pageNo}
+                        siblings={1}
+                        boundaries={1}
+                        onChange={handleChangePage}
+                    >
+                        <Group gap={3} justify="center">
+                            <Pagination.First />
+                            <Pagination.Previous />
+                            <Pagination.Items />
+                            <Pagination.Next />
+                            <Pagination.Last />
+                        </Group>
+                    </Pagination.Root>
+                </div>
+
             </div>
             <div id="result" className='relative flex w-full h-full bg-white'>
                 <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />

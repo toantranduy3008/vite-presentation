@@ -53,6 +53,7 @@ export const SearchInComing = () => {
     })
     const [listBank, setListBank] = useState([])
     const [tableData, setTableData] = useState([])
+    const [pagingDataDescription, setPagingDataDescription] = useState('Từ 0 đến 0/ 0 kết quả')
     const [rowsPerPage] = useState(listRowsPerPage)
     useEffect(() => {
         const fetchData = async () => {
@@ -150,13 +151,14 @@ export const SearchInComing = () => {
         SearchAPI.incoming(`/bankdemo/api/payment/listIncomingTrans`, pagingQuery, filtersInput)
             .then(
                 (response) => {
-                    const { content, totalPages, number } = response
+                    const { content, totalPages, number, numberOfElements, totalElements } = response
                     setTableData(content)
                     if (content.length === 0) {
                         NotificationServices.info('Không tìm thấy giao dịch.')
                         return;
                     }
 
+                    setPagingDataDescription(`Từ ${pagingQuery.size * number + 1} đến ${pagingQuery.size * number + numberOfElements} / ${totalElements} kết quả`)
                     setPaging({
                         ...paging,
                         pageNo: number + 1,
@@ -165,6 +167,8 @@ export const SearchInComing = () => {
                 }
             ).catch(
                 () => {
+                    setTableData([])
+                    setPagingDataDescription(`Từ 0 đến 0 / 0 kết quả`)
                     NotificationServices.error('Không thể tìm kiếm giao dịch.')
                 }
             ).finally(
@@ -360,21 +364,24 @@ export const SearchInComing = () => {
                     maxDropdownHeight={200}
                     onChange={handleChangeRowNum}
                 />
-                <Pagination.Root
-                    total={paging.totalPages}
-                    value={paging.pageNo}
-                    siblings={1}
-                    boundaries={1}
-                    onChange={handleChangePage}
-                >
-                    <Group gap={3} justify="center">
-                        <Pagination.First />
-                        <Pagination.Previous />
-                        <Pagination.Items />
-                        <Pagination.Next />
-                        <Pagination.Last />
-                    </Group>
-                </Pagination.Root>
+                <div className='flex gap-4 '>
+                    <p className='flex p-0 m-0 italic text-indigo-400 justify-end items-end'>{pagingDataDescription}</p>
+                    <Pagination.Root
+                        total={paging.totalPages}
+                        value={paging.pageNo}
+                        siblings={1}
+                        boundaries={1}
+                        onChange={handleChangePage}
+                    >
+                        <Group gap={3} justify="center">
+                            <Pagination.First />
+                            <Pagination.Previous />
+                            <Pagination.Items />
+                            <Pagination.Next />
+                            <Pagination.Last />
+                        </Group>
+                    </Pagination.Root>
+                </div>
             </div>
             <div id="result" className='relative flex w-full h-full bg-white'>
                 <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
