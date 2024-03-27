@@ -9,17 +9,19 @@ const TransactionDetailModal = ({ data, opened, onClose }) => {
             onClose={onClose}
             withCloseButton={false}
             closeOnClickOutside={true}
-            size={"75%"}
+            size={"50%"}
             centered
             className='flex flex-col'
         >
             <div className='flex w-full h-full gap-4'>
-                <div id='napas-logo' className='flex basis-1/6 w-full justify-center items-center '>
-                    <img src='/bankdemo/napas-logo.svg' className="flex flex-1 w-auto xs:w-24 h-5 xs:h-auto align-middle border-none " />
-                </div>
                 <div id="transaction-detail" className="flex flex-col w-full h-full justify-center items-center gap-2">
-                    <p className='flex w-full m-0 p-0 text-xl text-slate-700 italic uppercase font-semibold justify-start items-center'>Thông tin giao dịch</p>
-                    <div id="detail" className='flex w-full h-full gap-3 items-start justify-center'>
+                    <div className='flex flex-col w-full justify-start items-start gap-1 border-0 border-b border-dashed border-indigo-200'>
+                        <img src='/bankdemo/napas-logo.svg' className="flex flex-1 w-auto xs:w-24 h-5 xs:h-auto align-middle border-none " />
+                        <div className="flex flex-1 justify-start items-center text-left font-bold uppercase italic text-slate-700 text-base">Thông tin giao dịch</div>
+                    </div>
+                    {/* <img src='/bankdemo/napas-logo.svg' className="flex flex-1 w-auto xs:w-24 h-5 xs:h-auto align-middle border-none justify-start items-start" />
+                    <p className='flex w-full m-0 p-0 text-xl text-slate-700 italic uppercase font-semibold justify-start items-center'>Thông tin giao dịch</p> */}
+                    <div id="detail" className='flex w-full h-full gap-5 items-start justify-center'>
                         <div className='flex flex-col flex-1 w-full h-full justify-center items-start'>
                             <div id="transaction-source" className='flex w-full justify-between items-center border-0 border-b border-dashed border-indigo-200 py-1'>
                                 <div className='flex flex-1 items-center justify-start'>Ngân hàng phát lệnh</div>

@@ -2,11 +2,12 @@ import { ActionIcon, Button, CopyButton, Group, LoadingOverlay, Pagination, Sele
 import { useEffect, useState } from 'react'
 import { SearchAPI } from '../../../apis/SearchAPI'
 import NotificationServices from '../../../services/notificationServices/NotificationServices'
-import { IconCheck, IconCopy, IconEye } from '@tabler/icons-react'
+import { IconCheck, IconEye, IconSquareRoundedArrowLeft, IconSquareRoundedArrowRight } from '@tabler/icons-react'
 import JsonViewerModal from './JsonViewerModal'
 import dayjs from 'dayjs'
 import { listRowsPerPage } from '../../../configs/GlobalConfig'
 import { DateTimePicker } from '@mantine/dates'
+import { maskRefCode } from '../../../services/Utilities'
 const InvestigateMessage = () => {
     const [loading, setLoading] = useState(false)
     // const [transRef, setTransRef] = useState('')
@@ -61,8 +62,13 @@ const InvestigateMessage = () => {
         handleSearch(requestBody)
     }
     const handleShowJsonModal = data => {
+        console.log('data: ', data)
+
+        setJsonData({
+            request: JSON.parse(data.rawJson),
+            response: JSON.parse(data.relatedLog.rawJson)
+        })
         setShowJsonModal(true)
-        setJsonData(JSON.parse(data.rawJson))
     }
     const handleSearch = async (requestBody = null) => {
         setPagingParams({ ...pagingParams, pageNo: 1 })
@@ -72,7 +78,7 @@ const InvestigateMessage = () => {
             size: requestBody ? requestBody.size : pagingParams.pageSize
         }
         const filtersInput = {
-            transRef: requestBody ? requestBody.transRef : lookupParams.transRef,
+            transactionReference: requestBody ? requestBody.transRef : lookupParams.transRef,
             sentBefore: dayjs(requestBody ? requestBody.endDate : lookupParams.endDate).format('YYYY-MM-DDTHH:mm:ss'),
             sentAfter: dayjs(requestBody ? requestBody.startDate : lookupParams.startDate).format('YYYY-MM-DDTHH:mm:ss'),
         }
@@ -103,7 +109,7 @@ const InvestigateMessage = () => {
     }
     const tblRows = investData.map((element, index) => (
         <Table.Tr
-            key={`${index}_${element.transRef}`}
+            key={`${index}_${element.senderReference}`}
             className='hover:cursor-pointer'
         >
             <Table.Td>
@@ -112,12 +118,27 @@ const InvestigateMessage = () => {
             <Table.Td className=''>
                 <CopyButton value={JSON.stringify(JSON.parse(element.rawJson), null, 2)} timeout={1000}>
                     {({ copied, copy }) => (
-                        <Tooltip label={copied ? 'Copied' : 'Copy'} position="top">
+                        <Tooltip label={copied ? 'Copied' : 'Copy bản tin request'} position="top">
                             <ActionIcon variant="transparent" onClick={copy}>
                                 {copied ? (
                                     <IconCheck />
                                 ) : (
-                                    <IconCopy className="w-6 h-6 text-slate-700 hover:text-indigo-700 hover:scale-125 transition ease-linear duration-150" />
+                                    <IconSquareRoundedArrowRight className="w-6 h-6 text-slate-700 hover:text-indigo-700 hover:scale-125 transition ease-linear duration-150" />
+                                )}
+                            </ActionIcon>
+                        </Tooltip>
+                    )}
+                </CopyButton>
+            </Table.Td>
+            <Table.Td className=''>
+                <CopyButton value={JSON.stringify(JSON.parse(element.relatedLog.rawJson), null, 2)} timeout={1000}>
+                    {({ copied, copy }) => (
+                        <Tooltip label={copied ? 'Copied' : 'Copy bản tin response'} position="top">
+                            <ActionIcon variant="transparent" onClick={copy}>
+                                {copied ? (
+                                    <IconCheck />
+                                ) : (
+                                    <IconSquareRoundedArrowLeft className="w-6 h-6 text-slate-700 hover:text-indigo-700 hover:scale-125 transition ease-linear duration-150" />
                                 )}
                             </ActionIcon>
                         </Tooltip>
@@ -142,14 +163,11 @@ const InvestigateMessage = () => {
                 {element.direction}
             </Table.Td>
             <Table.Td>
-                {element.relatedLog}
-            </Table.Td>
-            <Table.Td>
                 {element.senderReference}
             </Table.Td>
-            {/* <Table.Td>
-                {JSON.stringify(JSON.parse(element.rawJson))}
-            </Table.Td> */}
+            <Table.Td>
+                {maskRefCode(element.transactionReference)}
+            </Table.Td>
         </Table.Tr>
     ));
     return (
@@ -210,12 +228,12 @@ const InvestigateMessage = () => {
                                 <Table.Th>Stt</Table.Th>
                                 <Table.Th></Table.Th>
                                 <Table.Th></Table.Th>
+                                <Table.Th></Table.Th>
                                 <Table.Th>Thời gian</Table.Th>
                                 <Table.Th>Loại</Table.Th>
                                 <Table.Th>Chiều</Table.Th>
-                                <Table.Th>HTTP Response</Table.Th>
                                 <Table.Th>Sender Reference</Table.Th>
-                                {/* <Table.Th>Bản tin</Table.Th> */}
+                                <Table.Th>Mã tham chiếu</Table.Th>
                             </Table.Tr>
                         </Table.Thead>
                         <Table.Tbody>{tblRows}</Table.Tbody>
