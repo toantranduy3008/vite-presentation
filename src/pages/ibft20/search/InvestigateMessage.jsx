@@ -83,6 +83,7 @@ const InvestigateMessage = () => {
             transactionReference: requestBody ? requestBody.transRef : lookupParams.transRef,
             sentBefore: dayjs(requestBody ? requestBody.endDate : lookupParams.endDate).format('YYYY-MM-DDTHH:mm:ss'),
             sentAfter: dayjs(requestBody ? requestBody.startDate : lookupParams.startDate).format('YYYY-MM-DDTHH:mm:ss'),
+            messageIdentifier: ""
         }
 
         SearchAPI.investigateMessage(`/bankdemo/api/payment/isoMessageHistory`, pagingQuery, filtersInput)
@@ -213,7 +214,7 @@ const InvestigateMessage = () => {
                     onChange={handleChangeRowNum}
                 />
                 <div className='flex gap-4 '>
-                    <p className='flex p-0 m-0 italic text-indigo-400 justify-end items-end'>{pagingDataDescription}</p>
+                    <p className='flex p-0 m-0 italic text-indigo-400 font-semibold justify-end items-end'>{pagingDataDescription}</p>
                     <Pagination.Root
                         total={pagingParams.totalPages}
                         value={pagingParams.pageNo}
@@ -234,32 +235,34 @@ const InvestigateMessage = () => {
             </div>
             <div id="result" className='relative flex w-full h-full bg-white'>
                 <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-                <Table.ScrollContainer maw={'100%'} className='w-full'>
-                    <Table
-                        highlightOnHover
-                    >
-                        <Table.Thead>
-                            <Table.Tr>
-                                <Table.Th>Stt</Table.Th>
-                                {protocol === 'https' || hostName === 'localhost' ?
-                                    <>
-                                        <Table.Th></Table.Th>
-                                        <Table.Th></Table.Th>
-                                    </>
-                                    :
-                                    null
-                                }
-                                <Table.Th></Table.Th>
-                                <Table.Th>Thời gian</Table.Th>
-                                <Table.Th>Loại</Table.Th>
-                                <Table.Th>Chiều</Table.Th>
-                                <Table.Th>Sender Reference</Table.Th>
-                                <Table.Th>Mã tham chiếu</Table.Th>
-                            </Table.Tr>
-                        </Table.Thead>
-                        <Table.Tbody>{tblRows}</Table.Tbody>
-                    </Table>
-                </Table.ScrollContainer>
+                {/* <Table.ScrollContainer maw={'100%'} className='w-full'> */}
+                <Table
+                    highlightOnHover
+                    stickyHeader
+                    stickyHeaderOffset={60}
+                >
+                    <Table.Thead>
+                        <Table.Tr>
+                            <Table.Th>Stt</Table.Th>
+                            {protocol === 'https' || hostName === 'localhost' ?
+                                <>
+                                    <Table.Th></Table.Th>
+                                    <Table.Th></Table.Th>
+                                </>
+                                :
+                                null
+                            }
+                            <Table.Th></Table.Th>
+                            <Table.Th>Thời gian</Table.Th>
+                            <Table.Th>Loại</Table.Th>
+                            <Table.Th>Chiều</Table.Th>
+                            <Table.Th>Sender Reference</Table.Th>
+                            <Table.Th>Mã tham chiếu</Table.Th>
+                        </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>{tblRows}</Table.Tbody>
+                </Table>
+                {/* </Table.ScrollContainer> */}
             </div>
             <JsonViewerModal data={jsonData} onClose={setShowJsonModal} opened={showJsonModal} />
         </div>

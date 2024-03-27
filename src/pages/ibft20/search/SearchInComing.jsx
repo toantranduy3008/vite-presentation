@@ -365,7 +365,7 @@ export const SearchInComing = () => {
                     onChange={handleChangeRowNum}
                 />
                 <div className='flex gap-4 '>
-                    <p className='flex p-0 m-0 italic text-indigo-400 justify-end items-end'>{pagingDataDescription}</p>
+                    <p className='flex p-0 m-0 italic text-indigo-400 font-semibold justify-end items-end'>{pagingDataDescription}</p>
                     <Pagination.Root
                         total={paging.totalPages}
                         value={paging.pageNo}
