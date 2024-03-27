@@ -159,7 +159,7 @@ const InvestigateMessage = () => {
                 </Tooltip>
             </Table.Td>
             <Table.Td>
-                {dayjs(element.senderDateTime).format('DD/MM/YYYY HH:mm')}
+                {dayjs(element.senderDateTime).format('DD/MM/YYYY HH:mm:ss')}
             </Table.Td>
             <Table.Td className='capitalize'>
                 {element.messageIdentifier}

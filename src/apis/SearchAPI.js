@@ -34,6 +34,17 @@ export const SearchAPI = {
 
         return response.data
     },
+    copyTransaction: async function (requestBody, cancel = false) {
+        const response = await api.request({
+            url: `/bankdemo/api/copy/payment`,
+            method: "POST",
+            data: requestBody,
+            headers: authHeader(),
+            signal: cancel ? cancelApiObject[this.copyTransaction.name].handleRequestCancellation().signal : undefined,
+        })
+
+        return response.data
+    },
     investigateMessage: async function (apiUrl, paging, filtersInput, cancel = false) {
         const response = await api.request({
             url: `${apiUrl}?${new URLSearchParams(paging).toString()}&${new URLSearchParams(filtersInput).toString()}`,

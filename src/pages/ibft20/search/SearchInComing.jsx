@@ -241,6 +241,27 @@ export const SearchInComing = () => {
             })
     }
 
+    const handleCopyTransaction = (e, data) => {
+        SearchAPI.copyTransaction({ seqNo: data.seqNo }, true)
+            .then(res => {
+                const { responseCode } = res
+                if (responseCode === '00') {
+                    NotificationServices.success('Gửi yêu cầu copy giao dịch thành công.')
+                    setShowReturnTransactionModal(false)
+                } else {
+                    NotificationServices.warning('Gửi yêu cầu copy giao dịch không thành công.')
+                }
+            })
+            // .then(() => { handleSearch() })
+            .catch((e) => {
+                console.log(e)
+                NotificationServices.error(`Không thể gửi yêu cầu copy giao dịch.`)
+            })
+            .finally(() => {
+                // setLoading(false)
+            })
+    }
+
     const tblRows = tableData.map((element, index) => (
         <Table.Tr
             key={`${index}_${element.transRef}`}
@@ -290,6 +311,12 @@ export const SearchInComing = () => {
                             onClick={(e) => { handleShowReturnTransactionModal(e, element) }}
                         >
                             Hoàn trả
+                        </Menu.Item>
+                        <Menu.Item
+                            className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
+                            onClick={(e) => { handleCopyTransaction(e, element) }}
+                        >
+                            Copy giao dịch
                         </Menu.Item>
                         <Menu.Item
                             className='text-slate-700 hover:bg-orange-500 hover:font-semibold hover:text-white'
