@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
-import { Modal, CopyButton, Tooltip, ActionIcon } from '@mantine/core'
+import { Modal, CopyButton, Tooltip, ActionIcon, JsonInput } from '@mantine/core'
 import { IconCheck, IconCopy } from '@tabler/icons-react'
 import { getUrl } from '../../../services/Utilities'
-
+import classes from './Modal.module.css'
 const JsonViewerModal = ({ data, opened, onClose }) => {
     const { protocol, hostName } = getUrl()
     const requestDataString = JSON.stringify(data.request)
@@ -20,7 +20,7 @@ const JsonViewerModal = ({ data, opened, onClose }) => {
             className='flex flex-col w-full h-ful'
         >
             <div className='relative flex w-full h-full gap-5'>
-                <div id="request" className='flex flex-1 flex-col gap-2  justify-start items-start'>
+                <div id="request" className='flex flex-1 flex-col gap-2 max-w-[50%]  justify-start items-start'>
                     <div className='flex w-full justify-start items-center gap-2'>
                         <p className='flex w-fit m-0 italic text-indigo-400 font-semibold'>Bản tin request</p>
                         {protocol === 'https' || hostName === 'localhost' ?
@@ -44,8 +44,23 @@ const JsonViewerModal = ({ data, opened, onClose }) => {
                             : null
                         }
                     </div>
-                    <div className='flex w-full h-full justify-start items-start border border-dashed border-indigo-400 rounded-md px-2'>
-                        <pre className='text-sm'>{requestDataJson ? JSON.stringify(requestDataJson, null, 2) : "Không có bản tin request"}</pre>
+                    <div className='flex w-full h-full justify-start items-start border border-dashed border-indigo-400 rounded-md'>
+                        {requestDataJson ?
+                            <JsonInput
+                                validationError="Invalid JSON"
+                                formatOnBlur
+                                autosize
+                                minRows={4}
+                                value={JSON.stringify(requestDataJson, null, 2)}
+                                className='w-full'
+                                classNames={{
+                                    input: classes.jsonViewerInput
+                                }}
+                                readOnly
+                            />
+                            :
+                            <div className='flex w-full h-full p-1 px-2 text-sm'>Không có bản tin request</div>
+                        }
                     </div>
                 </div>
                 <div id="response" className='flex flex-1 flex-col gap-2 justify-start  items-start'>
@@ -70,8 +85,27 @@ const JsonViewerModal = ({ data, opened, onClose }) => {
                             : null
                         }
                     </div>
-                    <div className='flex w-full h-full justify-start items-start border border-dashed border-indigo-400 rounded-md px-2'>
-                        <pre className='text-sm'>{responseDataJson ? JSON.stringify(responseDataJson, null, 2) : 'Không có bản tin response'}</pre>
+                    <div className='flex w-full h-full justify-start items-start border border-dashed border-indigo-400 rounded-md'>
+                        <div className='flex w-full h-full justify-start items-start'>
+                            {/* <pre className='text-sm w-full'> */}
+                            {responseDataJson ?
+                                <JsonInput
+                                    validationError="Invalid JSON"
+                                    formatOnBlur
+                                    autosize
+                                    minRows={4}
+                                    value={JSON.stringify(responseDataJson, null, 2)}
+                                    className='w-full'
+                                    classNames={{
+                                        input: classes.jsonViewerInput
+                                    }}
+                                    readOnly
+                                />
+                                :
+                                <div className='flex w-full h-full p-1 px-2 text-sm'>Không có bản tin response</div>
+                            }
+                            {/* </pre> */}
+                        </div>
                     </div>
                 </div>
             </div>

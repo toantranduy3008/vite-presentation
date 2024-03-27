@@ -1,0 +1,9 @@
+.jsonViewerInput {
+    border: none;
+    outline: none;
+}
+
+.jsonViewerInput:focus {
+    border: none;
+    outline: none;
+}

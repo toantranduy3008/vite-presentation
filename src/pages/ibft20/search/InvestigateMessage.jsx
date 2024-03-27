@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import { listRowsPerPage } from '../../../configs/GlobalConfig'
 import { DateTimePicker } from '@mantine/dates'
 import { getUrl, maskRefCode } from '../../../services/Utilities'
+import { fakeHis } from '../../fake'
 const InvestigateMessage = () => {
     const [loading, setLoading] = useState(false)
     const { protocol, hostName } = getUrl()
@@ -19,7 +20,7 @@ const InvestigateMessage = () => {
         traceNo: '',
         transRef: ''
     })
-    const [investData, setInvestData] = useState([])
+    const [investData, setInvestData] = useState(fakeHis.content)
     const [pagingParams, setPagingParams] = useState({
         pageNo: 1,
         pageSize: '30',
@@ -29,7 +30,9 @@ const InvestigateMessage = () => {
     const [showJsonModal, setShowJsonModal] = useState(false)
     const [jsonData, setJsonData] = useState('')
     const [pagingDataDescription, setPagingDataDescription] = useState('Từ 0 đến 0/ 0 kết quả')
-    useEffect(() => { handleSearch() }, [])
+    useEffect(() => {
+        // handleSearch() 
+    }, [])
     const handleChangeTransRef = (e) => {
         setLookupParams({ ...lookupParams, transRef: e.target.value })
     }
