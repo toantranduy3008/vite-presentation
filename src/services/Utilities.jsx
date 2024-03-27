@@ -173,3 +173,10 @@ export const maskRefCode = (refCode) => {
 
     return refCode
 }
+
+export const getUrl = () => {
+    return {
+        protocol: location.protocol,
+        hostName: location.hostname,
+    }
+}

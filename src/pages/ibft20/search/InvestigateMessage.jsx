@@ -7,10 +7,10 @@ import JsonViewerModal from './JsonViewerModal'
 import dayjs from 'dayjs'
 import { listRowsPerPage } from '../../../configs/GlobalConfig'
 import { DateTimePicker } from '@mantine/dates'
-import { maskRefCode } from '../../../services/Utilities'
+import { getUrl, maskRefCode } from '../../../services/Utilities'
 const InvestigateMessage = () => {
     const [loading, setLoading] = useState(false)
-    // const [transRef, setTransRef] = useState('')
+    const { protocol, hostName } = getUrl()
     const currentDate = new Date()
     const previousWeek = new Date(dayjs().subtract(1, 'w'))
     const [lookupParams, setLookupParams] = useState({
@@ -115,36 +115,41 @@ const InvestigateMessage = () => {
             <Table.Td>
                 {(pagingParams.pageNo - 1) * pagingParams.pageSize + index + 1}
             </Table.Td>
-            <Table.Td className=''>
-                <CopyButton value={JSON.stringify(JSON.parse(element.rawJson), null, 2)} timeout={1000}>
-                    {({ copied, copy }) => (
-                        <Tooltip label={copied ? 'Copied' : 'Copy bản tin request'} position="top">
-                            <ActionIcon variant="transparent" onClick={copy}>
-                                {copied ? (
-                                    <IconCheck />
-                                ) : (
-                                    <IconSquareRoundedArrowRight className="w-6 h-6 text-slate-700 hover:text-indigo-700 hover:scale-125 transition ease-linear duration-150" />
-                                )}
-                            </ActionIcon>
-                        </Tooltip>
-                    )}
-                </CopyButton>
-            </Table.Td>
-            <Table.Td className=''>
-                <CopyButton value={JSON.stringify(JSON.parse(element.relatedLog.rawJson), null, 2)} timeout={1000}>
-                    {({ copied, copy }) => (
-                        <Tooltip label={copied ? 'Copied' : 'Copy bản tin response'} position="top">
-                            <ActionIcon variant="transparent" onClick={copy}>
-                                {copied ? (
-                                    <IconCheck />
-                                ) : (
-                                    <IconSquareRoundedArrowLeft className="w-6 h-6 text-slate-700 hover:text-indigo-700 hover:scale-125 transition ease-linear duration-150" />
-                                )}
-                            </ActionIcon>
-                        </Tooltip>
-                    )}
-                </CopyButton>
-            </Table.Td>
+            {protocol === 'https' || hostName === 'localhost' ?
+                <>
+                    <Table.Td className=''>
+                        <CopyButton value={JSON.stringify(JSON.parse(element.rawJson), null, 2)} timeout={1000}>
+                            {({ copied, copy }) => (
+                                <Tooltip label={copied ? 'Copied' : 'Copy bản tin request'} position="top">
+                                    <ActionIcon variant="transparent" onClick={copy}>
+                                        {copied ? (
+                                            <IconCheck />
+                                        ) : (
+                                            <IconSquareRoundedArrowRight className="w-6 h-6 text-slate-700 hover:text-indigo-700 hover:scale-125 transition ease-linear duration-150" />
+                                        )}
+                                    </ActionIcon>
+                                </Tooltip>
+                            )}
+                        </CopyButton>
+                    </Table.Td>
+                    <Table.Td className=''>
+                        <CopyButton value={JSON.stringify(JSON.parse(element.relatedLog.rawJson), null, 2)} timeout={1000}>
+                            {({ copied, copy }) => (
+                                <Tooltip label={copied ? 'Copied' : 'Copy bản tin response'} position="top">
+                                    <ActionIcon variant="transparent" onClick={copy}>
+                                        {copied ? (
+                                            <IconCheck />
+                                        ) : (
+                                            <IconSquareRoundedArrowLeft className="w-6 h-6 text-slate-700 hover:text-indigo-700 hover:scale-125 transition ease-linear duration-150" />
+                                        )}
+                                    </ActionIcon>
+                                </Tooltip>
+                            )}
+                        </CopyButton>
+                    </Table.Td>
+                </>
+                : null
+            }
             <Table.Td>
                 <Tooltip label="Chi tiết">
                     <IconEye
@@ -226,8 +231,14 @@ const InvestigateMessage = () => {
                         <Table.Thead>
                             <Table.Tr>
                                 <Table.Th>Stt</Table.Th>
-                                <Table.Th></Table.Th>
-                                <Table.Th></Table.Th>
+                                {protocol === 'https' || hostName === 'localhost' ?
+                                    <>
+                                        <Table.Th></Table.Th>
+                                        <Table.Th></Table.Th>
+                                    </>
+                                    :
+                                    null
+                                }
                                 <Table.Th></Table.Th>
                                 <Table.Th>Thời gian</Table.Th>
                                 <Table.Th>Loại</Table.Th>
