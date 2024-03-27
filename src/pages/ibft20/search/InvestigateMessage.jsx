@@ -57,16 +57,20 @@ const InvestigateMessage = () => {
         const requestBody = {
             page: value,
             size: pagingParams.pageSize,
-            transRef: lookupParams.transRef
+            transRef: lookupParams.transRef,
+            endDate: lookupParams.endDate,
+            startDate: lookupParams.startDate,
         }
+
+        console.log('requestBody', requestBody)
         handleSearch(requestBody)
     }
     const handleShowJsonModal = data => {
         console.log('data: ', data)
 
         setJsonData({
-            request: JSON.parse(data.rawJson),
-            response: JSON.parse(data.relatedLog.rawJson)
+            request: data.rawJson ? JSON.parse(data?.rawJson) : "",
+            response: data.relatedLog ? JSON.parse(data.relatedLog?.rawJson) : ""
         })
         setShowJsonModal(true)
     }
@@ -133,7 +137,7 @@ const InvestigateMessage = () => {
                         </CopyButton>
                     </Table.Td>
                     <Table.Td className=''>
-                        <CopyButton value={JSON.stringify(JSON.parse(element.relatedLog.rawJson), null, 2)} timeout={1000}>
+                        <CopyButton value={element.relatedLog ? JSON.stringify(JSON.parse(element.relatedLog?.rawJson), null, 2) : ""} timeout={1000}>
                             {({ copied, copy }) => (
                                 <Tooltip label={copied ? 'Copied' : 'Copy bản tin response'} position="top">
                                     <ActionIcon variant="transparent" onClick={copy}>

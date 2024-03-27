@@ -215,9 +215,7 @@ export const SearchInComing = () => {
                 console.log(e)
                 NotificationServices.error(`Không thể gửi yêu cầu hoàn trả.`)
             })
-            .finally(() => {
-                // setLoading(false)
-            })
+            .finally(() => { })
     }
 
     const handleInvestigateTransaction = (e, data) => {
@@ -236,9 +234,7 @@ export const SearchInComing = () => {
                 console.log(e)
                 NotificationServices.error(`Không thể gửi yêu cầu tra cứu.`)
             })
-            .finally(() => {
-                // setLoading(false)
-            })
+            .finally(() => { })
     }
 
     const handleCopyTransaction = (e, data) => {
@@ -252,14 +248,11 @@ export const SearchInComing = () => {
                     NotificationServices.warning('Gửi yêu cầu copy giao dịch không thành công.')
                 }
             })
-            // .then(() => { handleSearch() })
             .catch((e) => {
                 console.log(e)
                 NotificationServices.error(`Không thể gửi yêu cầu copy giao dịch.`)
             })
-            .finally(() => {
-                // setLoading(false)
-            })
+            .finally(() => { })
     }
 
     const tblRows = tableData.map((element, index) => (
