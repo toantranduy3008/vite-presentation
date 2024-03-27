@@ -44,7 +44,7 @@ const JsonViewerModal = ({ data, opened, onClose }) => {
                             : null
                         }
                     </div>
-                    <div className='flex w-full h-full justify-start items-start border border-dashed border-indigo-400 rounded-md'>
+                    <div className='flex w-full h-full justify-start items-start border border-dashed border-indigo-400 '>
                         {requestDataJson ?
                             <JsonInput
                                 validationError="Invalid JSON"
@@ -85,7 +85,7 @@ const JsonViewerModal = ({ data, opened, onClose }) => {
                             : null
                         }
                     </div>
-                    <div className='flex w-full h-full justify-start items-start border border-dashed border-indigo-400 rounded-md'>
+                    <div className='flex w-full h-full justify-start items-start border border-dashed border-indigo-400 '>
                         <div className='flex w-full h-full justify-start items-start'>
                             {/* <pre className='text-sm w-full'> */}
                             {responseDataJson ?

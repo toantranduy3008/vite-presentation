@@ -5,10 +5,11 @@ import NotificationServices from '../../../services/notificationServices/Notific
 import { IconCheck, IconEye, IconSquareRoundedArrowLeft, IconSquareRoundedArrowRight } from '@tabler/icons-react'
 import JsonViewerModal from './JsonViewerModal'
 import dayjs from 'dayjs'
-import { listRowsPerPage } from '../../../configs/GlobalConfig'
+import { listRowsPerPage, listMessageIdentifier } from '../../../configs/GlobalConfig'
 import { DateTimePicker } from '@mantine/dates'
 import { getUrl, maskRefCode } from '../../../services/Utilities'
 import { fakeHis } from '../../fake'
+
 const InvestigateMessage = () => {
     const [loading, setLoading] = useState(false)
     const { protocol, hostName } = getUrl()
@@ -30,6 +31,7 @@ const InvestigateMessage = () => {
     const [showJsonModal, setShowJsonModal] = useState(false)
     const [jsonData, setJsonData] = useState('')
     const [pagingDataDescription, setPagingDataDescription] = useState('Từ 0 đến 0/ 0 kết quả')
+    const [messageIdentifier, setMessageIdentifier] = useState("")
     useEffect(() => {
         // handleSearch() 
     }, [])
@@ -55,7 +57,9 @@ const InvestigateMessage = () => {
             pageSize: value
         })
     }
-
+    const handleChangeMessageIdentifier = (value) => {
+        setMessageIdentifier(value)
+    }
     const handleChangePage = (value) => {
         setPagingParams({ ...pagingParams, pageNo: value })
         const requestBody = {
@@ -202,6 +206,17 @@ const InvestigateMessage = () => {
                     placeholder="F63"
                     value={lookupParams.transRef}
                     onChange={handleChangeTransRef}
+                />
+                <Select
+                    label="Loại thông điệp"
+                    data={listMessageIdentifier}
+                    value={messageIdentifier}
+                    searchable
+                    nothingFoundMessage="Không tìm thấy ..."
+                    className="w-fit"
+                    maxDropdownHeight={300}
+                    onChange={handleChangeMessageIdentifier}
+                    allowDeselect={false}
                 />
                 <Button variant="filled" className="hover:bg-teal-600" onClick={() => { handleSearch() }}>Tìm kiếm</Button>
             </div>

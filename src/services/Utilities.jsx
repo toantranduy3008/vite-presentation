@@ -180,3 +180,4 @@ export const getUrl = () => {
         hostName: location.hostname,
     }
 }
+

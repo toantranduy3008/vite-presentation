@@ -6,86 +6,90 @@ export const listRowsPerPage = [
 
 export const indicatorResponseCodes = [
     {
-        code: "00",
+        value: "00",
         msg: "SUCCESS"
     },
     {
-        code: "25",
+        value: "25",
         msg: "UNABLE_TO_LOCATE_ORIGINAL_TRANSACTION"
     },
     {
-        code: "05",
+        value: "05",
         msg: "TRANSACTION_NOT_ALLOWED"
     },
     {
-        code: "65",
+        value: "65",
         msg: "TIME_EXCEEDED"
     },
     {
-        code: "96",
+        value: "96",
         msg: "OVER_TIMES_ALLOWED"
     },
     {
-        code: "03",
+        value: "03",
         msg: "RECEIVER_NOT_SUPPORT"
     },
     {
-        code: "92",
+        value: "92",
         msg: "OFFLINE_AGENT"
     },
     {
-        code: "68",
+        value: "68",
         msg: "TIMEOUT_WITH_RECEIVER"
     },
 ]
 
-export const messageIdentifiers = [
+export const listMessageIdentifier = [
     {
-        code: "inquiryrequest",
-        name: "Thông điệp truy vấn thông tin khách hàng"
+        value: "",
+        label: "Tất cả"
     },
     {
-        code: "billinquiryrequest",
-        name: "Thông điệp truy vấn thông tin hóa đơn"
+        value: "inquiry",
+        label: "Thông điệp truy vấn thông tin khách hàng"
     },
     {
-        code: "ibftrequest",
-        name: "Thông điệp chuyển tiền"
+        value: "billinquiry",
+        label: "Thông điệp truy vấn thông tin hóa đơn"
     },
     {
-        code: "billpaymentrequest",
-        name: "Thông điệp thanh toán hóa đơn"
+        value: "ibft",
+        label: "Thông điệp chuyển tiền"
     },
     {
-        code: "returnrequest",
-        name: "Thông điệp hoàn trả"
+        value: "billpayment",
+        label: "Thông điệp thanh toán hóa đơn"
     },
     {
-        code: "investigationrequest",
-        name: "Thông điệp truy vấn trạng thái giao dịch chuyển tiền/thanh toán"
+        value: "return",
+        label: "Thông điệp hoàn trả"
     },
     {
-        code: "copyrequest",
-        name: "Thông điệp copy thông tin giao dịch gốc"
+        value: "investigation",
+        label: "Thông điệp truy vấn trạng thái giao dịch chuyển tiền/thanh toán"
     },
     {
-        code: "disputerequest",
-        name: "Thông điệp tra soát"
+        value: "copy",
+        label: "Thông điệp copy thông tin giao dịch gốc"
     },
     {
-        code: "reconciliationreport",
-        name: "Thông điệp báo cáo đối soát"
+        value: "dispute",
+        label: "Thông điệp tra soát"
     },
     {
-        code: "settlementreport",
-        name: "Thông điệp báo cáo quyết toán"
+        value: "reconciliationreport",
+        label: "Thông điệp báo cáo đối soát"
     },
     {
-        code: "generalreport",
-        name: "Thông điệp báo cáo tổng hợp (dạng file gắn kèm)"
+        value: "settlementreport",
+        label: "Thông điệp báo cáo quyết toán"
     },
     {
-        code: "lookuprequest",
-        name: "Thông điệp để lookup thông tin liên quan đến QR Format."
+        value: "generalreport",
+        label: "Thông điệp báo cáo tổng hợp (dạng file gắn kèm)"
+    },
+    {
+        value: "lookup",
+        label: "Thông điệp để lookup thông tin liên quan đến QR Format."
     },
 ]
