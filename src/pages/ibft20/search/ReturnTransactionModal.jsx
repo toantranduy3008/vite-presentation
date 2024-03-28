@@ -106,7 +106,9 @@ const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransacti
 
                         <Tabs.Panel value="return">
                             <div className='flex flex-col w-full h-full gap-1 py-1'>
-                                <div id="root-info" className='flex xs:flex-col lg:flex-row basis-1/2 h-full w-full gap-1 justify-center items-start'>
+                                <div
+                                    id="root-info"
+                                    className='flex xs:flex-col basis-1/2 h-full w-full py-1 justify-center items-start border-0 border-b border-dashed border-indigo-200'>
                                     <div className='flex flex-col w-full items-start justify-center'>
                                         <div className="flex gap-2">
                                             <p className='m-0'>Số tham chiếu giao dịch gốc: </p>
@@ -127,7 +129,6 @@ const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransacti
                                             <p className='m-0 font-semibold'>{numberWithCommas(data.returnedAmount)}</p>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div id="return-info" className='flex flex-col basis-1/2 h-full lg:w-1/2 gap-1 justify-center items-start'>
                                     <p className='flex justify-center items-center m-0'>Số tiền hoàn trả</p>
@@ -140,13 +141,13 @@ const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransacti
                                         hideControls
                                         className='w-full'
                                     />
-                                    <p className='flex justify-center items-center m-0'>Lý do hoàn trả</p>
+                                    {/* <p className='flex justify-center items-center m-0'>Lý do hoàn trả</p>
                                     <Textarea
                                         placeholder="Lý do hoàn trả"
                                         value={returnReason}
                                         onChange={handleChangeReason}
                                         className='w-full'
-                                    />
+                                    /> */}
                                     <div id='transaction-action' className='flex w-full  justify-end items-center gap-2'>
                                         <Button
                                             variant="filled"
@@ -157,11 +158,6 @@ const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransacti
                                         </Button>
                                     </div>
                                 </div>
-
-                            </div>
-
-                            <div id="transaction-detail" className='flex flex-col w-full gap-1'>
-
                             </div>
                         </Tabs.Panel>
 

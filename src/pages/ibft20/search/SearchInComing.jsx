@@ -211,23 +211,31 @@ export const SearchInComing = () => {
     }
     const onSubmitReturnTransaction = (data) => {
         if (data.amount < 2000 || !data.amount) return NotificationServices.warning('Số tiền hoàn trả không hợp lệ.')
-        if (!data.reason.trim()) return NotificationServices.warning('Lý do hoàn trả không được để trống.')
-        SearchAPI.returnTransaction(data, true)
+        // if (!data.reason.trim()) return NotificationServices.warning('Lý do hoàn trả không được để trống.')
+        const returnData = {
+            ...data,
+            reason: `Hoàn trả ${numberWithCommas(data.amount)}`
+        }
+        SearchAPI.returnTransaction(returnData, true)
             .then(res => {
                 const { responseCode } = res
                 if (responseCode === '00') {
                     NotificationServices.success('Gửi yêu cầu hoành trả thành công.')
-                    setShowReturnTransactionModal(false)
+                    handleSearch()
                 } else {
                     NotificationServices.warning('Gửi yêu cầu hoàn trả không thành công.')
                 }
             })
-            .then(() => { handleSearch() })
+            .then(() => {
+                // handleSearch() 
+            })
             .catch((e) => {
                 console.log(e)
                 NotificationServices.error(`Không thể gửi yêu cầu hoàn trả.`)
             })
-            .finally(() => { })
+            .finally(() => {
+                setShowReturnTransactionModal(false)
+            })
     }
 
     const handleInvestigateTransaction = (e, data) => {
