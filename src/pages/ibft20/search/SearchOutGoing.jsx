@@ -154,6 +154,7 @@ export const SearchOutGoing = () => {
                     const { content, totalPages, number, numberOfElements, totalElements } = response
                     setTableData(content)
                     if (content.length === 0) {
+                        setPagingDataDescription(`Từ 0 đến 0 / 0 kết quả`)
                         NotificationServices.info('Không tìm thấy giao dịch.')
                         return;
                     }

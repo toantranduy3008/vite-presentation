@@ -8,7 +8,6 @@ import dayjs from 'dayjs'
 import { listRowsPerPage, listMessageIdentifier } from '../../../configs/GlobalConfig'
 import { DateTimePicker } from '@mantine/dates'
 import { getUrl, maskRefCode } from '../../../services/Utilities'
-import { fakeHis } from '../../fake'
 
 const InvestigateMessage = () => {
     const [loading, setLoading] = useState(false)
@@ -21,7 +20,7 @@ const InvestigateMessage = () => {
         traceNo: '',
         transRef: ''
     })
-    const [investData, setInvestData] = useState(fakeHis.content)
+    const [investData, setInvestData] = useState([])
     const [pagingParams, setPagingParams] = useState({
         pageNo: 1,
         pageSize: '30',
@@ -33,7 +32,7 @@ const InvestigateMessage = () => {
     const [pagingDataDescription, setPagingDataDescription] = useState('Từ 0 đến 0/ 0 kết quả')
     const [messageIdentifier, setMessageIdentifier] = useState("")
     useEffect(() => {
-        // handleSearch() 
+        handleSearch()
     }, [])
     const handleChangeTransRef = (e) => {
         setLookupParams({ ...lookupParams, transRef: e.target.value })
@@ -68,6 +67,7 @@ const InvestigateMessage = () => {
             transRef: lookupParams.transRef,
             endDate: lookupParams.endDate,
             startDate: lookupParams.startDate,
+            messageIdentifier: messageIdentifier
         }
 
         handleSearch(requestBody)
@@ -90,7 +90,7 @@ const InvestigateMessage = () => {
             transactionReference: requestBody ? requestBody.transRef : lookupParams.transRef,
             sentBefore: dayjs(requestBody ? requestBody.endDate : lookupParams.endDate).format('YYYY-MM-DDTHH:mm:ss'),
             sentAfter: dayjs(requestBody ? requestBody.startDate : lookupParams.startDate).format('YYYY-MM-DDTHH:mm:ss'),
-            messageIdentifier: ""
+            messageIdentifier: requestBody ? requestBody.messageIdentifier : messageIdentifier
         }
 
         SearchAPI.investigateMessage(`/bankdemo/api/payment/isoMessageHistory`, pagingQuery, filtersInput)
@@ -99,6 +99,7 @@ const InvestigateMessage = () => {
                     const { content, totalPages, number, numberOfElements, totalElements } = response
                     setInvestData(content)
                     if (content.length === 0) {
+                        setPagingDataDescription(`Từ 0 đến 0 / 0 kết quả`)
                         NotificationServices.info('Không tìm thấy bản tin.')
                         return;
                     }
