@@ -46,50 +46,50 @@ export const listMessageIdentifier = [
     },
     {
         value: "inquiry",
-        label: "Thông điệp truy vấn thông tin khách hàng"
+        label: "Truy vấn thông tin khách hàng"
     },
     {
         value: "billinquiry",
-        label: "Thông điệp truy vấn thông tin hóa đơn"
+        label: "Truy vấn thông tin hóa đơn"
     },
     {
         value: "ibft",
-        label: "Thông điệp chuyển tiền"
+        label: "Chuyển tiền"
     },
     {
         value: "billpayment",
-        label: "Thông điệp thanh toán hóa đơn"
+        label: "Thanh toán hóa đơn"
     },
     {
         value: "return",
-        label: "Thông điệp hoàn trả"
+        label: "Hoàn trả"
     },
     {
         value: "investigation",
-        label: "Thông điệp truy vấn trạng thái giao dịch chuyển tiền/thanh toán"
+        label: "Truy vấn trạng thái giao dịch chuyển tiền/thanh toán"
     },
     {
         value: "copy",
-        label: "Thông điệp copy thông tin giao dịch gốc"
+        label: "Copy thông tin giao dịch gốc"
     },
     {
         value: "dispute",
-        label: "Thông điệp tra soát"
+        label: "Tra soát"
     },
     {
         value: "reconciliationreport",
-        label: "Thông điệp báo cáo đối soát"
+        label: "Báo cáo đối soát"
     },
     {
         value: "settlementreport",
-        label: "Thông điệp báo cáo quyết toán"
+        label: "Báo cáo quyết toán"
     },
     {
         value: "generalreport",
-        label: "Thông điệp báo cáo tổng hợp (dạng file gắn kèm)"
+        label: "Báo cáo tổng hợp (dạng file gắn kèm)"
     },
     {
         value: "lookup",
-        label: "Thông điệp để lookup thông tin liên quan đến QR Format."
+        label: "QR Format."
     },
 ]

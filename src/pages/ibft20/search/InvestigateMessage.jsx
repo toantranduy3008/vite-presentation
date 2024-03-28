@@ -7,7 +7,8 @@ import JsonViewerModal from './JsonViewerModal'
 import dayjs from 'dayjs'
 import { listRowsPerPage, listMessageIdentifier } from '../../../configs/GlobalConfig'
 import { DateTimePicker } from '@mantine/dates'
-import { getUrl, maskRefCode } from '../../../services/Utilities'
+import { fetchBankList, getUrl, maskRefCode } from '../../../services/Utilities'
+import { BankAPI } from '../../../apis/BankAPI'
 
 const InvestigateMessage = () => {
     const [loading, setLoading] = useState(false)
@@ -31,8 +32,27 @@ const InvestigateMessage = () => {
     const [jsonData, setJsonData] = useState('')
     const [pagingDataDescription, setPagingDataDescription] = useState('Từ 0 đến 0/ 0 kết quả')
     const [messageIdentifier, setMessageIdentifier] = useState("")
+    const [listBank, setListBank] = useState([])
     useEffect(() => {
-        handleSearch()
+        BankAPI.getAll()
+            .then(
+                res => {
+                    setListBank(res.listBank)
+                }
+            )
+            .then(
+                () => {
+                    handleSearch()
+                }
+            )
+            .catch(
+                () => {
+                    setListBank([])
+                    NotificationServices.error('Không thể lấy danh sách ngân hàng.')
+                }
+            ).finally(
+                () => { }
+            )
     }, [])
     const handleChangeTransRef = (e) => {
         setLookupParams({ ...lookupParams, transRef: e.target.value })
@@ -175,6 +195,12 @@ const InvestigateMessage = () => {
             <Table.Td>
                 {dayjs(element.senderDateTime).format('DD/MM/YYYY HH:mm:ss')}
             </Table.Td>
+            <Table.Td>
+                {element.senderId == '970411' ? 'Napas' : listBank.length > 0 ? listBank.find(b => b.id == element.senderId)?.name : ""}
+            </Table.Td>
+            <Table.Td>
+                {element.receiverId === '990401' ? 'Napas' : listBank.length > 0 ? listBank.find(b => b.id == element.receiverId)?.name : ""}
+            </Table.Td>
             <Table.Td className='capitalize'>
                 {element.messageIdentifier}
             </Table.Td>
@@ -273,6 +299,8 @@ const InvestigateMessage = () => {
                             }
                             <Table.Th></Table.Th>
                             <Table.Th>Thời gian</Table.Th>
+                            <Table.Th>Bên gửi</Table.Th>
+                            <Table.Th>Bên nhận</Table.Th>
                             <Table.Th>Loại</Table.Th>
                             <Table.Th>Chiều</Table.Th>
                             <Table.Th>Sender Reference</Table.Th>

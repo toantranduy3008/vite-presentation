@@ -58,7 +58,7 @@ const ReturnTransactionModal = ({ data, opened, onClose, onSubmitReturnTransacti
                 {numberWithCommas(element.transactionAmount)}
             </Table.Td>
             <Table.Td>
-                {dayjs(element.creationDateTime).format('DD/MM/YYYY HH:mm')}
+                {dayjs(element.creationDateTime).format('DD/MM/YYYY HH:mm:ss')}
             </Table.Td>
             <Table.Td
                 className='flex justify-start items-center'

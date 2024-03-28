@@ -3,7 +3,7 @@ import { api } from "./configs/axiosConfig";
 import { defineCancelApiObject } from "./configs/axiosUtils";
 
 export const BankAPI = {
-    getAll: async function (requestBody, cancel = false) {
+    getAll: async function (cancel = false) {
         const response = await api.request({
             url: `/bankdemo/api/bank`,
             method: "GET",
@@ -11,7 +11,7 @@ export const BankAPI = {
             signal: cancel ? cancelApiObject[this.getAll.name].handleRequestCancellation().signal : undefined,
         })
 
-        return response
+        return response.data
     }
 }
 

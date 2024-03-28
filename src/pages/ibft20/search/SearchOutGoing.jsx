@@ -9,6 +9,7 @@ import NotificationServices from '../../../services/notificationServices/Notific
 import ReturnTransactionModal from './ReturnTransactionModal'
 import { SearchAPI } from '../../../apis/SearchAPI'
 import { listRowsPerPage } from '../../../configs/GlobalConfig'
+import { BankAPI } from '../../../apis/BankAPI'
 export const SearchOutGoing = () => {
     const currentDate = new Date()
     const previousWeek = new Date(dayjs().subtract(1, 'w'))
@@ -56,12 +57,18 @@ export const SearchOutGoing = () => {
     const [pagingDataDescription, setPagingDataDescription] = useState('Từ 0 đến 0/ 0 kết quả')
     const [rowsPerPage] = useState(listRowsPerPage)
     useEffect(() => {
-        const fetchData = async () => {
-            const [acquirer] = await fetchBankList()
-            setListBank(acquirer)
-        }
-
-        fetchData()
+        BankAPI.getAll()
+            .then(
+                res => {
+                    const banks = res.listBank.map(item => {
+                        return {
+                            value: item.id,
+                            label: item.name
+                        }
+                    })
+                    setListBank(banks)
+                }
+            )
             .then(() => {
                 handleSearch()
             })
@@ -273,7 +280,7 @@ export const SearchOutGoing = () => {
                 {element.settlementStatus}
             </Table.Td>
             <Table.Td>
-                {listBank.find(b => b.value.toString() === element.benId).label}
+                {listBank.find(b => b.value.toString() === element.benId)?.label}
             </Table.Td>
             <Table.Td>
                 {dayjs(element.transDate).format('DD/MM/YYYY HH:mm')}
