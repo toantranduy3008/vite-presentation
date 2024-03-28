@@ -364,6 +364,7 @@ export const SearchInComing = () => {
                     nothingFoundMessage="Không tìm thấy ..."
                     maxDropdownHeight={200}
                     onChange={handleChangeRowNum}
+                    allowDeselect={false}
                 />
                 <div className='flex gap-4 '>
                     <p className='flex p-0 m-0 italic text-indigo-400 font-semibold justify-end items-end'>{pagingDataDescription}</p>

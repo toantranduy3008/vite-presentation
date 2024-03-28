@@ -364,6 +364,7 @@ export const Transfer = () => {
                             maxDropdownHeight={200}
                             disabled
                             onChange={handleChangeIssBank}
+                            allowDeselect={false}
                         />
                         <Select
                             label="Từ nguồn"
@@ -374,6 +375,7 @@ export const Transfer = () => {
                             className="w-full"
                             maxDropdownHeight={200}
                             onChange={handleChangeFromSourceValue}
+                            allowDeselect={false}
                         />
                         <TextInput
                             label="Tới thẻ/ tài khoản"
@@ -407,6 +409,7 @@ export const Transfer = () => {
                             className="w-full"
                             maxDropdownHeight={200}
                             onChange={handleChangeAcqBank}
+                            allowDeselect={false}
                         />
                         <Select
                             label="Tới nguồn"
@@ -417,6 +420,7 @@ export const Transfer = () => {
                             className="w-full"
                             maxDropdownHeight={200}
                             onChange={handleChangeToSourceValue}
+                            allowDeselect={false}
                         />
                         <NumberInput
                             label="Số tiền"
