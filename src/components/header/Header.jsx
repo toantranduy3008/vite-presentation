@@ -42,7 +42,6 @@ const Header = () => {
     }
 
     const handleGetCurrentUserInfo = () => {
-        // alert('ok')
         UserAPI.getCurrentUserInfo(true)
             .then(res => {
                 setUserBalance(res.accountBalance)
@@ -64,7 +63,10 @@ const Header = () => {
             </div>
 
             <div className="flex basis-1/6 h-full justify-end items-center gap-2 ">
-                <div className="flex xs:w-fit md:w-fit h-full justify-between items-center rounded-full xs:bg-none lg:bg-indigo-400 px-2 gap-2" onClick={handleGetCurrentUserInfo}>
+                <div
+                    className="flex xs:w-fit md:w-fit h-full justify-between items-center rounded-full xs:bg-none lg:bg-indigo-400 px-2 gap-2"
+                    onClick={handleGetCurrentUserInfo}
+                >
                     <Tooltip label={`Xin chào, ${fullName} 😄`}>
                         <div className="xs:hidden lg:flex w-full h-full justify-start items-center">
                             {/* <p className="pl-2 text-white">Xin chào, </p> */}
@@ -110,7 +112,6 @@ const Header = () => {
                         width={250}
                         position="bottom-end"
                         className="flex"
-
                     >
                         <Menu.Target className="bg-teal-400 hover:cursor-pointer hover:shadow-md rounded-full p-1 transition ease-linear duration-200">
                             <IconUserCircle className=" w-7 h-7 text-white hover:bg-orange-500" />

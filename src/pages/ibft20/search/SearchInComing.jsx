@@ -195,7 +195,7 @@ export const SearchInComing = () => {
             benId: data.benId,
             toAccount: data.toAccount,
             acqAccountName: data.f120,
-            transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm') : '',
+            transDate: data.transDate ? dayjs(data.transDate).format('DD/MM/YYYY HH:mm:ss') : '',
             transRef: data.transRef,
             traceNo: data.traceNo,
             amount: data.amount ? data.amount : 0,
@@ -294,10 +294,13 @@ export const SearchInComing = () => {
                 {element.settlementStatus}
             </Table.Td>
             <Table.Td>
+                {listBank.find(b => b.value.toString() === element.bankId)?.label}
+            </Table.Td>
+            <Table.Td>
                 {listBank.find(b => b.value.toString() === element.benId)?.label}
             </Table.Td>
             <Table.Td>
-                {dayjs(element.transDate).format('DD/MM/YYYY HH:mm')}
+                {dayjs(element.transDate).format('DD/MM/YYYY HH:mm:ss')}
             </Table.Td>
             <Table.Td>
                 <Menu shadow="md" width={200} position="bottom-end" offset={0} className="flex">
@@ -404,6 +407,7 @@ export const SearchInComing = () => {
                             <Table.Th>Số tiền đã hoàn trả</Table.Th>
                             <Table.Th>TTGD tại Napas</Table.Th>
                             <Table.Th>TT quyết toán</Table.Th>
+                            <Table.Th>Ngân hàng phát lệnh</Table.Th>
                             <Table.Th>Ngân hàng thụ hưởng</Table.Th>
                             <Table.Th>Thời gian giao dịch</Table.Th>
                             <Table.Th></Table.Th>

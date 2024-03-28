@@ -7,16 +7,16 @@ import JsonViewerModal from './JsonViewerModal'
 import dayjs from 'dayjs'
 import { listRowsPerPage, listMessageIdentifier } from '../../../configs/GlobalConfig'
 import { DateTimePicker } from '@mantine/dates'
-import { fetchBankList, getUrl, maskRefCode } from '../../../services/Utilities'
+import { getUrl, maskRefCode } from '../../../services/Utilities'
 import { BankAPI } from '../../../apis/BankAPI'
 
 const InvestigateMessage = () => {
     const [loading, setLoading] = useState(false)
     const { protocol, hostName } = getUrl()
     const currentDate = new Date()
-    const previousWeek = new Date(dayjs().subtract(1, 'w'))
+    const previousDay = new Date(dayjs().subtract(1, 'd'))
     const [lookupParams, setLookupParams] = useState({
-        startDate: new Date(previousWeek.setHours(0, 0, 0, 0)),
+        startDate: new Date(currentDate.setHours(0, 0, 0, 0)),
         endDate: new Date(currentDate.setHours(23, 59, 59, 0)),
         traceNo: '',
         transRef: ''
@@ -35,24 +35,19 @@ const InvestigateMessage = () => {
     const [listBank, setListBank] = useState([])
     useEffect(() => {
         BankAPI.getAll()
-            .then(
-                res => {
-                    setListBank(res.listBank)
-                }
-            )
-            .then(
-                () => {
-                    handleSearch()
-                }
-            )
-            .catch(
-                () => {
-                    setListBank([])
-                    NotificationServices.error('Không thể lấy danh sách ngân hàng.')
-                }
-            ).finally(
-                () => { }
-            )
+            .then(res => {
+                setListBank(res.listBank)
+            })
+            .then(() => {
+                handleSearch()
+            })
+            .catch(() => {
+                setListBank([])
+                NotificationServices.error('Không thể lấy danh sách ngân hàng.')
+            })
+            .finally(() => {
+
+            })
     }, [])
     const handleChangeTransRef = (e) => {
         setLookupParams({ ...lookupParams, transRef: e.target.value })
@@ -248,7 +243,6 @@ const InvestigateMessage = () => {
                 <Button variant="filled" className="hover:bg-teal-600" onClick={() => { handleSearch() }}>Tìm kiếm</Button>
             </div>
             <div id="paging" className='flex w-full  gap-1 items-end justify-between'>
-
                 <Select
                     label="Số dòng/ trang"
                     data={rowsPerPage}
