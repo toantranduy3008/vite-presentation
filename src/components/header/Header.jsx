@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Menu, rem, Tooltip } from "@mantine/core"
 import { useNavigate } from "react-router-dom";
-import { getTheme } from "../../services/Utilities";
+import { getTheme, numberWithCommas } from "../../services/Utilities";
 import {
     IconLogout,
     IconUserCircle,
@@ -11,12 +11,15 @@ import {
 } from '@tabler/icons-react';
 import { getCurrentUser } from "../../services/AuthServices";
 import { truncateString } from "../../services/Utilities";
+import { UserAPI } from "../../apis/UserAPI";
+import NotificationServices from "../../services/notificationServices/NotificationServices";
 
 const Header = () => {
     const navigate = useNavigate()
     const { fullName, bankId, cardNo, accountNumber, username } = getCurrentUser()
     const darkSystem = window.matchMedia('(prefers-color-scheme: dark)').matches
     const [theme, setTheme] = useState(getTheme())
+    const [userBalance, setUserBalance] = useState(0)
     useEffect(() => {
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => e.matches && setTheme('dark'));
         window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => e.matches && setTheme('light'));
@@ -38,6 +41,18 @@ const Header = () => {
         }
     }
 
+    const handleGetCurrentUserInfo = () => {
+        // alert('ok')
+        UserAPI.getCurrentUserInfo(true)
+            .then(res => {
+                setUserBalance(res.accountBalance)
+            })
+            .catch(() => {
+                setUserBalance(0)
+                NotificationServices.error('Không thể lấy thông tin số dư tài khoản.')
+            })
+            .finally(() => { })
+    }
     const handleLogout = () => {
         sessionStorage.removeItem('userSession')
         navigate('/bankdemo/app/login')
@@ -48,8 +63,8 @@ const Header = () => {
                 <img src='/bankdemo/napas-logo.svg' className=" w-auto xs:w-24 h-12 xs:h-auto align-middle border-none " />
             </div>
 
-            <div className="flex basis-1/6 h-full justify-end items-center gap-2">
-                <div className="flex xs:w-fit md:w-fit h-full justify-between items-center rounded-full xs:bg-none lg:bg-indigo-400 px-2 gap-2">
+            <div className="flex basis-1/6 h-full justify-end items-center gap-2 ">
+                <div className="flex xs:w-fit md:w-fit h-full justify-between items-center rounded-full xs:bg-none lg:bg-indigo-400 px-2 gap-2" onClick={handleGetCurrentUserInfo}>
                     <Tooltip label={`Xin chào, ${fullName} 😄`}>
                         <div className="xs:hidden lg:flex w-full h-full justify-start items-center">
                             {/* <p className="pl-2 text-white">Xin chào, </p> */}
@@ -90,12 +105,18 @@ const Header = () => {
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
-                    <Menu shadow="md" width={200} position="bottom-end" className="flex">
+                    <Menu
+                        shadow="md"
+                        width={250}
+                        position="bottom-end"
+                        className="flex"
+
+                    >
                         <Menu.Target className="bg-teal-400 hover:cursor-pointer hover:shadow-md rounded-full p-1 transition ease-linear duration-200">
-                            <IconUserCircle className=" w-7 h-7 text-white  hover:bg-orange-500" />
+                            <IconUserCircle className=" w-7 h-7 text-white hover:bg-orange-500" />
                         </Menu.Target>
                         <Menu.Dropdown className="flex flex-col gap-1">
-                            <div className="flex flex-col gap-1 py-2 rounded-sm shadow-sm hover:shadow-md transition duration-150 ease-linear bg-slate-100">
+                            <div className="flex flex-col gap-1 py-2 rounded-sm shadow-sm hover:shadow-md transition duration-150 ease-linear ">
                                 <p className="flex m-0 pl-1 text-sm italic text-indigo-400">{fullName}</p>
                                 <div className="flex gap-1">
                                     <p className="flex m-0 pl-1 text-sm">Tài khoản:</p>
@@ -113,7 +134,10 @@ const Header = () => {
                                     <p className="flex m-0 pl-1 text-sm">Số thẻ:</p>
                                     <p className="flex m-0 pl-1 text-sm italic text-indigo-400"> {cardNo}</p>
                                 </div>
-
+                                <div className="flex gap-1">
+                                    <p className="flex m-0 pl-1 text-sm">Số dư:</p>
+                                    <p className="flex m-0 pl-1 text-sm italic text-indigo-400"> {numberWithCommas(userBalance)}</p>
+                                </div>
                             </div>
                             <Menu.Item
                                 color="red"
